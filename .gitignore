@@ -1,0 +1,4 @@
+# OS-generated clutter (nothing else to ignore: this repo is the finished static site)
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,16 +1,14 @@
-## Hi there 👋
+# Derek Staley: Product Portfolio
 
-<!--
-**dcstaley/dcstaley** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+**Live site: https://dcstaley.github.io/**
 
-Here are some ideas to get you started:
+A product management portfolio: two case studies for products I own end to end, plus the real working documents behind them (requirements, decision logs, discovery findings, and roadmaps).
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+## Contents
+
+- `index.html`: the portfolio
+- `work-samples/`: the collection index and the twelve document exhibits
+- `v1-feature-set.html`, `design-system.html`: product pages for the unified tasks-and-habits app
+- `Derek Staley Resume 2026.pdf`: resume
+
+Plain static HTML, no build step, served with GitHub Pages.
