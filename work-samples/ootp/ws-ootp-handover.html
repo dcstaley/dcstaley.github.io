@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Handover: Intended Feature Set and Domain Rules · OOTP Roster Optimizer &middot; Derek Staley</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234F46E5'/%3E%3C/svg%3E">
+<title>Handover: Intended Feature Set and Domain Rules · OOTP Roster Optimizer</title>
 <style>
 :root{
   --page:#f4f5f8; --surface:#ffffff; --ink:#1b1b1f; --muted:#5c5c67; --faint:#636b7c;
@@ -151,7 +150,7 @@ body{font-size:17px;}
 <div class="eyebrow">Work Sample</div>
 <h1>Handover: Intended Feature Set and Domain Rules · OOTP Roster Optimizer</h1>
 <div class="subtitle">Work sample · product intent and domain capture · as of v1 (July 2026)</div>
-<div class="callout"><p><strong>What this is:</strong> a full capture of the intended feature set, behavior, and domain rules of the existing app, written before the rebuild as the shared spec everything else would work from.</p><p><strong>What it shows:</strong> comprehensive product and systems mapping. Documenting an entire application's intent and its must-preserve domain facts before touching code, then distilling hard-won lessons into rules the rebuild had to follow.</p><p><strong>Source:</strong> condensed and edited from the project's handover document for presentation (trimmed for length, internal references removed). The full working version lives in the app repo.</p></div>
+<div class="callout"><p><strong>What this is:</strong> a full capture of the intended feature set, behavior, and domain rules of the existing app, written before the rebuild as the shared spec everything else would work from.</p><p><strong>What it shows:</strong> comprehensive product and systems mapping. Documenting an entire application's intent and its must-preserve domain facts before touching code, then distilling the lessons that surfaced into rules the rebuild had to follow.</p><p><strong>Source:</strong> condensed and edited from the project's handover document for presentation (trimmed for length, internal references removed). The full working version lives in the app repo.</p></div>
 </header>
 <div class="doc"><p>This is the initial intent capture. The discovery pass then tested it against the actual code and corrected it in places (see the discovery-findings exhibit); together they are the "write down the intent, then verify it against the evidence" arc that the rebuild ran on.</p>
 <hr />
@@ -209,7 +208,7 @@ body{font-size:17px;}
 <li><strong>Evaluate candidates with the optimizer's value notion,</strong> not a separate greedy proxy that can pass over a better player.</li>
 <li><strong>Variant and base of a card are mutually exclusive everywhere;</strong> counterpart removal must be intrinsic to any add path.</li>
 <li><strong>Gate scoring on data readiness,</strong> so it never runs against unloaded defaults.</li>
-<li><strong>Single source of truth in version control;</strong> never work from stale copies, which repeatedly reintroduced fixed bugs.</li>
+<li><strong>Single source of truth in version control;</strong> never work from stale copies, which repeatedly reintroduced fix</li>
 </ol></div>
 </main>
 <footer class="foot"><div class="wrap">

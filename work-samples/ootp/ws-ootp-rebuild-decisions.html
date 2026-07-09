@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Rebuild Requirements and Decisions: OOTP Roster Optimizer &middot; Derek Staley</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234F46E5'/%3E%3C/svg%3E">
+<title>Rebuild Requirements and Decisions: OOTP Roster Optimizer</title>
 <style>
 :root{
   --page:#f4f5f8; --surface:#ffffff; --ink:#1b1b1f; --muted:#5c5c67; --faint:#636b7c;
@@ -174,71 +173,55 @@ body{font-size:17px;}
 <h2>Part B · Open decisions (to resolve before architecture)</h2>
 <p>Each states the question, the options, and a recommendation.</p>
 <h3>D1 · Calibration, scaling, and anchoring (RESOLVED)</h3>
-<p><strong>Decision:</strong> Two score types, one implementation each, computed once and consumed identically:</p>
-<ul>
-<li><strong>Basic score</strong> is a direct function of ratings (each rating's contribution with era and park folded into the contribution). No event modeling, no BIP recompute, no per-event calibration.</li>
-<li><strong>wOBA score</strong> is an event-based pipeline, in this order: <code>raw → softcap → per-event calibration (to neutral baselines) → era/park → recompute BIP &amp; dependent hits → assemble wOBA → uniform per-pool/side anchor (AFTER era/park)</code>.</li>
-<li><strong>Anchor is after era and park.</strong> Rationale: the anchor is a single uniform multiplier per pool and side, so it cannot change within-pool ranking; era and park's <em>relative</em> effects are already baked into the events before it; its only real jobs are cross-pool reference (D2) and display. We optimize for roster quality, not realistic absolute numbers, so the absolute level the anchor sets is irrelevant.</li>
-<li>Per-event calibration is computed against neutral baselines, and the reference pool is the eligible/top-X pool (both already correct in current code).</li>
-<li>All cards normalized to 600 PA so cards compare fairly regardless of training-data volume.</li>
-</ul>
+<p><strong>Decision:</strong> Two score types, one implementation each, computed once and consumed identically:
+- <strong>Basic score</strong> is a direct function of ratings (each rating's contribution with era and park folded into the contribution). No event modeling, no BIP recompute, no per-event calibration.
+- <strong>wOBA score</strong> is an event-based pipeline, in this order: <code>raw → softcap → per-event calibration (to neutral baselines) → era/park → recompute BIP &amp; dependent hits → assemble wOBA → uniform per-pool/side anchor (AFTER era/park)</code>.
+- <strong>Anchor is after era and park.</strong> Rationale: the anchor is a single uniform multiplier per pool and side, so it cannot change within-pool ranking; era and park's <em>relative</em> effects are already baked into the events before it; its only real jobs are cross-pool reference (D2) and display. We optimize for roster quality, not realistic absolute numbers, so the absolute level the anchor sets is irrelevant.
+- Per-event calibration is computed against neutral baselines, and the reference pool is the eligible/top-X pool (both already correct in current code).
+- All cards normalized to 600 PA so cards compare fairly regardless of training-data volume.</p>
 <h3>D2 · Cross-pool hitter/pitcher comparability (RESOLVED)</h3>
-<p><strong>Decision:</strong> Compare players by <strong>signed distance from a common baseline</strong>, with the sign flipped for pitchers, all at 600-PA normalization:</p>
-<ul>
-<li>Hitter value is <code>wOBA − baseline</code>; pitcher value is <code>baseline − allowedWOBA</code>. Same unit (wOBA points), same direction (more is better). This serves both within-pool ranking (monotonic with wOBA) and cross-pool comparison.</li>
-<li><strong>Drop the <code>^1.2</code> power transform</strong> and the LP-only multipliers. With both pools honestly on the same wOBA scale (guaranteed by D1) and measured from a shared baseline, the exponent only distorted the balance. (Consistent with the project rule: fix the scale, do not scale-hack.)</li>
-<li><strong>Natural hitter/pitcher balance, no tilt knob.</strong> The H/P exchange falls out of each pool's real wOBA spread. If a split ever looks wrong, treat it as a calibration signal to fix at the source.</li>
-<li>Because playing time is constant (600 PA), the runs/playing-time apparatus collapses to constants and is unnecessary; the baseline (from D1) is the only input.</li>
-<li><strong>Role/slot weights and the both-sides bonus apply in CAP and SLOTS modes only.</strong> Non-cap objective is unweighted Σ(signed-distance value) subject to structural constraints; cap/slots objective is Σ(signed-distance value × role/slot weight) subject to budget and tier caps. The value unit and natural balance are identical across all modes.</li>
-</ul>
+<p><strong>Decision:</strong> Compare players by <strong>signed distance from a common baseline</strong>, with the sign flipped for pitchers, all at 600-PA normalization:
+- Hitter value is <code>wOBA − baseline</code>; pitcher value is <code>baseline − allowedWOBA</code>. Same unit (wOBA points), same direction (more is better). This serves both within-pool ranking (monotonic with wOBA) and cross-pool comparison.
+- <strong>Drop the <code>^1.2</code> power transform</strong> and the LP-only multipliers. With both pools honestly on the same wOBA scale (guaranteed by D1) and measured from a shared baseline, the exponent only distorted the balance. (Consistent with the project rule: fix the scale, do not scale-hack.)
+- <strong>Natural hitter/pitcher balance, no tilt knob.</strong> The H/P exchange falls out of each pool's real wOBA spread. If a split ever looks wrong, treat it as a calibration signal to fix at the source.
+- Because playing time is constant (600 PA), the runs/playing-time apparatus collapses to constants and is unnecessary; the baseline (from D1) is the only input.
+- <strong>Role/slot weights and the both-sides bonus apply in CAP and SLOTS modes only.</strong> Non-cap objective is unweighted Σ(signed-distance value) subject to structural constraints; cap/slots objective is Σ(signed-distance value × role/slot weight) subject to budget and tier caps. The value unit and natural balance are identical across all modes.</p>
 <h3>D3 · Model functional form (DEFERRED, decide with data in hand)</h3>
 <p><strong>Decision:</strong> Defer the functional-form choice to a dedicated data-exploration phase. It needs a real bake-off across many structures (sequential and non-sequential; log, linear, quadratic, cubic; logistic vs rate). The earlier poor sequential result is weak evidence (old tooling).</p>
-<p><strong>Firm requirements this imposes on the rebuild (decided now):</strong></p>
-<ul>
-<li>The <strong>model is a swappable component behind a clean interface.</strong> The scoring core, calibration (D1), and value/LP layers (D2) consume predicted events and scores abstractly, never assumptions about how they were produced, so the form can change later without touching anything downstream.</li>
-<li>A <strong>model-comparison harness</strong> is part of the plan: fit candidate forms, score them against the residual/diagnostic suite on real data, and select. Diagnostics (residual bins by weighted volume, over-valuation signal, and so on) are a permanent capability.</li>
-</ul>
+<p><strong>Firm requirements this imposes on the rebuild (decided now):</strong>
+- The <strong>model is a swappable component behind a clean interface.</strong> The scoring core, calibration (D1), and value/LP layers (D2) consume predicted events and scores abstractly, never assumptions about how they were produced, so the form can change later without touching anything downstream.
+- A <strong>model-comparison harness</strong> is part of the plan: fit candidate forms, score them against the residual/diagnostic suite on real data, and select. Diagnostics (residual bins by weighted volume, over-valuation signal, and so on) are a permanent capability.</p>
 <blockquote>
 <p><strong>Resolved later (2026-07):</strong> the data bake-off selected the raw-poly functional form. The swappable-interface requirement above is what made swapping the model in painless, which is the point of deferring the choice rather than guessing early.</p>
 </blockquote>
 <h3>D4 · Unified configuration model (RESOLVED)</h3>
-<p><strong>Decision:</strong> One home per concern; selecting a tournament <em>is</em> the configuration (no manual "load" step).</p>
-<ul>
-<li><strong>Tournament is the single source</strong> for roster shape, cap/slots rules, eligibility, position constraints, metrics, pool sizes, and ownedOnly. The page-level RosterSettings folds into the tournament.</li>
-<li><strong>Era becomes a reusable Eras library</strong>, referenced by the tournament by id (not embedded).</li>
-<li><strong>Park becomes its own reusable Park library</strong>, referenced by id, mirroring Eras (new).</li>
-<li><strong>Position weights are tournament-scoped</strong> (cap/slots roster rules).</li>
-<li><strong>Softcaps are tournament/pool-scoped</strong>, because the right softcap depends on the card pool (elite vs mid-tier pools need different high-end compression), currently hand-tuned per tournament. <strong>Model training emits recommended softcaps to seed</strong> a tournament's values. Note: the need for per-pool manual softcaps is largely a symptom of model-shape error at the extremes; D3's better model should reduce it over time.</li>
-<li><strong>The global mutable coeff bag dissolves:</strong> model coefficients are model-scoped; era and park come from libraries via the tournament; position weights and softcaps are tournament-scoped; fixed wOBA weights are constants; derived values are computed. No button-synced global state.</li>
-</ul>
+<p><strong>Decision:</strong> One home per concern; selecting a tournament <em>is</em> the configuration (no manual "load" step).
+- <strong>Tournament is the single source</strong> for roster shape, cap/slots rules, eligibility, position constraints, metrics, pool sizes, and ownedOnly. The page-level RosterSettings folds into the tournament.
+- <strong>Era becomes a reusable Eras library</strong>, referenced by the tournament by id (not embedded).
+- <strong>Park becomes its own reusable Park library</strong>, referenced by id, mirroring Eras (new).
+- <strong>Position weights are tournament-scoped</strong> (cap/slots roster rules).
+- <strong>Softcaps are tournament/pool-scoped</strong>, because the right softcap depends on the card pool (elite vs mid-tier pools need different high-end compression), currently hand-tuned per tournament. <strong>Model training emits recommended softcaps to seed</strong> a tournament's values. Note: the need for per-pool manual softcaps is largely a symptom of model-shape error at the extremes; D3's better model should reduce it over time.
+- <strong>The global mutable coeff bag dissolves:</strong> model coefficients are model-scoped; era and park come from libraries via the tournament; position weights and softcaps are tournament-scoped; fixed wOBA weights are constants; derived values are computed. No button-synced global state.</p>
 <h3>D5 · Optimizer shape and post-processing (RESOLVED, keep decomposition, fix quality)</h3>
-<p>Root cause understood (findings §7C): the LP optimizes the starting core and reserves cap for support roles filled post-LP. <strong>Decision: the starters-first decomposition stays.</strong> It is correct for two reasons, not only tractability:</p>
-<ul>
-<li><strong>Value structure:</strong> in cap/slots mode starters are valued <em>massively</em> above bench, and the per-role support budgets (<code>maxCap</code> bench, backup-C, swingman, reliever) are an <strong>explicit user feature</strong>. Pouring scarce budget and tier-slots into high-value starters and cheaply filling low-value support is the right economics; jointly optimizing all 26 spends huge solver and modeling cost on near-zero-stakes bench picks.</li>
-<li><strong>Tractability:</strong> full 26-card selection plus feasible defensive <em>assignment</em> across vL/vR and backups is a covering-versus-matching problem (counts are not feasible simultaneous alignment); a single MILP with card-by-position-by-side assignment plus sub-budgets plus slots tiers is big and brittle. This is consistent with prior experience that it does not solve reliably in cap/slots, and that base mode chokes on positional constraints.</li>
-</ul>
-<p><strong>The rebuild's win is quality, not restructuring:</strong></p>
-<ol>
-<li>Keep starters-first (cap/slots). Non-cap mode picks the best roster meeting structural and positional constraints, no role weighting or sub-budgets.</li>
-<li>Replace the <strong>greedy</strong> support/bench fill with a small <strong>principled</strong> optimization (maximize coverage plus value within the reserved sub-budgets). This kills the Arozarena-class bug without touching starter logic.</li>
-<li>Make defensive feasibility a <strong>principled matching/assignment check</strong> so a chosen starter set is guaranteed alignable across vL/vR and backups. This removes greedy gap-patching and the catcher misfires (backup catcher becomes a coverage-depth requirement, not a 3-pass).</li>
-<li>Keep cap-reclaim (unspent support budget to starters) but make it deterministic.</li>
-<li>Lineup assignment stays a legitimate sub-solve; all steps consume the one D1/D2 scoring value.</li>
-</ol>
+<p>Root cause understood (findings §7C): the LP optimizes the starting core and reserves cap for support roles filled post-LP. <strong>Decision: the starters-first decomposition stays.</strong> It is correct for two reasons, not only tractability:
+- <strong>Value structure:</strong> in cap/slots mode starters are valued <em>massively</em> above bench, and the per-role support budgets (<code>maxCap</code> bench, backup-C, swingman, reliever) are an <strong>explicit user feature</strong>. Pouring scarce budget and tier-slots into high-value starters and cheaply filling low-value support is the right economics; jointly optimizing all 26 spends huge solver and modeling cost on near-zero-stakes bench picks.
+- <strong>Tractability:</strong> full 26-card selection plus feasible defensive <em>assignment</em> across vL/vR and backups is a covering-versus-matching problem (counts are not feasible simultaneous alignment); a single MILP with card-by-position-by-side assignment plus sub-budgets plus slots tiers is big and brittle. This is consistent with prior experience that it does not solve reliably in cap/slots, and that base mode chokes on positional constraints.</p>
+<p><strong>The rebuild's win is quality, not restructuring:</strong>
+1. Keep starters-first (cap/slots). Non-cap mode picks the best roster meeting structural and positional constraints, no role weighting or sub-budgets.
+2. Replace the <strong>greedy</strong> support/bench fill with a small <strong>principled</strong> optimization (maximize coverage plus value within the reserved sub-budgets). This kills the Arozarena-class bug without touching starter logic.
+3. Make defensive feasibility a <strong>principled matching/assignment check</strong> so a chosen starter set is guaranteed alignable across vL/vR and backups. This removes greedy gap-patching and the catcher misfires (backup catcher becomes a coverage-depth requirement, not a 3-pass).
+4. Keep cap-reclaim (unspent support budget to starters) but make it deterministic.
+5. Lineup assignment stays a legitimate sub-solve; all steps consume the one D1/D2 scoring value.</p>
 <p>Formulation specifics were settled during the build with the solver in hand.</p>
 <h3>D6 · PT Account data model (RESOLVED)</h3>
-<p>Core (from findings §7B): per-account ownership scoping, one CSV import per account, quantity in CSV, PT-only. Specifics:</p>
-<ul>
-<li><strong>Account count: two</strong>, but do not hard-code it. Model accounts as keyed overlays so N is possible later (two is the immediate need; N kept as a cheap backup option).</li>
-<li><strong>Quantity: carried as information, filter on <code>owned &gt; 0</code>.</strong> Roster building uses owned-versus-not; quantity is stored and displayed (variant material, "you own 3") but constrains nothing for now.</li>
-<li><strong>Active-account selector scopes the whole PT view:</strong> owned quantity shown in the Data Grid, which account's variants you see and edit, and the owned filter in generation. (Variants are account-scoped, so the selector must drive grid and variants, not just generation.)</li>
-</ul>
+<p>Core (from findings §7B): per-account ownership scoping, one CSV import per account, quantity in CSV, PT-only. Specifics:
+- <strong>Account count: two</strong>, but do not hard-code it. Model accounts as keyed overlays so N is possible later (two is the immediate need; N kept as a cheap backup option).
+- <strong>Quantity: carried as information, filter on <code>owned &gt; 0</code>.</strong> Roster building uses owned-versus-not; quantity is stored and displayed (variant material, "you own 3") but constrains nothing for now.
+- <strong>Active-account selector scopes the whole PT view:</strong> owned quantity shown in the Data Grid, which account's variants you see and edit, and the owned filter in generation. (Variants are account-scoped, so the selector must drive grid and variants, not just generation.)</p>
 <h3>D7 · Persistence and platform (RESOLVED, principle now, tech at architecture)</h3>
-<p><strong>Decision:</strong> Lock the principle, defer the technology to the architecture phase.</p>
-<ul>
-<li><strong>Principle:</strong> consolidated, coherent persistence: one home for libraries (tournaments, eras, parks, models) and one for the active working session; the D6 per-account overlays are first-class. No replicating today's four-mechanism sprawl (IndexedDB plus localStorage plus sessionStorage plus backend JSON).</li>
-<li><strong>Deferred to architecture:</strong> the actual storage technology (local vs server, which DB) and whether the solver stays Python/HiGHS (works today, no forcing function) or moves in-process.</li>
-</ul>
+<p><strong>Decision:</strong> Lock the principle, defer the technology to the architecture phase.
+- <strong>Principle:</strong> consolidated, coherent persistence: one home for libraries (tournaments, eras, parks, models) and one for the active working session; the D6 per-account overlays are first-class. No replicating today's four-mechanism sprawl (IndexedDB plus localStorage plus sessionStorage plus backend JSON).
+- <strong>Deferred to architecture:</strong> the actual storage technology (local vs server, which DB) and whether the solver stays Python/HiGHS (works today, no forcing function) or moves in-process.</p>
 <hr />
 <h2>Decision status</h2>
 <ul>
