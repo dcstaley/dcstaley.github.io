@@ -2,3 +2,6 @@
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Original screenshots (processed copies live in images/; originals stay local)
+Screenshots/

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System · Unified Tasks &amp; Habits · Derek Staley</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234F46E5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Neutrals */
+  --bg-page:#F6F6F7; --bg:#FFFFFF; --bg-subtle:#F2F2F4;
+  --text:#1C1C1E; --text-2:#6B7280; --text-3:#9CA3AF;
+  --border:#E6E7EB; --border-strong:#D5D7DC;
+  /* Accent (UI actions / selection) */
+  --accent:#4F46E5; --accent-strong:#4338CA; --accent-weak:#EEF0FE;
+  /* Habit identity (distinct from UI accent) */
+  --habit:#0D9488; --habit-weak:#E4F4F1;
+  /* Semantic */
+  --danger:#DC2626; --danger-weak:#FCECEC;
+  --success:#15803D; --warning:#B45309; --warning-weak:#FBF0E0;
+  /* Shape & type */
+  --r-sm:6px; --r-md:8px; --r-lg:12px;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg-page);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased;padding:40px 24px}
+.wrap{max-width:920px;margin:0 auto}
+h1{font-size:22px;font-weight:600;letter-spacing:-0.01em}
+h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);margin:40px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.lede{color:var(--text-2);font-size:15px;margin-top:6px}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px}
+.grid{display:grid;gap:12px}
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.label{font-size:12px;color:var(--text-3);margin-top:8px}
+
+/* palette */
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.sw{border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;background:var(--bg)}
+.sw .chip{height:52px}
+.sw .meta{padding:6px 8px;font-size:11px}
+.sw .meta b{display:block;font-weight:500;font-size:12px}
+.sw .meta span{color:var(--text-3);font-family:ui-monospace,monospace}
+
+/* type scale */
+.t-display{font-size:22px;font-weight:600;letter-spacing:-0.01em}
+.t-h2{font-size:18px;font-weight:600}
+.t-h3{font-size:16px;font-weight:600}
+.t-body{font-size:15px;font-weight:400}
+.t-small{font-size:13px;color:var(--text-2)}
+.t-caption{font-size:12px;color:var(--text-3)}
+.t-row{padding:7px 0;border-bottom:1px solid var(--bg-subtle)}
+
+/* buttons */
+.btn{font-family:var(--font);font-size:14px;font-weight:500;border-radius:var(--r-md);padding:8px 14px;border:1px solid transparent;cursor:pointer}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-secondary{background:var(--bg);color:var(--text);border-color:var(--border-strong)}
+.btn-ghost{background:transparent;color:var(--text-2)}
+.btn-danger{background:var(--bg);color:var(--danger);border-color:var(--danger)}
+
+/* input */
+.input{font-family:var(--font);font-size:14px;width:240px;padding:9px 11px;border:1px solid var(--border-strong);border-radius:var(--r-md);background:var(--bg);color:var(--text)}
+.input::placeholder{color:var(--text-3)}
+
+/* completion toggle */
+.tog{width:20px;height:20px;border-radius:50%;border:1.8px solid var(--border-strong);flex:none;display:inline-flex;align-items:center;justify-content:center}
+.tog.done{background:var(--accent);border-color:var(--accent)}
+.tog.done::after{content:"";width:6px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-0.5px,-1px)}
+
+/* item rows */
+.item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-md)}
+.item + .item{margin-top:8px}
+.item .body{flex:1;min-width:0}
+.item .title{font-size:14px;font-weight:500}
+.item .sub{font-size:12px;color:var(--text-3);margin-top:1px}
+.item .when{font-size:12px;color:var(--text-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.item.habit{border-left:3px solid var(--habit)}
+.habit-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;color:var(--habit);background:var(--habit-weak);padding:2px 7px;border-radius:999px}
+.item.done .title{color:var(--text-3);text-decoration:line-through}
+.item.overdue{border-left:3px solid var(--danger)}
+.item.overdue .when{color:var(--danger);font-weight:500}
+
+/* tags */
+.tag{display:inline-flex;align-items:center;font-size:12px;color:var(--text-2);background:var(--bg-subtle);border:1px solid var(--border);padding:3px 9px;border-radius:999px}
+
+/* top bar */
+.topbar{display:flex;align-items:center;gap:14px;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-md);flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:var(--r-md);overflow:hidden}
+.seg button{font-family:var(--font);font-size:13px;padding:5px 12px;border:none;background:var(--bg);color:var(--text-2);cursor:pointer;border-right:1px solid var(--border)}
+.seg button:last-child{border-right:none}
+.seg button.on{background:var(--accent-weak);color:var(--accent-strong);font-weight:500}
+.datenav{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500}
+.datenav .arrow{width:26px;height:26px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg);color:var(--text-2);cursor:pointer}
+.spacer{flex:1}
+.sync{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3)}
+.dot{width:7px;height:7px;border-radius:50%}
+.dot.ok{background:#cbd5cf}
+.dot.offline{background:var(--warning)}
+.add{font-size:13px;font-weight:500;color:#fff;background:var(--accent);border:none;border-radius:var(--r-md);padding:7px 13px;cursor:pointer}
+
+/* overlay shell */
+.faux{background:rgba(20,20,30,0.32);border-radius:var(--r-lg);padding:28px;display:flex;justify-content:center}
+.sheet{width:380px;background:var(--bg);border-radius:var(--r-lg);box-shadow:0 12px 40px rgba(0,0,0,0.18);overflow:hidden}
+.sheet header{padding:14px 18px;border-bottom:1px solid var(--border);font-weight:600;font-size:15px}
+.sheet .content{padding:18px}
+.sheet footer{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;color:var(--text-2);margin-bottom:5px}
+.note{background:var(--accent-weak);color:var(--accent-strong);font-size:12px;padding:8px 12px;border-radius:var(--r-md)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p style="margin-bottom:20px;font-size:13px;"><a href="index.html" style="color:var(--text-2);text-decoration:none;">&larr; Portfolio</a></p>
+  <h1>Design system</h1>
+  <p class="lede">Calm, professional, low-chrome. Built for clarity over decoration: no streaks, badges, or playful mascots. Light mode shown; the same tokens swap to dark later. Typeface: Inter. Comfortable density, 8px corners.</p>
+
+  <h2>Color</h2>
+  <div class="card">
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:#F6F6F7"></div><div class="meta"><b>Page</b><span>#F6F6F7</span></div></div>
+      <div class="sw"><div class="chip" style="background:#FFFFFF;border-bottom:1px solid var(--border)"></div><div class="meta"><b>Surface</b><span>#FFFFFF</span></div></div>
+      <div class="sw"><div class="chip" style="background:#1C1C1E"></div><div class="meta"><b>Text</b><span>#1C1C1E</span></div></div>
+      <div class="sw"><div class="chip" style="background:#6B7280"></div><div class="meta"><b>Text 2</b><span>#6B7280</span></div></div>
+      <div class="sw"><div class="chip" style="background:#E6E7EB"></div><div class="meta"><b>Border</b><span>#E6E7EB</span></div></div>
+      <div class="sw"><div class="chip" style="background:#4F46E5"></div><div class="meta"><b>Accent</b><span>#4F46E5</span></div></div>
+      <div class="sw"><div class="chip" style="background:#0D9488"></div><div class="meta"><b>Habit</b><span>#0D9488</span></div></div>
+      <div class="sw"><div class="chip" style="background:#DC2626"></div><div class="meta"><b>Danger</b><span>#DC2626</span></div></div>
+      <div class="sw"><div class="chip" style="background:#B45309"></div><div class="meta"><b>Warning</b><span>#B45309</span></div></div>
+    </div>
+    <p class="label">Indigo is the one UI accent (actions, selection). Teal is reserved as the "habit" identity color so tracked habits read distinctly. Two accents only, both muted. Alternate accents if you prefer: slate-blue #3B5BDB or teal-as-accent; say the word and I'll swap.</p>
+  </div>
+
+  <h2>Type scale</h2>
+  <div class="card">
+    <div class="t-row t-display">Display / 22 / 600 · Today</div>
+    <div class="t-row t-h2">Heading 2 / 18 / 600 · This week</div>
+    <div class="t-row t-h3">Heading 3 / 16 / 600 · Morning</div>
+    <div class="t-row t-body">Body / 15 / 400 · Draft the quarterly review</div>
+    <div class="t-row t-small">Small / 13 · supporting detail and metadata</div>
+    <div class="t-row t-caption">Caption / 12 · timestamps, hints</div>
+  </div>
+
+  <h2>Buttons & inputs</h2>
+  <div class="card">
+    <div class="row">
+      <button class="btn btn-primary">Save</button>
+      <button class="btn btn-secondary">Cancel</button>
+      <button class="btn btn-ghost">Dismiss</button>
+      <button class="btn btn-danger">Delete</button>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <input class="input" placeholder="Item title">
+      <select class="input"><option>Specific time</option><option>Window</option><option>By end of day</option><option>Loose timeframe</option><option>Someday</option></select>
+    </div>
+  </div>
+
+  <h2>Completion toggle</h2>
+  <div class="card">
+    <div class="row">
+      <span class="tog"></span><span class="t-small">Not done</span>
+      <span style="width:24px"></span>
+      <span class="tog done"></span><span class="t-small">Done</span>
+    </div>
+    <p class="label">A quiet circle that fills on completion. No animation, points, or celebration.</p>
+  </div>
+
+  <h2>Item rows (task vs tracked habit)</h2>
+  <div class="card">
+    <div class="item">
+      <span class="tog"></span>
+      <div class="body"><div class="title">Draft the quarterly review</div><div class="sub">Work</div></div>
+      <div class="when">2:00 PM</div>
+    </div>
+    <div class="item habit">
+      <span class="tog"></span>
+      <div class="body"><div class="title">Meditate</div><div class="sub"><span class="habit-tag">&#9685; Habit · daily</span></div></div>
+      <div class="when">Morning</div>
+    </div>
+    <div class="item habit">
+      <span class="tog done"></span>
+      <div class="body"><div class="title">Read</div><div class="sub"><span class="habit-tag">&#9685; Habit · 3 of 5 this week</span></div></div>
+      <div class="when">Anytime</div>
+    </div>
+    <div class="item" style="background:#E8F0FE;border-color:#cbddfb">
+      <span class="tog"></span>
+      <div class="body"><div class="title">Draft quarterly review</div><div class="sub" style="color:#5b7fb8">Work</div></div>
+      <div class="when" style="color:#5b7fb8">2:00 PM</div>
+    </div>
+    <div class="item overdue">
+      <span class="tog"></span>
+      <div class="body"><div class="title">Call the dentist</div></div>
+      <div class="when">Overdue · 11:00 AM</div>
+    </div>
+    <div class="item done">
+      <span class="tog done"></span>
+      <div class="body"><div class="title">Pay electricity bill</div></div>
+      <div class="when">Done</div>
+    </div>
+    <p class="label">Items are neutral by default. Color comes from a tag's color, or a custom color on an untagged item (the blue "Work" row), and fills the card. A colored left bar means status: teal for a tracked habit, red for overdue (with a red label). Status bars and fill color stack without fighting, so a Work-colored item can also be overdue.</p>
+  </div>
+
+  <h2>Tags</h2>
+  <div class="card">
+    <div class="row"><span class="tag">Work</span><span class="tag">Fitness</span><span class="tag">Personal</span><span class="tag">Music</span></div>
+    <p class="label">Tags are the single organizing layer (they replaced scheduling groups). Neutral, quiet, never color-coded by default.</p>
+  </div>
+
+  <h2>Top bar</h2>
+  <div class="card">
+    <div class="topbar">
+      <div class="seg"><button class="on">Day</button><button>Week</button><button>Month</button></div>
+      <div class="seg"><button class="on">Schedule</button><button>Category</button><button>Type</button></div>
+      <div class="datenav"><button class="arrow">&lsaquo;</button><span>Today</span><button class="arrow">&rsaquo;</button></div>
+      <div class="spacer"></div>
+      <span class="sync"><span class="dot ok"></span>Synced</span>
+      <button class="add">+ Add</button>
+    </div>
+    <p class="label">Time range and lens are segmented controls. The sync indicator is a faint dot ("Synced", near-invisible); it turns amber only when offline or attention is needed.</p>
+    <div class="row" style="margin-top:12px">
+      <span class="sync"><span class="dot ok"></span>Synced</span>
+      <span class="sync"><span class="dot offline"></span>Offline · changes saved here</span>
+      <span class="sync"><span class="dot" style="background:var(--accent)"></span>Syncing&hellip;</span>
+    </div>
+  </div>
+
+  <h2>Overlay (create / edit, item detail, confirmations)</h2>
+  <div class="faux">
+    <div class="sheet">
+      <header>New item</header>
+      <div class="content">
+        <div class="field"><label>Title</label><input class="input" style="width:100%" value="Practice guitar"></div>
+        <div class="field"><label>When</label><select class="input" style="width:100%"><option>Window · 12:00 to 4:00 PM</option></select></div>
+        <div class="field"><label>Repeat</label><select class="input" style="width:100%"><option>Does not repeat</option></select></div>
+        <div class="note">Track as a habit &nbsp;·&nbsp; off · toggle on to set a target like "2 hours a week"</div>
+      </div>
+      <footer><button class="btn btn-ghost">Cancel</button><button class="btn btn-primary">Save</button></footer>
+    </div>
+  </div>
+  <p class="label">Overlays sit over the current view (sheet shown). The "track as a habit" toggle is off by default and reveals the target only when on, keeping the common case simple.</p>
+
+  <div style="margin-top:44px;padding-top:18px;border-top:1px solid var(--border);"><a href="index.html" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-size:14px;font-weight:600;text-decoration:none;">&larr; Back to portfolio</a></div>
+
+</div>
+</body>
+</html>
