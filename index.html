@@ -205,7 +205,7 @@
 <header class="hero"><div class="wrap">
   <h1>Derek Staley</h1>
   <p style="font-size:clamp(19px,3vw,26px);font-weight:700;letter-spacing:-.01em;color:var(--accent);margin:6px 0 0;">Product-minded delivery leader</p>
-  <p class="lede">For 13 years I led software delivery, running launches and keeping cross-functional teams moving through complex builds. The part I kept coming back to was the product side: deciding what problem to solve, what to build, and what to cut. So I started building products to make those calls myself.</p>
+  <p class="lede">For 13 years I managed software delivery. That meant keeping cross-functional teams moving through complex roadmaps and launches. But the part I kept being drawn to was the product side: deciding what problem to solve, what to build, and what to cut. So I started building products to make those calls myself.</p>
   <div class="cta">
     <a class="btn btn-primary" href="#work">See the case studies</a>
     <a class="btn btn-ghost" href="mailto:dstaley@gmail.com">Get in touch</a>
@@ -224,7 +224,7 @@
   <!-- CASE 1: Productivity App -->
   <article class="case">
     <h3 style="margin-top:0;font-size:23px;">Unified Tasks &amp; Habits App</h3>
-    <p class="case-lead">A local-first web app that puts tasks, habits, and calendar events on one daily view. A 9:00am meeting from Google Calendar, a by-end-of-day errand, and a four-times-a-week habit sit side by side, each scheduled as loosely or as precisely as it needs.</p>
+    <p class="case-lead">A local-first web app that puts tasks, habits, and calendar events on one daily view. A timed meeting from Google Calendar can share a day with a habit you're doing four times a week, each one scheduled as loosely or as precisely as it needs.</p>
     <div class="case-meta">
       <span class="chip live">v1 shipped · three phases</span>
       <span class="chip">Sole product owner</span>
@@ -241,14 +241,14 @@
 
     <figure style="margin:22px 0 0;">
       <a href="images/prod-day-view.png" style="display:block;line-height:0;cursor:zoom-in;"><img class="shot" src="images/prod-day-view.png" alt="The app's Day view: a flexible-window task shown as a highlighted band on the time grid, alongside timed calendar events and inline habits, with tags and a side rail of untimed tasks." loading="lazy"></a>
-      <figcaption class="shot-cap">The Day view. The highlighted band is a flexible-window task ("do it between 9 and 12"), on the same grid as timed events and habits. One item model, each thing landing on the day with only the precision it actually needs.</figcaption>
+      <figcaption class="shot-cap">The Day view. The highlighted band is a flexible-window task ("do it between 9 and 12"), on the same grid as timed events and habits. One item model, each thing scheduled as loosely or as precisely as it needs.</figcaption>
     </figure>
 
     <h3>The problem</h3>
-    <p>Planning a real day means looking in three places: a task app, a habit tracker, and a calendar. Each has its own model, and each demands more precision than real plans have. A to-do app wants a date, a calendar wants a time, and neither has a home for "practice Spanish four times this week." The product's bet is that these are the same thing, one item model on one daily view, with your real calendar alongside it.</p>
+    <p>Planning a real day can mean switching between a task app, a habit tracker, and a calendar, three tools that don't always work well together. A to-do app wants a date, a calendar wants a time, and neither has a home for "practice Spanish four times this week." The product's bet is that these can all be captured by one item model on one daily view, with your real calendar alongside it.</p>
 
     <h3>Discovery: the incumbent</h3>
-    <p>Before I wrote the spec, I looked closely at TickTick, the best-known app that already combines tasks, habits, and a calendar. It has a day timeline, a rail of unscheduled tasks you drag onto it, durations, and recurring tasks. Its scheduling works in two modes: an item has a specific time, or it has none. There's no flexible option in between, no way to tell it "I'll do this sometime between 12 and 4" and have it sit on the day without committing to a slot. Habits are separate as well, tracked in their own module and shown on the calendar rather than planned like a task. That's the space I built for, flexible scheduling and habits that work like any other item.</p>
+    <p>Before I wrote the spec, I looked closely at TickTick, the best-known app that already combines tasks, habits, and a calendar. It has a day timeline, a rail of unscheduled tasks you drag onto it, durations, and recurring tasks. Its scheduling has only two modes. An item either has a specific time or it has none. There's no flexible option in between, no way to tell it "I'll do this sometime between 12 and 4" and have it sit on the day without committing to a slot. Habits are separate as well, tracked in their own module and shown on the calendar rather than planned like a task. That's the space I built for, handling flexible scheduling and treating habits like any other item.</p>
     <div class="excerpt">
       <div class="src">Competitive analysis · TickTick, structural insight</div>
       <p>"TickTick unified the <em>apps</em> but not the <em>model</em>. Its architecture keeps task, habit, and calendar event as different kinds of things, then works to display them together... The real opening is not another feature-complete competitor. It is a product built on one item model: task, event, and habit as the same underlying item with options turned on, rendered on one daily view next to the user's real calendar."</p>
@@ -266,7 +266,7 @@
       </div>
       <div class="dcard">
         <div class="q">Require an account?</div>
-        <p class="a"><b>No.</b> The app is local-first and fully usable as a guest; an account adds sync and backup without gating access. It also inverts the incumbent's paywall on the features that define the category.</p>
+        <p class="a"><b>No.</b> The app is local-first and fully usable as a guest; an account adds sync and backup rather than gating access. It also inverts the incumbent's paywall on the features that define the category.</p>
       </div>
       <div class="dcard">
         <div class="q">Past days: read-only?</div>
@@ -303,16 +303,16 @@
         <li><b>A written competitive analysis.</b> Broke down the leading incumbent, named the gap it leaves, and tied every product bet back to a specific finding.</li>
         <li><b>A living PRD and backlog.</b> User stories with acceptance criteria, plus information and technical architecture specs, versioned and kept current as the build proceeds.</li>
         <li><b>A phased roadmap with an out-of-scope list.</b> Explicit boundaries per phase, so no early decision quietly builds in a feature meant for later.</li>
-        <li><b>A prioritized v2 roadmap.</b> Past shipping v1, a scope menu that classifies every deferred feature by origin, current state, and effort, so the next round is sequenced on evidence.</li>
+        <li><b>A prioritized v2 roadmap.</b> Past shipping v1, a scope menu that classifies every deferred feature by origin, current state, and effort, so the next round is sequenced on evidence rather than guessed.</li>
       </ul>
     </div>
-    <p class="artifacts"><b>Read the documents behind it:</b> the <a href="work-samples/productivity/ws-productivity-prd.html">PRD with its decision changelog</a>, <a href="work-samples/productivity/ws-productivity-user-stories.html">user stories and acceptance criteria</a>, the <a href="work-samples/productivity/ws-productivity-competitive-analysis.html">competitive analysis</a>, the <a href="work-samples/productivity/ws-productivity-information-architecture.html">information architecture</a>, and the <a href="work-samples/productivity/ws-productivity-v2-plan.html">v2 roadmap</a>. Alongside them: the <a href="v1-feature-set.html">v1 feature set</a> and the <a href="design-system.html">design system</a>.</p>
+    <p class="artifacts"><b>Read the documents behind it:</b> the <a href="work-samples/productivity/ws-productivity-prd.html">PRD with its decision changelog</a>, the <a href="work-samples/productivity/ws-productivity-user-stories.html">user stories and acceptance criteria</a>, the <a href="work-samples/productivity/ws-productivity-competitive-analysis.html">competitive analysis</a>, the <a href="work-samples/productivity/ws-productivity-information-architecture.html">information architecture</a>, the <a href="work-samples/productivity/ws-productivity-v2-plan.html">v2 roadmap</a>, the <a href="v1-feature-set.html">v1 feature set</a>, and the <a href="design-system.html">design system</a>.</p>
   </article>
 
   <!-- CASE 2: OOTP -->
   <article class="case">
     <h3 style="margin-top:0;font-size:23px;">Roster Optimizer</h3>
-    <p class="case-lead">An analytics web app for Out of the Park Baseball's Perfect Team mode. It imports player data, scores every player through regression models trained on real game outcomes, and solves for the optimal 26-player tournament roster under budget, position, and eligibility constraints.</p>
+    <p class="case-lead">An analytics web app for Out of the Park Baseball's Perfect Team mode. It imports player data, scores every player through regression models trained on real game outcomes, and solves for the optimal 26-player roster under budget and eligibility constraints.</p>
     <div class="case-meta">
       <span class="chip live">Live and in active development</span>
       <span class="chip">Sole product owner</span>
@@ -330,7 +330,7 @@
     </figure>
 
     <h3>The problem</h3>
-    <p>Building a tournament roster is a constrained optimization problem: thousands of players, budget caps, position eligibility, platoon matchups, tier limits. Most people solve it by intuition. I wanted rosters chosen on evidence, with player value predicted from how players actually performed, not from their ratings. A first version worked, then ran into a problem that reframed the whole project.</p>
+    <p>Building a tournament roster is a constrained optimization problem with thousands of players weighted against budget caps, position eligibility, platoon matchups, and tier limits. Most people build rosters by feel and intuition. I wanted rosters built on evidence, with player value predicted by models trained on actual game outcomes. A first version worked, then ran into a problem that reframed the whole project.</p>
 
     <h3>Key decisions</h3>
     <div class="decisions">
@@ -344,16 +344,16 @@
       </div>
       <div class="dcard">
         <div class="q">Which prediction model?</div>
-        <p class="a"><b>Let real data pick.</b> Rather than choose a model up front, I made it a swappable component behind one interface and built a comparison harness. A bake-off on season results from five simulated leagues decided it, and the winning model is deployed.</p>
+        <p class="a"><b>Let real data pick.</b> Instead of choosing a model up front, I made it a swappable component behind one interface and built a comparison harness. A bake-off on season results from five simulated leagues decided it, and the winning model is deployed.</p>
       </div>
       <div class="dcard">
         <div class="q">Keep matching the old app's scores?</div>
-        <p class="a"><b>No.</b> Reproducing v1's scores was the rebuild's original success metric. Once the data-driven model outperformed them, that target stopped being useful, so I retired the benchmark and replaced it with the model's predictive accuracy.</p>
+        <p class="a"><b>No.</b> Reproducing v1's scores was the rebuild's original success metric. Once the data-driven model outperformed them, that target stopped being useful, so I retired the benchmark and replaced it with model accuracy against real outcomes.</p>
       </div>
     </div>
 
     <h3>From the actual documents</h3>
-    <p>One decision captures the approach, choosing not to decide yet. I left the prediction model swappable and let a bake-off on season data pick it, so the choice was cheap to defer and cheap to change. The document records that reasoning.</p>
+    <p>The clearest example was a decision not to decide until the time was right. I kept the prediction model swappable and let a bake-off on exported data pick it, so it was cheap to defer and cheap to change. The document records that reasoning.</p>
     <div class="excerpt">
       <div class="src">Requirements &amp; decisions doc · D3, model functional form</div>
       <p>"Defer the functional-form choice to a dedicated data-exploration phase. <em>The model is a swappable component behind a clean interface</em>, so the form can change later without touching anything downstream. A model-comparison harness fits candidate forms, scores them against the diagnostic suite on real data, and selects."</p>
@@ -362,25 +362,25 @@
 
 
     <h3>Execution</h3>
-    <p>A milestone roadmap with user stories and exploration spikes gating the risky steps: scoring core first, then the data and config layer, the data grid, the optimizer, manual drag-and-drop overrides, and model training. Each milestone was validated before the next began. Recent features come from my own use in live play, such as Biggest Upgrades, which surfaces the acquisition targets that would most improve the current roster.</p>
+    <p>The build followed a milestone roadmap, with user stories and exploration spikes gating the risky steps. It started with the scoring core, then the data and config layer, the grid, the optimizer, manual overrides, and finally model training. Each milestone was validated before the next began. Recent features come from my own use in live play, such as Biggest Upgrades, which surfaces the acquisition targets that would most improve the current roster.</p>
 
     <h3>Impact</h3>
     <div class="stats">
       <div class="stat"><div class="n">Proven in play</div><div class="l">Success in live competitive play, with features still shipping from daily use</div></div>
       <div class="stat"><div class="n">Trust restored</div><div class="l">One scoring core means the grid and the optimizer can no longer disagree on a player's value</div></div>
-      <div class="stat"><div class="n">Better predictions</div><div class="l">The deployed model beat the original formulas in a bake-off on season outcomes</div></div>
+      <div class="stat"><div class="n">Better predictions</div><div class="l">The deployed model beat the original formulas in a bake-off on real season outcomes</div></div>
     </div>
 
     <div class="demo">
       <h4>What this demonstrates</h4>
       <ul>
-        <li><b>A file-by-file audit.</b> Traced the failure to scores computed two different ways, which pointed at the architecture, not a missing feature, and set the scope for a rebuild.</li>
+        <li><b>A file-by-file audit.</b> Traced the failure to scores computed two different ways, which pointed at the architecture rather than a missing feature and set the scope for a rebuild.</li>
         <li><b>A written decision log, D1 through D7.</b> Every call recorded with its reasoning, including the deliberate choice to defer the model until the data existed.</li>
-        <li><b>A retired success metric.</b> When the data-driven model beat the old app's scores, I dropped parity as the goal and replaced it with accuracy against measured results.</li>
+        <li><b>A retired success metric.</b> When the data-driven model beat the old app's scores, I dropped parity as the goal and replaced it with accuracy against real outcomes.</li>
         <li><b>A full spec set.</b> Discovery findings, requirements, a decision log, and an architecture doc, enough to run the whole rebuild from the documents.</li>
       </ul>
     </div>
-    <p class="artifacts"><b>Read the documents behind it:</b> the <a href="work-samples/ootp/ws-ootp-discovery-findings.html">discovery findings</a>, the <a href="work-samples/ootp/ws-ootp-rebuild-decisions.html">requirements and decisions (D1 through D7)</a>, the <a href="work-samples/ootp/ws-ootp-handover.html">handover</a>, and the <a href="work-samples/ootp/ws-ootp-rebuild-roadmap.html">milestone roadmap</a>. Alongside them: the <a href="ootp-feature-set.html">feature set</a>.</p>
+    <p class="artifacts"><b>Read the documents behind it:</b> the <a href="work-samples/ootp/ws-ootp-discovery-findings.html">discovery findings</a>, the <a href="work-samples/ootp/ws-ootp-rebuild-decisions.html">requirements and decisions (D1 through D7)</a>, the <a href="work-samples/ootp/ws-ootp-handover.html">handover</a>, the <a href="work-samples/ootp/ws-ootp-rebuild-roadmap.html">milestone roadmap</a>, and the <a href="ootp-feature-set.html">feature set</a>.</p>
   </article>
 </div></section>
 
@@ -402,7 +402,7 @@
   <div class="mini">
     <div class="role">Project Manager · Ellation (Crunchyroll)</div>
     <h3>Launching VRV on four platforms at once</h3>
-    <p>Led the launch of VRV, a new streaming platform that hit its target launch date as a simultaneous release on iOS, Android, Xbox One, and PS4. The launch held together through tight scope and resourcing decisions, backed by dashboards that kept the critical path visible to engineering and executives, so tradeoffs happened early.</p>
+    <p>Led the launch of VRV, a new streaming platform that hit its target launch date as a simultaneous release on iOS, Android, Xbox One, and PS4. The launch held together through tight scope and resourcing decisions, backed by dashboards that kept the critical path visible to engineering and executives, so tradeoffs were made early rather than at the deadline.</p>
   </div>
 
   <div class="mini">
