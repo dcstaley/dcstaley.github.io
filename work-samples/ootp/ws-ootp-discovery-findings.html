@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Discovery Findings: OOTP Roster Optimizer Rebuild &middot; Derek Staley</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234F46E5'/%3E%3C/svg%3E">
+<style>
+:root{
+  --page:#f4f5f8; --surface:#ffffff; --ink:#1b1b1f; --muted:#5c5c67; --faint:#636b7c;
+  --line:#e7e7ee; --line-soft:#eff0f4;
+  --accent:#4f46e5; --accent-ink:#3b34c4; --accent-soft:#eeedfb;
+  --habit:#0d9488; --habit-soft:#e3f1ef;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+  --radius:8px;
+  --shadow:0 1px 2px rgba(20,26,44,.04),0 8px 24px rgba(20,26,44,.05);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+.wrap{max-width:54rem;margin:0 auto;padding:0 clamp(1.15rem,5vw,2rem);}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:10;background:rgba(244,245,248,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem clamp(1.15rem,5vw,2rem);}
+.brand{display:inline-flex;align-items:center;gap:.55rem;font-weight:600;letter-spacing:-.01em;color:var(--ink);font-size:.95rem;}
+.brand:hover{text-decoration:none;}
+.brand .dot{width:.8rem;height:.8rem;border-radius:3px;background:var(--accent);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);}
+.brand .habitbar{width:3px;height:.85rem;border-radius:2px;background:var(--habit);}
+.crumb{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--faint);text-transform:uppercase;}
+@media(max-width:620px){.crumb{display:none;}}
+
+/* document header */
+.dochead{padding:clamp(2.2rem,5vw,3.6rem) 0 1.8rem;border-bottom:1px solid var(--line);}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);}
+.dochead h1{font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.08;letter-spacing:-.025em;font-weight:660;margin:.5rem 0 0;text-wrap:balance;}
+.subtitle{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;color:var(--faint);margin:.9rem 0 0;}
+.callout{margin:1.5rem 0 0;background:var(--accent-soft);border:1px solid #e0defa;border-radius:var(--radius);padding:1.05rem 1.25rem;font-size:.95rem;color:var(--muted);}
+.callout p{margin:.35rem 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+.callout strong{color:var(--accent-ink);font-weight:650;}
+
+/* body */
+.doc{padding:2.2rem 0 1rem;}
+.doc>p:first-of-type{font-size:1.05rem;color:var(--muted);}
+.doc h2{font-size:1.28rem;letter-spacing:-.015em;font-weight:680;margin:2.4rem 0 .5rem;padding-top:1.4rem;border-top:1px solid var(--line);}
+.doc h3{font-size:1.02rem;font-weight:660;margin:1.6rem 0 .4rem;color:var(--ink);}
+.doc h2:first-child,.doc h3:first-child{margin-top:0;border-top:none;padding-top:0;}
+.doc p{margin:.7rem 0;}
+.doc ul,.doc ol{margin:.6rem 0;padding-left:1.3rem;}
+.doc li{margin:.34rem 0;}
+.doc li>ul,.doc li>ol{margin:.3rem 0;}
+.doc strong{color:var(--ink);font-weight:650;}
+.doc hr{border:none;border-top:1px solid var(--line);margin:2.2rem 0;}
+.doc a{border-bottom:1px solid transparent;}
+
+/* figures / screenshots */
+.doc figure{margin:1.5rem 0;}
+.doc figure.shotrow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start;}
+@media(max-width:640px){.doc figure.shotrow{grid-template-columns:1fr;}}
+.doc figure.shotrow a{display:block;border-bottom:0;line-height:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .12s ease;}
+.doc figure.shotrow a:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 24px rgba(20,26,44,.09);}
+.doc figure.shotrow img{width:100%;height:230px;object-fit:cover;object-position:top left;display:block;}
+.doc figure figcaption{grid-column:1/-1;font-size:14px;color:var(--faint);margin-top:.4rem;line-height:1.5;}
+@media (prefers-reduced-motion: reduce){.doc figure.shotrow a{transition:none;}.doc figure.shotrow a:hover{transform:none;}}
+
+/* inline code + code blocks */
+.doc code{font-family:var(--mono);font-size:.85em;background:var(--line-soft);border:1px solid var(--line);border-radius:5px;padding:.08em .38em;color:var(--accent-ink);}
+.doc pre{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.1rem;overflow:auto;box-shadow:var(--shadow);margin:1rem 0;}
+.doc pre code{background:none;border:none;padding:0;color:var(--muted);font-size:.82rem;line-height:1.55;}
+
+/* body blockquotes (e.g. "Resolved later" notes) */
+.doc blockquote{margin:1.1rem 0;padding:.7rem 1.1rem;border-left:3px solid var(--habit);background:var(--habit-soft);border-radius:0 var(--radius) var(--radius) 0;color:var(--muted);font-size:.95rem;}
+.doc blockquote p{margin:.3rem 0;}
+.doc blockquote strong{color:#0a6d64;}
+
+/* tables */
+.doc table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.9rem;display:block;overflow-x:auto;}
+.doc th{text-align:left;font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);padding:.6rem .7rem;border-bottom:2px solid var(--line);white-space:nowrap;}
+.doc td{padding:.6rem .7rem;border-bottom:1px solid var(--line);vertical-align:top;}
+.doc tbody tr:hover{background:var(--line-soft);}
+
+/* footer */
+.foot{border-top:1px solid var(--line);margin-top:2rem;padding:2rem 0 3rem;}
+.foot .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.85rem;color:var(--faint);}
+.foot a{font-weight:600;}
+.backlink{color:var(--ink);}
+.backbtn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border:1px solid var(--accent);border-radius:8px;color:var(--accent-ink);font-weight:600;font-size:14px;text-decoration:none;transition:background .12s ease,color .12s ease;}
+.backbtn:hover{background:var(--accent);color:#fff;text-decoration:none;}
+.foot .footmeta a{color:var(--faint);}
+/* image lightbox */
+.lb-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(15,17,28,.92);padding:2.5vmin;cursor:zoom-out;opacity:0;transition:opacity .16s ease;}
+.lb-overlay.open{display:flex;opacity:1;}
+.lb-overlay img{max-width:95vw;max-height:92vh;width:auto;height:auto;border-radius:8px;box-shadow:0 12px 48px rgba(0,0,0,.5);cursor:default;}
+.lb-close{position:fixed;top:16px;right:20px;width:40px;height:40px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lb-close:hover{background:rgba(255,255,255,.26);}
+@media (prefers-reduced-motion: reduce){.backbtn{transition:none;}.lb-overlay{transition:none;}}
+
+/* index */
+.hero{padding:clamp(2.6rem,6vw,4.4rem) 0 2.2rem;}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3rem);line-height:1.06;letter-spacing:-.03em;font-weight:680;margin:.6rem 0 0;}
+.hero .lede{font-size:clamp(1.05rem,2.4vw,1.2rem);color:var(--muted);max-width:60ch;margin:1.3rem 0 0;}
+.grouplabel{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:2.6rem 0 1rem;display:flex;align-items:center;gap:.8rem;}
+.grouplabel::after{content:"";flex:1;height:1px;background:var(--line);}
+.grouplabel .app{color:var(--accent-ink);}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+@media(max-width:640px){.cards{grid-template-columns:1fr;}}
+.card{display:block;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow);color:var(--ink);transition:transform .12s ease,box-shadow .12s ease;}
+.card:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 3px 6px rgba(20,26,44,.06),0 14px 32px rgba(20,26,44,.08);}
+.card .kind{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.card .name{font-weight:670;font-size:1.02rem;letter-spacing:-.01em;margin:.3rem 0 .4rem;}
+.card .shows{font-size:.9rem;color:var(--muted);line-height:1.55;}
+.intro-note{margin:2.4rem 0 0;font-size:.92rem;color:var(--faint);border-top:1px solid var(--line);padding-top:1.2rem;}
+
+/* Type & contrast pass to match the portfolio: larger content tiers, 13px label floor, underlined body links */
+body{font-size:17px;}
+.doc p,.doc li,.doc td{font-size:17px;}
+.doc h2{font-size:22px;}
+.doc h3{font-size:18px;}
+.callout{font-size:16px;}
+.doc table{font-size:15.5px;}
+.doc th{font-size:13px;}
+.doc code,.doc pre code{font-size:14px;}
+.doc blockquote{font-size:16px;}
+.subtitle{font-size:13px;}
+.crumb{font-size:13px;}
+.eyebrow{font-size:13px;}
+.card .kind{font-size:12.5px;}
+.card .name{font-size:17px;}
+.card .shows{font-size:15px;}
+.foot .wrap{font-size:14px;}
+.doc a{text-decoration:underline;}
+.brand a{color:var(--ink);text-decoration:none;font-weight:600;}
+.brand a:hover{color:var(--accent);}
+.brand .sep{color:var(--faint);font-weight:400;margin:0 .1rem;}
+.foot a{text-decoration:none;}
+@media (prefers-reduced-motion: reduce){ .card{transition:none;} .card:hover{transform:none;} }
+@media print{ .topbar{position:static;} body{background:#fff;} .doc pre,.callout,.card{break-inside:avoid;} }
+
+
+</style>
+</head><body>
+<header class="topbar"><div class="wrap">
+<span class="brand"><span class="dot"></span><span class="habitbar"></span><a href="../../index.html" class="backlink">&larr; Portfolio</a></span>
+<span class="crumb">OOTP Roster Optimizer</span>
+</div></header>
+<main class="wrap">
+<header class="dochead">
+<div class="eyebrow">Work Sample</div>
+<h1>Discovery Findings: OOTP Roster Optimizer Rebuild</h1>
+<div class="subtitle">Work sample · codebase discovery and root-cause analysis · as of v1 (July 2026)</div>
+<div class="callout"><p><strong>What this is:</strong> the discovery pass over the existing app's codebase, done before committing to a rebuild. Ground truth is the code itself, cross-checked against the earlier handover document.</p><p><strong>What it shows:</strong> evidence-based discovery and root-cause analysis. It inventories what every file actually does, separates live code from dead, and corrects the places where the handover's assumptions turned out to be wrong.</p><p><strong>Source:</strong> condensed and edited from the project's discovery-findings document for presentation (trimmed for length, internal references removed). The full working version, with the complete file-by-file inventory, lives in the app repo.</p></div>
+</header>
+<div class="doc"><p><strong>The short version.</strong> The rebuild's founding premise was "one scoring core, computed once, consumed identically everywhere." This pass tested that premise against the real code. The finding: the per-card <em>formulas</em> were already consolidated into one module, so that was not the problem. The genuine problem was the <em>calibration and scaling</em> layer, which was re-implemented up to four times and split across the frontend and backend. Several handover claims were also disproved by the code. These findings are what shaped the requirements and decisions that followed.</p>
+<p>A note on method: live-versus-dead status is derived from the import graph, which is reliable. Small and medium files were read in full; the few very large files (a roster generator near 4,800 lines, the roster page near 3,000, the server near 2,000) were read in their relevant sections and characterized structurally.</p>
+<hr />
+<h2>1. Headline findings (the things that change the rebuild picture)</h2>
+<p><strong>1.1 The handover had the scoring core backwards.</strong> It called one file the authoritative path and said the actual core was deleted. The reverse is true: the core module is alive and is the single formula core; the file the handover named is a thin per-row wrapper that delegates every formula to it. Good news underneath the error: the formula bodies really are consolidated into one module on the frontend.</p>
+<p><strong>1.2 The real "scoring in multiple places" problem is the frontend/backend split, plus calibration scatter.</strong> There are two copies of the formula core, one frontend and one backend, kept in sync by hand and currently identical, which is a latent drift source. The backend copy is imported by nothing; the optimizer re-derives scoring inline rather than calling the core. So the formulas are consolidated on the frontend, but the backend optimizer re-derives scores independently, and the backend keeps an orphaned synced copy that nothing uses. Calibration and scaling is the genuinely scattered layer, appearing across at least nine files. The divergence is in the code explicitly: a comment notes a cross-pool pitcher multiplier that is "LP-only, not for display," so the same player can be scored differently for the grid versus the optimizer.</p>
+<p><strong>1.3 Persistence is a hybrid, not "all IndexedDB" as documented.</strong> IndexedDB holds the dataset, variants, eras, and tournaments; localStorage holds coefficients, grid state, and calibration scales. Two declared IndexedDB stores are never used (those values live in localStorage instead), leaving orphaned store definitions.</p>
+<p><strong>1.4 "No default coefficients" is false.</strong> The docs said a trained model supplies all coefficients. In fact the app ships a complete default coefficient set with real fitted values baked in, and scores against these on first load before any model is loaded. Whether that is desirable is a rebuild decision, but it is not "no defaults."</p>
+<p><strong>1.5 There are remnants of an older, all-frontend solver architecture.</strong> The app migrated from an in-browser JavaScript solver to a backend Python/HiGHS solver, and several leftover files (a frontend LP optimizer, a client for an endpoint that no longer exists, a browser-script loader, an unmounted Express router) are now dead code, imported by nothing.</p>
+<p><strong>1.6 The live solve path.</strong> The solver wrapper writes the LP to a temp file and shells out to a Python <code>highspy</code> process. So the Python file is not an "alternative" path as the handover implied; it is the solver.</p>
+<p><strong>1.7 Files the handover never mentioned.</strong> Several live, shared modules and UI components were absent from the handover entirely, including the shared position-constraints module (which matters, because the handover claimed constraints were frontend-only), the localStorage helpers, and a Python recalibration script at the repo root.</p>
+<p><strong>1.8 Smaller corrections.</strong> The era record has no HR toggle (the toggle lives in coefficients, not the era); position constraints are split, with definitions in page state but enforcement in a shared backend module; the Single Player page is literally named and routed as "Scouting," so the misnomer the handover wanted renamed is baked into filenames and routes.</p>
+<hr />
+<h2>2. File inventory (what is live, dead, and orphaned)</h2>
+<p>The full pass read or structurally characterized every non-vendored source file. The classification that matters for the rebuild:</p>
+<ul>
+<li><strong>The formula core</strong> is one frontend module of pure functions (softcap, park compression, basic and advanced hitting/pitching, wOBA). It is authoritative, contrary to the handover.</li>
+<li><strong>The backend optimizer</strong> builds the LP and runs multi-phase post-processing, and re-derives scoring inline from a <code>modifiers</code> bundle the frontend sends rather than calling a shared core. This is the central architectural issue.</li>
+<li><strong>Orphaned or dead:</strong> the backend's hand-synced copy of the core (imported by nothing), a dead frontend LP optimizer, a client for a non-existent endpoint, a browser-script solver loader, an unmounted Express router, legacy seed models, solver debug dumps, and two unused IndexedDB store declarations. All are safe-to-drop candidates.</li>
+<li><strong>Live but undocumented:</strong> the shared position-constraints module, the localStorage helpers, the IndexedDB helpers, and several editing widgets (rotation, depth chart, settings, defensive input).</li>
+</ul>
+<p>The takeaway is not the file list itself but its shape: a consolidated formula core, a backend that bypasses it, a scattered calibration layer, and a visible layer of dead code from a prior architecture.</p>
+<hr />
+<h2>3. The three flagged open problems, confirmed against the code</h2>
+<p><strong>Scoring, scaling, and calibration layering (highest value).</strong> Confirmed as the real mess. The per-card formulas are consolidated; the calibration and scaling layer is split frontend to backend via the <code>modifiers</code> bundle, re-derived in the LP rather than consumed, and already divergent between display and optimizer. The distinct operations to untangle, as they exist today: per-event softcaps, anchor calibration, calibration scales cached for display, and a cross-pool pitcher/hitter multiplier applied only in the optimizer. Whether all of these are necessary, and their order versus era and park, is the design question, and now the exact code for each can be pointed at.</p>
+<p><strong>Model functional form.</strong> Confirmed: the coefficient store carries unused quadratic and cubic slots (all zero) alongside the log terms, exactly the dead slots that make the mixed form nonsensical. Re-deriving the form against residuals is open.</p>
+<p><strong>Multi-source config split.</strong> Confirmed, and slightly worse than described: generation config is split across the IndexedDB tournament and the page-level roster settings, and position-constraint enforcement lives in a separate backend module. Park factors and softcaps each duplicate between the tournament and the coefficients store.</p>
+<hr />
+<h2>4. Calibration layer, end to end (the deep dive)</h2>
+<p><strong>4.1 The wOBA-to-calibrated-score pipeline is re-implemented four times.</strong> The per-event to BIP to hits to wOBA recomputation, with calibration scales, era, and park, exists nearly identically in four places: the core (raw, no era/park/calibration), the roster page (frontend, calibrated), the backend optimizer (the same steps again, to build LP coefficients), and the backend anchor computation (the same recompute a fourth time, to derive the calibration scales). The data grid is a fifth consumer. Any formula tweak must be hand-mirrored across all of them. This is the single clearest embodiment of the "scoring in multiple places" problem.</p>
+<p><strong>4.2 Era and park are applied at inconsistent layers.</strong> For the basic scores, era and park are applied inside the core, so the stored basic columns already include them. For the advanced wOBA scores, the core produces a raw value with no era or park, and they are applied later, in the consumer. So whether a stored column already contains era and park depends on the metric, and anyone consuming a column has to know which regime it is in. This is the "what does each step accomplish, and where" ambiguity, made concrete.</p>
+<p><strong>4.3 The anchor and scale model.</strong> A hard-coded wOBA target anchors the pool: per-event scales bring the top-N anchor pool to baseline rates, then a per-side scale brings the anchor pool's mean recomputed wOBA to the target. Anchors are selected from the calibration pool rather than the full collection (which the code comment confirms is correct, since anchoring against the full collection collapses the scales). Hitters get per-side scales; pitchers get a single scale applied to both sides.</p>
+<p><strong>4.4 Cross-pool hitter/pitcher comparability is a power transform, and display does not equal optimizer.</strong> The optimizer objective raises each calibrated score to a fixed power and multiplies by a normalizer so hitter and pitcher coefficients sit on comparable scales, and this is explicitly optimizer-only. A power transform is monotonic, so ordering within a pool is preserved, but the cross-pool hitter-versus-pitcher tradeoffs the optimizer makes are not reflected in any number the user sees. A deeper read found two cross-pool mechanisms coexisting (a linear multiplier that is inert outside cap mode, and the global power transform), applied inconsistently across the display paths, plus three separately-defined power exponents that appear intended to be equal but could drift. This directly informed the later decision (D2) to drop the power transform and put both pools on one honest scale.</p>
+<p><strong>4.5 What crosses the wire (the boundary that should not exist).</strong> Because the frontend sends the model coefficients themselves to the backend, the backend can and does re-run the scoring math. In a single-core design none of that bundle needs to exist: the core would emit final consumable values and the optimizer would read them.</p>
+<p><strong>4.6 A fourth persistence mechanism.</strong> The roster page adds <code>sessionStorage</code> for the working roster on top of IndexedDB, localStorage, and the calibration cache. Four storage layers in total, which is what the persistence decision (D7) later consolidates.</p>
+<p><strong>4.7 Implication for the rebuild.</strong> A single scoring core must own the per-event model, the BIP recompute (once, in one place), era and park, calibration and anchoring, and cross-pool normalization, and emit one final score per card, side, and role that the grid, roster page, optimizer, and SP all read without recomputation. The genuinely open questions that remain: the correct order of calibration versus era and park; whether per-event scaling, anchor scalar, and power-norm are three necessary steps or collapsible into fewer; and whether cross-pool comparability should be a power transform, a shared unit, or something the optimizer handles directly.</p>
+<hr />
+<h2>5. Why the post-processing phases exist (root-cause analysis)</h2>
+<p>This is the analysis that most changed the rebuild plan. The optimizer does not build the full 26-man roster. It optimizes the high-value core (starters and rotation) and deliberately reserves cap budget for support roles, which are then filled by post-LP greedy passes within that reserved budget. Almost every post-processing phase is a consequence of that one choice:</p>
+<ul>
+<li><strong>Bench fill</strong> exists only because the optimizer did not select the bench. It is the home of a known greedy-versus-optimal value bug.</li>
+<li><strong>The backup-catcher three-pass</strong> exists because "a starter plus a qualified backup catcher" could not be guaranteed in the core LP, so it runs three full re-solves. It is the single most workaround-heavy mechanism.</li>
+<li><strong>Cap reclaim</strong> exists purely because the reserved support budget may go unspent; it reclaims the surplus and re-solves to upgrade starters.</li>
+<li><strong>Bonus selection</strong> is a separate concern: a two-way player fills two roles with one card, freeing a slot to fill.</li>
+</ul>
+<p>The conclusion: bench fill, the backup-catcher three-pass, cap reclaim, and swingman/reliever fill are all consequences of "optimize starters only and reserve a support sub-budget," not fundamental inexpressibility. A single LP selecting all 26 with full coverage (including a backup-qualified catcher), rotation and bullpen slots, and the whole cap with no reservation would collapse them into the solve. This is exactly what fed decision D5: keep the decomposition where it earns its keep, but replace the greedy fill with a principled matching-based approach and make defensive feasibility a real constraint rather than a three-pass workaround.</p>
+<hr />
+<h2>6. Model training and the functional-form question</h2>
+<p>A read of the training code confirms the handover's description here is accurate and pins the form. The fit is strictly log-linear, a single natural-log term per event, by weighted least squares; no quadratic or cubic terms are ever fit, so the extra coefficient slots are dead. Weighting is by plate appearances (or batters faced) to the 0.75 power. Training matches inference: the model uses predicted BIP from the just-fit sub-models, mirroring the scoring-time recompute. Left and right splits are kept as separate observations feeding one unified fit. The implication: the functional-form concern is real and untouched, because the model genuinely is single-log, and the residual shape (over-predict the middle, under-predict the high end) is a property of that form. The rebuild's "fit and compare forms" task is wide open; nothing in the code pre-judges it.</p>
+<p>There is also prior art. A separate root-level Python script fits a sequential conditional cubic-logistic model (each event conditioned on the prior ones, so the plate-appearance accounting is enforced by structure). It is not what the app trains, but it explains the otherwise-orphaned cubic slots, and it is a serious alternative worth comparing against the single-log form in the bake-off.</p>
+<hr />
+<h2>7. Remaining surfaces</h2>
+<p><strong>Variants and base edits.</strong> Variants are separate appended rows derived from base rows by a fixed boost formula, one per card, persisted and re-derivable after re-import. Base inline edits, by contrast, are ephemeral: they write to the working copy and are wiped on the next import. That matters for the ownership-override use case and is a behavior to decide on deliberately in the rebuild.</p>
+<p><strong>Config flow, and the real correctness trap.</strong> Scoring always reads the coefficients store. On a tournament switch, only the position weights are auto-pushed into it; era, park, and softcaps enter the store only when the user clicks a "load into coefficients" button. So selecting a tournament does not make scoring use that tournament's run environment until a manual button press. This is a genuine correctness trap, and it is the concrete reason the config decision (D4) makes tournament selection directly drive the scoring config from one source. Config is duplicated across three homes that must agree (the eras library, the tournament, and the coefficients store), which is what that decision collapses.</p>
+<p><strong>The data grid</strong> scores through the core and exposes the extensibility hooks (column presets, external filters, a dataset override) that make it reusable for Single Player. Two handover "wants," named column presets and a guard against corrupt rating values, were confirmed absent rather than existing.</p>
+<p><strong>A latent bug found in passing.</strong> The same pitch-type-counting logic lives in two places with two different column-name spellings; one uses the correct no-space names, the other looks for names with spaces that never match, so two pitch types are never counted, affecting starter qualification. A small, concrete instance of the same "one concept, two definitions" pattern the whole discovery is about.</p>
+<p><strong>PT Account (the one net-new feature).</strong> Roster generation keeps an owned/not-owned option, scoped per active account rather than pooling across accounts; one CSV import per account; ownership is a quantity already in the export, so "owned" means quantity greater than zero. It applies to Perfect Team only. The natural data shape is one shared card catalog plus a per-account overlay carrying ownership and that account's variants, so importing two accounts reconciles to one catalog with two overlays rather than two duplicate datasets.</p>
+<hr />
+<h2>8. Coverage</h2>
+<p>Every non-vendored source file was read or structurally characterized. The only items intentionally not deep-read are pure UI-entry widgets whose function is fully implied by their usage. Nothing scoring-, optimizer-, config-, or persistence-relevant remains unexamined.</p></div>
+</main>
+<footer class="foot"><div class="wrap">
+<a href="../../index.html" class="backbtn">&larr; Back to portfolio</a>
+<span class="footmeta"><a href="../index.html">All work samples</a> &middot; Derek Staley</span>
+</div></footer>
+<div class="lb-overlay" id="lb" role="dialog" aria-modal="true" aria-label="Image preview"><button class="lb-close" type="button" aria-label="Close preview">&times;</button><img alt=""></div>
+<script>
+(function(){var lb=document.getElementById('lb');if(!lb)return;var img=lb.querySelector('img'),btn=lb.querySelector('.lb-close');function open(s,a){img.src=s;img.alt=a||'';lb.classList.add('open');document.body.style.overflow='hidden';}function close(){lb.classList.remove('open');img.removeAttribute('src');document.body.style.overflow='';}document.addEventListener('click',function(e){var t=e.target.closest('a');if(!t)return;var h=t.getAttribute('href')||'';if(/\.(png|jpe?g|webp|gif)$/i.test(h)){e.preventDefault();var im=t.querySelector('img');open(h,im?im.getAttribute('alt'):'');}});btn.addEventListener('click',close);lb.addEventListener('click',function(e){if(e.target===lb)close();});document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});})();
+</script>
+</body></html>

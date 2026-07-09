@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Handover: Intended Feature Set and Domain Rules · OOTP Roster Optimizer &middot; Derek Staley</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234F46E5'/%3E%3C/svg%3E">
+<style>
+:root{
+  --page:#f4f5f8; --surface:#ffffff; --ink:#1b1b1f; --muted:#5c5c67; --faint:#636b7c;
+  --line:#e7e7ee; --line-soft:#eff0f4;
+  --accent:#4f46e5; --accent-ink:#3b34c4; --accent-soft:#eeedfb;
+  --habit:#0d9488; --habit-soft:#e3f1ef;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+  --radius:8px;
+  --shadow:0 1px 2px rgba(20,26,44,.04),0 8px 24px rgba(20,26,44,.05);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+.wrap{max-width:54rem;margin:0 auto;padding:0 clamp(1.15rem,5vw,2rem);}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:10;background:rgba(244,245,248,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem clamp(1.15rem,5vw,2rem);}
+.brand{display:inline-flex;align-items:center;gap:.55rem;font-weight:600;letter-spacing:-.01em;color:var(--ink);font-size:.95rem;}
+.brand:hover{text-decoration:none;}
+.brand .dot{width:.8rem;height:.8rem;border-radius:3px;background:var(--accent);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);}
+.brand .habitbar{width:3px;height:.85rem;border-radius:2px;background:var(--habit);}
+.crumb{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--faint);text-transform:uppercase;}
+@media(max-width:620px){.crumb{display:none;}}
+
+/* document header */
+.dochead{padding:clamp(2.2rem,5vw,3.6rem) 0 1.8rem;border-bottom:1px solid var(--line);}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);}
+.dochead h1{font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.08;letter-spacing:-.025em;font-weight:660;margin:.5rem 0 0;text-wrap:balance;}
+.subtitle{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;color:var(--faint);margin:.9rem 0 0;}
+.callout{margin:1.5rem 0 0;background:var(--accent-soft);border:1px solid #e0defa;border-radius:var(--radius);padding:1.05rem 1.25rem;font-size:.95rem;color:var(--muted);}
+.callout p{margin:.35rem 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+.callout strong{color:var(--accent-ink);font-weight:650;}
+
+/* body */
+.doc{padding:2.2rem 0 1rem;}
+.doc>p:first-of-type{font-size:1.05rem;color:var(--muted);}
+.doc h2{font-size:1.28rem;letter-spacing:-.015em;font-weight:680;margin:2.4rem 0 .5rem;padding-top:1.4rem;border-top:1px solid var(--line);}
+.doc h3{font-size:1.02rem;font-weight:660;margin:1.6rem 0 .4rem;color:var(--ink);}
+.doc h2:first-child,.doc h3:first-child{margin-top:0;border-top:none;padding-top:0;}
+.doc p{margin:.7rem 0;}
+.doc ul,.doc ol{margin:.6rem 0;padding-left:1.3rem;}
+.doc li{margin:.34rem 0;}
+.doc li>ul,.doc li>ol{margin:.3rem 0;}
+.doc strong{color:var(--ink);font-weight:650;}
+.doc hr{border:none;border-top:1px solid var(--line);margin:2.2rem 0;}
+.doc a{border-bottom:1px solid transparent;}
+
+/* figures / screenshots */
+.doc figure{margin:1.5rem 0;}
+.doc figure.shotrow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start;}
+@media(max-width:640px){.doc figure.shotrow{grid-template-columns:1fr;}}
+.doc figure.shotrow a{display:block;border-bottom:0;line-height:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .12s ease;}
+.doc figure.shotrow a:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 24px rgba(20,26,44,.09);}
+.doc figure.shotrow img{width:100%;height:230px;object-fit:cover;object-position:top left;display:block;}
+.doc figure figcaption{grid-column:1/-1;font-size:14px;color:var(--faint);margin-top:.4rem;line-height:1.5;}
+@media (prefers-reduced-motion: reduce){.doc figure.shotrow a{transition:none;}.doc figure.shotrow a:hover{transform:none;}}
+
+/* inline code + code blocks */
+.doc code{font-family:var(--mono);font-size:.85em;background:var(--line-soft);border:1px solid var(--line);border-radius:5px;padding:.08em .38em;color:var(--accent-ink);}
+.doc pre{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.1rem;overflow:auto;box-shadow:var(--shadow);margin:1rem 0;}
+.doc pre code{background:none;border:none;padding:0;color:var(--muted);font-size:.82rem;line-height:1.55;}
+
+/* body blockquotes (e.g. "Resolved later" notes) */
+.doc blockquote{margin:1.1rem 0;padding:.7rem 1.1rem;border-left:3px solid var(--habit);background:var(--habit-soft);border-radius:0 var(--radius) var(--radius) 0;color:var(--muted);font-size:.95rem;}
+.doc blockquote p{margin:.3rem 0;}
+.doc blockquote strong{color:#0a6d64;}
+
+/* tables */
+.doc table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.9rem;display:block;overflow-x:auto;}
+.doc th{text-align:left;font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);padding:.6rem .7rem;border-bottom:2px solid var(--line);white-space:nowrap;}
+.doc td{padding:.6rem .7rem;border-bottom:1px solid var(--line);vertical-align:top;}
+.doc tbody tr:hover{background:var(--line-soft);}
+
+/* footer */
+.foot{border-top:1px solid var(--line);margin-top:2rem;padding:2rem 0 3rem;}
+.foot .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.85rem;color:var(--faint);}
+.foot a{font-weight:600;}
+.backlink{color:var(--ink);}
+.backbtn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border:1px solid var(--accent);border-radius:8px;color:var(--accent-ink);font-weight:600;font-size:14px;text-decoration:none;transition:background .12s ease,color .12s ease;}
+.backbtn:hover{background:var(--accent);color:#fff;text-decoration:none;}
+.foot .footmeta a{color:var(--faint);}
+/* image lightbox */
+.lb-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(15,17,28,.92);padding:2.5vmin;cursor:zoom-out;opacity:0;transition:opacity .16s ease;}
+.lb-overlay.open{display:flex;opacity:1;}
+.lb-overlay img{max-width:95vw;max-height:92vh;width:auto;height:auto;border-radius:8px;box-shadow:0 12px 48px rgba(0,0,0,.5);cursor:default;}
+.lb-close{position:fixed;top:16px;right:20px;width:40px;height:40px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lb-close:hover{background:rgba(255,255,255,.26);}
+@media (prefers-reduced-motion: reduce){.backbtn{transition:none;}.lb-overlay{transition:none;}}
+
+/* index */
+.hero{padding:clamp(2.6rem,6vw,4.4rem) 0 2.2rem;}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3rem);line-height:1.06;letter-spacing:-.03em;font-weight:680;margin:.6rem 0 0;}
+.hero .lede{font-size:clamp(1.05rem,2.4vw,1.2rem);color:var(--muted);max-width:60ch;margin:1.3rem 0 0;}
+.grouplabel{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:2.6rem 0 1rem;display:flex;align-items:center;gap:.8rem;}
+.grouplabel::after{content:"";flex:1;height:1px;background:var(--line);}
+.grouplabel .app{color:var(--accent-ink);}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+@media(max-width:640px){.cards{grid-template-columns:1fr;}}
+.card{display:block;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow);color:var(--ink);transition:transform .12s ease,box-shadow .12s ease;}
+.card:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 3px 6px rgba(20,26,44,.06),0 14px 32px rgba(20,26,44,.08);}
+.card .kind{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.card .name{font-weight:670;font-size:1.02rem;letter-spacing:-.01em;margin:.3rem 0 .4rem;}
+.card .shows{font-size:.9rem;color:var(--muted);line-height:1.55;}
+.intro-note{margin:2.4rem 0 0;font-size:.92rem;color:var(--faint);border-top:1px solid var(--line);padding-top:1.2rem;}
+
+/* Type & contrast pass to match the portfolio: larger content tiers, 13px label floor, underlined body links */
+body{font-size:17px;}
+.doc p,.doc li,.doc td{font-size:17px;}
+.doc h2{font-size:22px;}
+.doc h3{font-size:18px;}
+.callout{font-size:16px;}
+.doc table{font-size:15.5px;}
+.doc th{font-size:13px;}
+.doc code,.doc pre code{font-size:14px;}
+.doc blockquote{font-size:16px;}
+.subtitle{font-size:13px;}
+.crumb{font-size:13px;}
+.eyebrow{font-size:13px;}
+.card .kind{font-size:12.5px;}
+.card .name{font-size:17px;}
+.card .shows{font-size:15px;}
+.foot .wrap{font-size:14px;}
+.doc a{text-decoration:underline;}
+.brand a{color:var(--ink);text-decoration:none;font-weight:600;}
+.brand a:hover{color:var(--accent);}
+.brand .sep{color:var(--faint);font-weight:400;margin:0 .1rem;}
+.foot a{text-decoration:none;}
+@media (prefers-reduced-motion: reduce){ .card{transition:none;} .card:hover{transform:none;} }
+@media print{ .topbar{position:static;} body{background:#fff;} .doc pre,.callout,.card{break-inside:avoid;} }
+
+
+</style>
+</head><body>
+<header class="topbar"><div class="wrap">
+<span class="brand"><span class="dot"></span><span class="habitbar"></span><a href="../../index.html" class="backlink">&larr; Portfolio</a></span>
+<span class="crumb">OOTP Roster Optimizer</span>
+</div></header>
+<main class="wrap">
+<header class="dochead">
+<div class="eyebrow">Work Sample</div>
+<h1>Handover: Intended Feature Set and Domain Rules · OOTP Roster Optimizer</h1>
+<div class="subtitle">Work sample · product intent and domain capture · as of v1 (July 2026)</div>
+<div class="callout"><p><strong>What this is:</strong> a full capture of the intended feature set, behavior, and domain rules of the existing app, written before the rebuild as the shared spec everything else would work from.</p><p><strong>What it shows:</strong> comprehensive product and systems mapping. Documenting an entire application's intent and its must-preserve domain facts before touching code, then distilling hard-won lessons into rules the rebuild had to follow.</p><p><strong>Source:</strong> condensed and edited from the project's handover document for presentation (trimmed for length, internal references removed). The full working version lives in the app repo.</p></div>
+</header>
+<div class="doc"><p>This is the initial intent capture. The discovery pass then tested it against the actual code and corrected it in places (see the discovery-findings exhibit); together they are the "write down the intent, then verify it against the evidence" arc that the rebuild ran on.</p>
+<hr />
+<h2>How to read this</h2>
+<p>Four conventions governed the whole document, and they are themselves product-thinking:</p>
+<ol>
+<li><strong>Everything here describes current behavior to convey intent, not a design to replicate.</strong> Every feature is open to redesign; the rebuild is free to re-architect language, framework, structure, persistence, and solver integration. Where current behavior is a domain fact about how the game engine works, that is called out explicitly as must-preserve.</li>
+<li><strong>Anything that happens in multiple places is unintended by definition.</strong> The recurring theme is logic (scoring, config) scattered across locations; the rebuild consolidates.</li>
+<li><strong>Where intended behavior is genuinely unresolved, it is flagged as an open question</strong> rather than written as if settled. Those are real design decisions, not gaps.</li>
+<li><strong>The model structure itself is under review.</strong> This is not just retraining; it is re-examining whether the current structure is even the right one. Specific fitted values are disposable.</li>
+</ol>
+<hr />
+<h2>Purpose and modes</h2>
+<p>The user exports card and player data from the game, loads it into the app, and the app uses linear programming to build an optimal roster (default 26 cards) plus optimized left-handed (vL) and right-handed (vR) lineups, subject to tournament rules and constraints. A separate statistical-modeling pipeline predicts player performance (wOBA and component events) from ratings, producing the coefficients that drive scoring.</p>
+<p>Two game modes share one engine. <strong>Perfect Team</strong> is the main application; its card ratings are on a proprietary scale. <strong>Single Player</strong> is a newer addition on a different rating scale (20 to 80, or 1 to 100). The important principle: scale should not be a mode-specific concern. Normalizing whatever scale arrives is the job of the scaling and anchoring layer, so if anchoring is built correctly, Single Player's scale is handled automatically.</p>
+<hr />
+<h2>The product: six feature areas plus tournaments</h2>
+<ul>
+<li><strong>Data Grid.</strong> The card browser and scoring surface: loads a card CSV, scores every row, and shows raw ratings plus computed columns, with sort, filter, search, column management, and roster highlighting. Built to be reusable for Single Player through a dataset override and an external row filter.</li>
+<li><strong>Roster &amp; Lineup.</strong> The largest area: LP optimization plus human-in-the-loop drag-and-drop editing. Produces a roster and optimized vL/vR lineups, rotation, and bullpen.</li>
+<li><strong>Coefficients.</strong> The scoring parameter set. Today it mixes conceptually distinct things (trained model params, era and park factors, platoon penalties, fixed weights, manual softcaps, derived values) in one global bag, which the rebuild separates by provenance and lifecycle.</li>
+<li><strong>Eras.</strong> A reusable library of era run-environment factors, selected per tournament.</li>
+<li><strong>Model Training.</strong> Fits the statistical models that produce the scoring coefficients; the analytical side of the app.</li>
+<li><strong>Single Player.</strong> The same engine on a different input format and scale, plus potential-rating scoring.</li>
+</ul>
+<p><strong>Tournaments</strong> is the central configuration object that nearly everything reads from: cap and value rules, roster shape, eligibility, era and park, softcaps, slot counts, and position weights. A major finding captured here is that generation config was split across two sources (the saved tournament and a separate page-level settings object), which is a prime consolidation target.</p>
+<hr />
+<h2>Must-preserve domain facts</h2>
+<p>These are the invariants the rebuild is not free to change, because they reflect how the game engine actually behaves:</p>
+<ul>
+<li><strong>Park factors are compressed before use; era factors are not.</strong> The engine applies park factors non-linearly: a raw park factor of 2.0 does not double outcomes, it raises them by about 26 percent, modeled as <code>cp(p) = 1 + (p − 1) × 0.26</code>. Era factors apply linearly, as-is. This asymmetry is intentional and must be preserved regardless of architecture.</li>
+<li><strong>Park factors apply by handedness.</strong> A right-handed bat uses the right-side factor on both lineups; a left-handed bat uses the left-side factor; a switch hitter uses the opposite-handed factor per side (bats left against right-handed pitching, and the reverse). Compression applies to whichever factor is selected.</li>
+<li><strong>A two-way player frees a roster slot.</strong> One card satisfies both a hitter and a pitcher requirement, so the roster meets its hitter and pitcher counts using fewer than 26 distinct cards, and the freed slot flows into bonus selection. Multiple two-way players each free an additional slot.</li>
+<li><strong>No pitcher batting.</strong> Pitcher hitting ability is never considered in selection or lineup construction. No pitcher-batting modeling exists or is wanted.</li>
+<li><strong>Event interdependency recomputes once, in one place.</strong> Balls in play are derived from the other events, and hits-on-contact depend on that, so whenever component events change, the dependent events must recompute. This is intrinsic to the model, not an architectural choice.</li>
+</ul>
+<hr />
+<h2>Model weaknesses and lessons learned</h2>
+<p>The transferable, hard-won knowledge that should inform model design regardless of architecture. Specific tuning thresholds are deliberately omitted; the rebuild re-derives them.</p>
+<p><strong>The functional-form question (the biggest open problem).</strong> The current models are log-linear per event. Residual analysis suggests log-linear may be systematically wrong rather than just miscalibrated: across the main events the pattern is consistent, over-predicting in the dense lower-middle range and under-predicting at the high end, a shape mismatch suggesting the true rating-to-outcome relationship is slightly steeper at the top than a pure log allows. The recommendation was to treat functional form as an open empirical question, fitting and comparing forms against residual diagnostics rather than assuming log. (This is the decision that later became D3 and was resolved by the bake-off.)</p>
+<p><strong>Diminishing returns and sparse extremes.</strong> Log curves flatten at high ratings, so at extreme ratings the model extrapolates into sparse training data and over-values players whose real performance does not match. Because cards are aggregated, raw row count is meaningless (one entry can represent tens of thousands of plate appearances), so density has to be measured by weighted volume, not count. Signals in sparse bins are real but uncertain, so the mitigation has to avoid both over-reacting to a few outliers and ignoring them.</p>
+<p><strong>Calibration and anchoring is the highest-value area to get right.</strong> The current implementation has several distinct-seeming operations (per-event scaling to baselines, anchor calibration of the pool mean to a target, and cross-pool hitter/pitcher normalization), and it is not established whether these are genuinely separate necessary steps or partly redundant artifacts of incremental development, nor is their correct order relative to era and park settled. Two things are known: anchoring must be done against the eligible pool being optimized, not the full collection (anchoring against everything collapses the scales toward 1.0), and cross-pool comparability must be solved properly rather than patched with a numeric hack.</p>
+<p><strong>Why this matters most:</strong> errors in scaling and calibration do not just produce slightly-off numbers, they make the optimizer select the wrong players. That is why this is the top priority.</p>
+<hr />
+<h2>Known bad patterns the rebuild must not carry forward</h2>
+<p>Each is a rule earned from a real bug class:</p>
+<ol>
+<li><strong>One scoring core.</strong> Scoring happened in the frontend and was re-derived in the optimizer, and had had parallel implementations. One implementation, called identically by every consumer.</li>
+<li><strong>Produce final values once.</strong> Scoring and calibration emit final values that the optimizer consumes; the optimizer never re-derives them.</li>
+<li><strong>Never re-create the authoritative path.</strong> Reuse the one scoring path rather than re-implementing formulas in new places.</li>
+<li><strong>Fix the normalization, do not scale-hack.</strong> Numeric band-aids (a tiny pitcher-scaling multiplier, coefficient skipping) patch symptoms of un-normalized cross-pool values; fix the cause.</li>
+<li><strong>Calibrate against the pool being optimized,</strong> not the full collection.</li>
+<li><strong>One home per config concern.</strong> Park factors, softcaps, and generation settings each lived in two places; each gets exactly one.</li>
+<li><strong>Prefer expressing constraints in the model.</strong> The multi-pass catcher system, bench-fill patching, and cap-reclaim all exist because constraints were hard to encode in one solve; treat each post-processing phase as a candidate for elimination through better formulation.</li>
+<li><strong>Evaluate candidates with the optimizer's value notion,</strong> not a separate greedy proxy that can pass over a better player.</li>
+<li><strong>Variant and base of a card are mutually exclusive everywhere;</strong> counterpart removal must be intrinsic to any add path.</li>
+<li><strong>Gate scoring on data readiness,</strong> so it never runs against unloaded defaults.</li>
+<li><strong>Single source of truth in version control;</strong> never work from stale copies, which repeatedly reintroduced fixed bugs.</li>
+</ol></div>
+</main>
+<footer class="foot"><div class="wrap">
+<a href="../../index.html" class="backbtn">&larr; Back to portfolio</a>
+<span class="footmeta"><a href="../index.html">All work samples</a> &middot; Derek Staley</span>
+</div></footer>
+<div class="lb-overlay" id="lb" role="dialog" aria-modal="true" aria-label="Image preview"><button class="lb-close" type="button" aria-label="Close preview">&times;</button><img alt=""></div>
+<script>
+(function(){var lb=document.getElementById('lb');if(!lb)return;var img=lb.querySelector('img'),btn=lb.querySelector('.lb-close');function open(s,a){img.src=s;img.alt=a||'';lb.classList.add('open');document.body.style.overflow='hidden';}function close(){lb.classList.remove('open');img.removeAttribute('src');document.body.style.overflow='';}document.addEventListener('click',function(e){var t=e.target.closest('a');if(!t)return;var h=t.getAttribute('href')||'';if(/\.(png|jpe?g|webp|gif)$/i.test(h)){e.preventDefault();var im=t.querySelector('img');open(h,im?im.getAttribute('alt'):'');}});btn.addEventListener('click',close);lb.addEventListener('click',function(e){if(e.target===lb)close();});document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});})();
+</script>
+</body></html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Roadmap and Backlog: OOTP Roster Optimizer Rebuild &middot; Derek Staley</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234F46E5'/%3E%3C/svg%3E">
+<style>
+:root{
+  --page:#f4f5f8; --surface:#ffffff; --ink:#1b1b1f; --muted:#5c5c67; --faint:#636b7c;
+  --line:#e7e7ee; --line-soft:#eff0f4;
+  --accent:#4f46e5; --accent-ink:#3b34c4; --accent-soft:#eeedfb;
+  --habit:#0d9488; --habit-soft:#e3f1ef;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+  --radius:8px;
+  --shadow:0 1px 2px rgba(20,26,44,.04),0 8px 24px rgba(20,26,44,.05);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+.wrap{max-width:54rem;margin:0 auto;padding:0 clamp(1.15rem,5vw,2rem);}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:10;background:rgba(244,245,248,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem clamp(1.15rem,5vw,2rem);}
+.brand{display:inline-flex;align-items:center;gap:.55rem;font-weight:600;letter-spacing:-.01em;color:var(--ink);font-size:.95rem;}
+.brand:hover{text-decoration:none;}
+.brand .dot{width:.8rem;height:.8rem;border-radius:3px;background:var(--accent);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);}
+.brand .habitbar{width:3px;height:.85rem;border-radius:2px;background:var(--habit);}
+.crumb{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--faint);text-transform:uppercase;}
+@media(max-width:620px){.crumb{display:none;}}
+
+/* document header */
+.dochead{padding:clamp(2.2rem,5vw,3.6rem) 0 1.8rem;border-bottom:1px solid var(--line);}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);}
+.dochead h1{font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.08;letter-spacing:-.025em;font-weight:660;margin:.5rem 0 0;text-wrap:balance;}
+.subtitle{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;color:var(--faint);margin:.9rem 0 0;}
+.callout{margin:1.5rem 0 0;background:var(--accent-soft);border:1px solid #e0defa;border-radius:var(--radius);padding:1.05rem 1.25rem;font-size:.95rem;color:var(--muted);}
+.callout p{margin:.35rem 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+.callout strong{color:var(--accent-ink);font-weight:650;}
+
+/* body */
+.doc{padding:2.2rem 0 1rem;}
+.doc>p:first-of-type{font-size:1.05rem;color:var(--muted);}
+.doc h2{font-size:1.28rem;letter-spacing:-.015em;font-weight:680;margin:2.4rem 0 .5rem;padding-top:1.4rem;border-top:1px solid var(--line);}
+.doc h3{font-size:1.02rem;font-weight:660;margin:1.6rem 0 .4rem;color:var(--ink);}
+.doc h2:first-child,.doc h3:first-child{margin-top:0;border-top:none;padding-top:0;}
+.doc p{margin:.7rem 0;}
+.doc ul,.doc ol{margin:.6rem 0;padding-left:1.3rem;}
+.doc li{margin:.34rem 0;}
+.doc li>ul,.doc li>ol{margin:.3rem 0;}
+.doc strong{color:var(--ink);font-weight:650;}
+.doc hr{border:none;border-top:1px solid var(--line);margin:2.2rem 0;}
+.doc a{border-bottom:1px solid transparent;}
+
+/* figures / screenshots */
+.doc figure{margin:1.5rem 0;}
+.doc figure.shotrow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start;}
+@media(max-width:640px){.doc figure.shotrow{grid-template-columns:1fr;}}
+.doc figure.shotrow a{display:block;border-bottom:0;line-height:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .12s ease;}
+.doc figure.shotrow a:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 24px rgba(20,26,44,.09);}
+.doc figure.shotrow img{width:100%;height:230px;object-fit:cover;object-position:top left;display:block;}
+.doc figure figcaption{grid-column:1/-1;font-size:14px;color:var(--faint);margin-top:.4rem;line-height:1.5;}
+@media (prefers-reduced-motion: reduce){.doc figure.shotrow a{transition:none;}.doc figure.shotrow a:hover{transform:none;}}
+
+/* inline code + code blocks */
+.doc code{font-family:var(--mono);font-size:.85em;background:var(--line-soft);border:1px solid var(--line);border-radius:5px;padding:.08em .38em;color:var(--accent-ink);}
+.doc pre{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.1rem;overflow:auto;box-shadow:var(--shadow);margin:1rem 0;}
+.doc pre code{background:none;border:none;padding:0;color:var(--muted);font-size:.82rem;line-height:1.55;}
+
+/* body blockquotes (e.g. "Resolved later" notes) */
+.doc blockquote{margin:1.1rem 0;padding:.7rem 1.1rem;border-left:3px solid var(--habit);background:var(--habit-soft);border-radius:0 var(--radius) var(--radius) 0;color:var(--muted);font-size:.95rem;}
+.doc blockquote p{margin:.3rem 0;}
+.doc blockquote strong{color:#0a6d64;}
+
+/* tables */
+.doc table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.9rem;display:block;overflow-x:auto;}
+.doc th{text-align:left;font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);padding:.6rem .7rem;border-bottom:2px solid var(--line);white-space:nowrap;}
+.doc td{padding:.6rem .7rem;border-bottom:1px solid var(--line);vertical-align:top;}
+.doc tbody tr:hover{background:var(--line-soft);}
+
+/* footer */
+.foot{border-top:1px solid var(--line);margin-top:2rem;padding:2rem 0 3rem;}
+.foot .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.85rem;color:var(--faint);}
+.foot a{font-weight:600;}
+.backlink{color:var(--ink);}
+.backbtn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border:1px solid var(--accent);border-radius:8px;color:var(--accent-ink);font-weight:600;font-size:14px;text-decoration:none;transition:background .12s ease,color .12s ease;}
+.backbtn:hover{background:var(--accent);color:#fff;text-decoration:none;}
+.foot .footmeta a{color:var(--faint);}
+/* image lightbox */
+.lb-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(15,17,28,.92);padding:2.5vmin;cursor:zoom-out;opacity:0;transition:opacity .16s ease;}
+.lb-overlay.open{display:flex;opacity:1;}
+.lb-overlay img{max-width:95vw;max-height:92vh;width:auto;height:auto;border-radius:8px;box-shadow:0 12px 48px rgba(0,0,0,.5);cursor:default;}
+.lb-close{position:fixed;top:16px;right:20px;width:40px;height:40px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lb-close:hover{background:rgba(255,255,255,.26);}
+@media (prefers-reduced-motion: reduce){.backbtn{transition:none;}.lb-overlay{transition:none;}}
+
+/* index */
+.hero{padding:clamp(2.6rem,6vw,4.4rem) 0 2.2rem;}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3rem);line-height:1.06;letter-spacing:-.03em;font-weight:680;margin:.6rem 0 0;}
+.hero .lede{font-size:clamp(1.05rem,2.4vw,1.2rem);color:var(--muted);max-width:60ch;margin:1.3rem 0 0;}
+.grouplabel{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:2.6rem 0 1rem;display:flex;align-items:center;gap:.8rem;}
+.grouplabel::after{content:"";flex:1;height:1px;background:var(--line);}
+.grouplabel .app{color:var(--accent-ink);}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+@media(max-width:640px){.cards{grid-template-columns:1fr;}}
+.card{display:block;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow);color:var(--ink);transition:transform .12s ease,box-shadow .12s ease;}
+.card:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 3px 6px rgba(20,26,44,.06),0 14px 32px rgba(20,26,44,.08);}
+.card .kind{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.card .name{font-weight:670;font-size:1.02rem;letter-spacing:-.01em;margin:.3rem 0 .4rem;}
+.card .shows{font-size:.9rem;color:var(--muted);line-height:1.55;}
+.intro-note{margin:2.4rem 0 0;font-size:.92rem;color:var(--faint);border-top:1px solid var(--line);padding-top:1.2rem;}
+
+/* Type & contrast pass to match the portfolio: larger content tiers, 13px label floor, underlined body links */
+body{font-size:17px;}
+.doc p,.doc li,.doc td{font-size:17px;}
+.doc h2{font-size:22px;}
+.doc h3{font-size:18px;}
+.callout{font-size:16px;}
+.doc table{font-size:15.5px;}
+.doc th{font-size:13px;}
+.doc code,.doc pre code{font-size:14px;}
+.doc blockquote{font-size:16px;}
+.subtitle{font-size:13px;}
+.crumb{font-size:13px;}
+.eyebrow{font-size:13px;}
+.card .kind{font-size:12.5px;}
+.card .name{font-size:17px;}
+.card .shows{font-size:15px;}
+.foot .wrap{font-size:14px;}
+.doc a{text-decoration:underline;}
+.brand a{color:var(--ink);text-decoration:none;font-weight:600;}
+.brand a:hover{color:var(--accent);}
+.brand .sep{color:var(--faint);font-weight:400;margin:0 .1rem;}
+.foot a{text-decoration:none;}
+@media (prefers-reduced-motion: reduce){ .card{transition:none;} .card:hover{transform:none;} }
+@media print{ .topbar{position:static;} body{background:#fff;} .doc pre,.callout,.card{break-inside:avoid;} }
+
+
+</style>
+</head><body>
+<header class="topbar"><div class="wrap">
+<span class="brand"><span class="dot"></span><span class="habitbar"></span><a href="../../index.html" class="backlink">&larr; Portfolio</a></span>
+<span class="crumb">OOTP Roster Optimizer</span>
+</div></header>
+<main class="wrap">
+<header class="dochead">
+<div class="eyebrow">Work Sample</div>
+<h1>Roadmap and Backlog: OOTP Roster Optimizer Rebuild</h1>
+<div class="subtitle">Work sample · roadmap, milestones, and risk-gating spikes · as of v1 (July 2026)</div>
+<div class="callout"><p><strong>What this is:</strong> the living plan that turned the settled decisions (D1–D7) into milestones, user stories, and exploration spikes to build against.</p><p><strong>What it shows:</strong> roadmapping and sequencing, dependency management, and risk-gating. It uses spikes to de-risk the uncertain pieces before committing a milestone, and it keeps a running list of forward risks and suspected issues to revisit.</p><p><strong>Source:</strong> condensed and edited from the project's roadmap document for presentation (trimmed for length; per-story acceptance criteria, build logs, and internal references removed). The full working version lives in the app repo.</p></div>
+</header>
+<div class="doc"><p><strong>The product, in one line:</strong> a single-user desktop-style web app (local server plus browser) that imports card data, scores every card through one shared core, and builds optimal rosters and lineups under tournament rules, with model training and a Single-Player mode.</p>
+<p><strong>The through-line:</strong> one scoring core, computed once, consumed identically. Every milestone reads that core; none recomputes scoring.</p>
+<p><strong>The strategy:</strong> parity first, then upgrade. Reproduce the old app's trusted numbers exactly, prove it, then improve on that trusted base. Parity was achieved (the rebuilt core reproduces the old app's scores bit-for-bit on the same inputs), after which the project moved to the model upgrade, the D3 bake-off, which selected the raw-poly form that is now the deployed scoring model.</p>
+<hr />
+<h2>Milestone map</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Milestone</th>
+<th>Goal</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M0</td>
+<td>Foundations</td>
+<td>TypeScript project, tests, version control</td>
+<td>Done</td>
+</tr>
+<tr>
+<td>M1</td>
+<td>Scoring core</td>
+<td>One core; reproduce the old app's scores exactly</td>
+<td>Done</td>
+</tr>
+<tr>
+<td>M1.5</td>
+<td>Self-contained calibration</td>
+<td>Compute our own anchor and calibration scales</td>
+<td>Done</td>
+</tr>
+<tr>
+<td>M2</td>
+<td>Data layer and config</td>
+<td>Catalog, per-account overlays, Tournament/Era/Park libraries</td>
+<td>Done</td>
+</tr>
+<tr>
+<td>M3</td>
+<td>Data Grid</td>
+<td>First UI consumer of the core</td>
+<td>Done</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>Optimizer</td>
+<td>Roster, lineups, rotation, and bullpen</td>
+<td>Done</td>
+</tr>
+<tr>
+<td>M5</td>
+<td>Manual editing</td>
+<td>Drag-drop roster and lineup overrides</td>
+<td>Done</td>
+</tr>
+<tr>
+<td>M6</td>
+<td>Training and bake-off</td>
+<td>Fit models; run the D3 comparison harness</td>
+<td>Done (D3 resolved to raw-poly, now the deployed model)</td>
+</tr>
+<tr>
+<td>M7</td>
+<td>Single Player</td>
+<td>Import adapter plus potential ratings</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>X</td>
+<td>Cross-cutting</td>
+<td>Packaging, persistence, parity method</td>
+<td>Ongoing</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sequencing rationale:</strong> M1.5 finishes the scoring story, so scales are computed rather than pasted from the old app. M2 builds the structure everything else reads. M3 makes it visible and checkable. M4 is the payoff. M5 through M7 round it out. Spikes gate the milestones that need exploration first.</p>
+<p>Each milestone carried a parity gate where an oracle existed: the rebuilt piece had to match the old app on the same inputs before the work was considered done. Past scoring the gate loosens by design, since rosters are "comparable" rather than identical because the decisions deliberately changed optimizer behavior, so M4 needed agreed acceptance criteria so that intended improvements would not be read as regressions.</p>
+<hr />
+<h2>Spikes: de-risking before committing</h2>
+<p>The riskiest milestones were gated by a spike that answered one concrete question before any scope was committed. Each spike stated the question, why it mattered, a rough approach, and the output it had to produce.</p>
+<table>
+<thead>
+<tr>
+<th>Spike</th>
+<th>Question</th>
+<th>Unblocks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SP-1</td>
+<td>How does the old app build its calibration anchor pool and per-event scales?</td>
+<td>M1.5</td>
+</tr>
+<tr>
+<td>SP-2</td>
+<td>What is the file-based persistence shape?</td>
+<td>M2</td>
+</tr>
+<tr>
+<td>SP-3</td>
+<td>Variant boost and eligibility exact behavior</td>
+<td>M2</td>
+</tr>
+<tr>
+<td>SP-4</td>
+<td>Optimizer LP formulation in an in-process WASM solver</td>
+<td>M4</td>
+</tr>
+<tr>
+<td>SP-5</td>
+<td>Defensive feasibility as a matching/assignment problem</td>
+<td>M4</td>
+</tr>
+<tr>
+<td>SP-6</td>
+<td>Solver performance on real pool sizes</td>
+<td>M4</td>
+</tr>
+<tr>
+<td>SP-7</td>
+<td>Does the signed-distance value give a sane hitter/pitcher balance?</td>
+<td>M4</td>
+</tr>
+<tr>
+<td>SP-8</td>
+<td>The D3 model functional-form bake-off</td>
+<td>M6</td>
+</tr>
+<tr>
+<td>SP-9</td>
+<td>Training-data loader and parity against the old trainer</td>
+<td>M6</td>
+</tr>
+<tr>
+<td>SP-10</td>
+<td>Single-Player export format and potential-rating fields</td>
+<td>M7</td>
+</tr>
+<tr>
+<td>SP-11</td>
+<td>Packaging scaffold (local server plus browser)</td>
+<td>M3</td>
+</tr>
+</tbody>
+</table>
+<p>The discipline paid off where it mattered most, the optimizer. SP-6 proved the in-process WASM solver handled the real pool fast enough (the full undecomposed problem solved to optimal in about half a second, with the planned decomposition giving a large additional margin), which retired the risk of needing a heavier solver. SP-4 and SP-5 proved the roster problem could be expressed as a single assignment MILP, including expressing the backup catcher as a coverage-depth constraint, which is what let the decisions retire the old app's three-pass catcher workaround. SP-7 measured the hitter/pitcher balance under the new value definition and surfaced a real skew, which led to a tunable per-tournament emphasis knob as the interim control and a baseline recentering as the proper fix. In each case the uncertain thing was tested in isolation before the milestone committed to it.</p>
+<hr />
+<h2>Open questions and risks</h2>
+<p>Kept as a live list so nothing quietly slips:</p>
+<ul>
+<li><strong>The optimizer is the hardest part,</strong> so it was de-risked early with spikes before M4 scope was committed.</li>
+<li><strong>Parity loosens past scoring.</strong> Scores are exact; rosters are comparable, so M4 needs explicit acceptance criteria so intended improvements are not mistaken for regressions.</li>
+<li><strong>Single-source config is a standing invariant, not a one-time task.</strong> The old app's split config and duplicated homes must not re-emerge, so the tournament-as-single-source rule is enforced continuously.</li>
+<li><strong>Calibration and scaling correctness was carried into M6 and evaluated there against real outcome data.</strong> The suspected issues (which components are independently re-anchored, how the platoon split is weighted) were decoupled from the optimizer, which reads scoring values as coefficients, so recalibration changed the numbers, not the machinery.</li>
+</ul>
+<hr />
+<h2>Parity as a baseline, not an endorsement</h2>
+<p>A standing policy governed how the old app was treated: it is usable but may contain real bugs. It was reproduced for a safe parity baseline, but scrutinized while porting, with suspected bugs flagged rather than copied, and fixes deferred until after parity unless trivial and agreed. Reproducing a number was never an endorsement of it. Two representative finds:</p>
+<ul>
+<li><strong>A pitch-type counting bug.</strong> The same logic lived in two places with two different column-name spellings; one looked for names that never matched, so two pitch types were never counted, quietly affecting starter qualification.</li>
+<li><strong>A calibration-skewing bug.</strong> The pool used to anchor calibration was gated on a position-eligibility flag that wrongly excluded some players, skewing the very scales that drive every displayed score. The correct design anchors against the full eligible pool.</li>
+</ul>
+<p>This is the habit the rebuild ran on: reproduce faithfully, verify against evidence, and surface what looks wrong rather than assuming the prior version was right.</p></div>
+</main>
+<footer class="foot"><div class="wrap">
+<a href="../../index.html" class="backbtn">&larr; Back to portfolio</a>
+<span class="footmeta"><a href="../index.html">All work samples</a> &middot; Derek Staley</span>
+</div></footer>
+<div class="lb-overlay" id="lb" role="dialog" aria-modal="true" aria-label="Image preview"><button class="lb-close" type="button" aria-label="Close preview">&times;</button><img alt=""></div>
+<script>
+(function(){var lb=document.getElementById('lb');if(!lb)return;var img=lb.querySelector('img'),btn=lb.querySelector('.lb-close');function open(s,a){img.src=s;img.alt=a||'';lb.classList.add('open');document.body.style.overflow='hidden';}function close(){lb.classList.remove('open');img.removeAttribute('src');document.body.style.overflow='';}document.addEventListener('click',function(e){var t=e.target.closest('a');if(!t)return;var h=t.getAttribute('href')||'';if(/\.(png|jpe?g|webp|gif)$/i.test(h)){e.preventDefault();var im=t.querySelector('img');open(h,im?im.getAttribute('alt'):'');}});btn.addEventListener('click',close);lb.addEventListener('click',function(e){if(e.target===lb)close();});document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});})();
+</script>
+</body></html>

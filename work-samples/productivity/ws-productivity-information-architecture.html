@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Information Architecture: Unified Tasks and Habits App &middot; Derek Staley</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234F46E5'/%3E%3C/svg%3E">
+<style>
+:root{
+  --page:#f4f5f8; --surface:#ffffff; --ink:#1b1b1f; --muted:#5c5c67; --faint:#636b7c;
+  --line:#e7e7ee; --line-soft:#eff0f4;
+  --accent:#4f46e5; --accent-ink:#3b34c4; --accent-soft:#eeedfb;
+  --habit:#0d9488; --habit-soft:#e3f1ef;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+  --radius:8px;
+  --shadow:0 1px 2px rgba(20,26,44,.04),0 8px 24px rgba(20,26,44,.05);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+.wrap{max-width:54rem;margin:0 auto;padding:0 clamp(1.15rem,5vw,2rem);}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:10;background:rgba(244,245,248,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem clamp(1.15rem,5vw,2rem);}
+.brand{display:inline-flex;align-items:center;gap:.55rem;font-weight:600;letter-spacing:-.01em;color:var(--ink);font-size:.95rem;}
+.brand:hover{text-decoration:none;}
+.brand .dot{width:.8rem;height:.8rem;border-radius:3px;background:var(--accent);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);}
+.brand .habitbar{width:3px;height:.85rem;border-radius:2px;background:var(--habit);}
+.crumb{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--faint);text-transform:uppercase;}
+@media(max-width:620px){.crumb{display:none;}}
+
+/* document header */
+.dochead{padding:clamp(2.2rem,5vw,3.6rem) 0 1.8rem;border-bottom:1px solid var(--line);}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);}
+.dochead h1{font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.08;letter-spacing:-.025em;font-weight:660;margin:.5rem 0 0;text-wrap:balance;}
+.subtitle{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;color:var(--faint);margin:.9rem 0 0;}
+.callout{margin:1.5rem 0 0;background:var(--accent-soft);border:1px solid #e0defa;border-radius:var(--radius);padding:1.05rem 1.25rem;font-size:.95rem;color:var(--muted);}
+.callout p{margin:.35rem 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+.callout strong{color:var(--accent-ink);font-weight:650;}
+
+/* body */
+.doc{padding:2.2rem 0 1rem;}
+.doc>p:first-of-type{font-size:1.05rem;color:var(--muted);}
+.doc h2{font-size:1.28rem;letter-spacing:-.015em;font-weight:680;margin:2.4rem 0 .5rem;padding-top:1.4rem;border-top:1px solid var(--line);}
+.doc h3{font-size:1.02rem;font-weight:660;margin:1.6rem 0 .4rem;color:var(--ink);}
+.doc h2:first-child,.doc h3:first-child{margin-top:0;border-top:none;padding-top:0;}
+.doc p{margin:.7rem 0;}
+.doc ul,.doc ol{margin:.6rem 0;padding-left:1.3rem;}
+.doc li{margin:.34rem 0;}
+.doc li>ul,.doc li>ol{margin:.3rem 0;}
+.doc strong{color:var(--ink);font-weight:650;}
+.doc hr{border:none;border-top:1px solid var(--line);margin:2.2rem 0;}
+.doc a{border-bottom:1px solid transparent;}
+
+/* figures / screenshots */
+.doc figure{margin:1.5rem 0;}
+.doc figure.shotrow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start;}
+@media(max-width:640px){.doc figure.shotrow{grid-template-columns:1fr;}}
+.doc figure.shotrow a{display:block;border-bottom:0;line-height:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .12s ease;}
+.doc figure.shotrow a:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 24px rgba(20,26,44,.09);}
+.doc figure.shotrow img{width:100%;height:230px;object-fit:cover;object-position:top left;display:block;}
+.doc figure figcaption{grid-column:1/-1;font-size:14px;color:var(--faint);margin-top:.4rem;line-height:1.5;}
+@media (prefers-reduced-motion: reduce){.doc figure.shotrow a{transition:none;}.doc figure.shotrow a:hover{transform:none;}}
+
+/* inline code + code blocks */
+.doc code{font-family:var(--mono);font-size:.85em;background:var(--line-soft);border:1px solid var(--line);border-radius:5px;padding:.08em .38em;color:var(--accent-ink);}
+.doc pre{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.1rem;overflow:auto;box-shadow:var(--shadow);margin:1rem 0;}
+.doc pre code{background:none;border:none;padding:0;color:var(--muted);font-size:.82rem;line-height:1.55;}
+
+/* body blockquotes (e.g. "Resolved later" notes) */
+.doc blockquote{margin:1.1rem 0;padding:.7rem 1.1rem;border-left:3px solid var(--habit);background:var(--habit-soft);border-radius:0 var(--radius) var(--radius) 0;color:var(--muted);font-size:.95rem;}
+.doc blockquote p{margin:.3rem 0;}
+.doc blockquote strong{color:#0a6d64;}
+
+/* tables */
+.doc table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.9rem;display:block;overflow-x:auto;}
+.doc th{text-align:left;font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);padding:.6rem .7rem;border-bottom:2px solid var(--line);white-space:nowrap;}
+.doc td{padding:.6rem .7rem;border-bottom:1px solid var(--line);vertical-align:top;}
+.doc tbody tr:hover{background:var(--line-soft);}
+
+/* footer */
+.foot{border-top:1px solid var(--line);margin-top:2rem;padding:2rem 0 3rem;}
+.foot .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.85rem;color:var(--faint);}
+.foot a{font-weight:600;}
+.backlink{color:var(--ink);}
+.backbtn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border:1px solid var(--accent);border-radius:8px;color:var(--accent-ink);font-weight:600;font-size:14px;text-decoration:none;transition:background .12s ease,color .12s ease;}
+.backbtn:hover{background:var(--accent);color:#fff;text-decoration:none;}
+.foot .footmeta a{color:var(--faint);}
+/* image lightbox */
+.lb-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(15,17,28,.92);padding:2.5vmin;cursor:zoom-out;opacity:0;transition:opacity .16s ease;}
+.lb-overlay.open{display:flex;opacity:1;}
+.lb-overlay img{max-width:95vw;max-height:92vh;width:auto;height:auto;border-radius:8px;box-shadow:0 12px 48px rgba(0,0,0,.5);cursor:default;}
+.lb-close{position:fixed;top:16px;right:20px;width:40px;height:40px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lb-close:hover{background:rgba(255,255,255,.26);}
+@media (prefers-reduced-motion: reduce){.backbtn{transition:none;}.lb-overlay{transition:none;}}
+
+/* index */
+.hero{padding:clamp(2.6rem,6vw,4.4rem) 0 2.2rem;}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3rem);line-height:1.06;letter-spacing:-.03em;font-weight:680;margin:.6rem 0 0;}
+.hero .lede{font-size:clamp(1.05rem,2.4vw,1.2rem);color:var(--muted);max-width:60ch;margin:1.3rem 0 0;}
+.grouplabel{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:2.6rem 0 1rem;display:flex;align-items:center;gap:.8rem;}
+.grouplabel::after{content:"";flex:1;height:1px;background:var(--line);}
+.grouplabel .app{color:var(--accent-ink);}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+@media(max-width:640px){.cards{grid-template-columns:1fr;}}
+.card{display:block;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow);color:var(--ink);transition:transform .12s ease,box-shadow .12s ease;}
+.card:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 3px 6px rgba(20,26,44,.06),0 14px 32px rgba(20,26,44,.08);}
+.card .kind{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.card .name{font-weight:670;font-size:1.02rem;letter-spacing:-.01em;margin:.3rem 0 .4rem;}
+.card .shows{font-size:.9rem;color:var(--muted);line-height:1.55;}
+.intro-note{margin:2.4rem 0 0;font-size:.92rem;color:var(--faint);border-top:1px solid var(--line);padding-top:1.2rem;}
+
+/* Type & contrast pass to match the portfolio: larger content tiers, 13px label floor, underlined body links */
+body{font-size:17px;}
+.doc p,.doc li,.doc td{font-size:17px;}
+.doc h2{font-size:22px;}
+.doc h3{font-size:18px;}
+.callout{font-size:16px;}
+.doc table{font-size:15.5px;}
+.doc th{font-size:13px;}
+.doc code,.doc pre code{font-size:14px;}
+.doc blockquote{font-size:16px;}
+.subtitle{font-size:13px;}
+.crumb{font-size:13px;}
+.eyebrow{font-size:13px;}
+.card .kind{font-size:12.5px;}
+.card .name{font-size:17px;}
+.card .shows{font-size:15px;}
+.foot .wrap{font-size:14px;}
+.doc a{text-decoration:underline;}
+.brand a{color:var(--ink);text-decoration:none;font-weight:600;}
+.brand a:hover{color:var(--accent);}
+.brand .sep{color:var(--faint);font-weight:400;margin:0 .1rem;}
+.foot a{text-decoration:none;}
+@media (prefers-reduced-motion: reduce){ .card{transition:none;} .card:hover{transform:none;} }
+@media print{ .topbar{position:static;} body{background:#fff;} .doc pre,.callout,.card{break-inside:avoid;} }
+
+
+</style>
+</head><body>
+<header class="topbar"><div class="wrap">
+<span class="brand"><span class="dot"></span><span class="habitbar"></span><a href="../../index.html" class="backlink">&larr; Portfolio</a></span>
+<span class="crumb">Unified Tasks &amp; Habits</span>
+</div></header>
+<main class="wrap">
+<header class="dochead">
+<div class="eyebrow">Work Sample</div>
+<h1>Information Architecture: Unified Tasks and Habits App</h1>
+<div class="subtitle">Work sample · information architecture · as of v1 (July 2026)</div>
+<div class="callout"><p><strong>What this is:</strong> the app's structure, which screens and surfaces exist and how a user moves between them.</p><p><strong>What it shows:</strong> structural product design and information architecture.</p><p><strong>Source:</strong> condensed and edited from the project's information architecture for presentation (trimmed for length, internal references removed). The full working version lives in the app repo.</p></div>
+</header>
+<div class="doc"><p>This document maps a local-first productivity app that unifies tasks and habits in one system. It is a structural artifact written before the wireframes: it settles what the screens are and how they connect, and leaves visual and interaction treatment to a later design pass. Behavior lives in the PRD; this document is about where each surface sits and how it is reached.</p>
+<hr />
+<h2>How to read this document</h2>
+<p>This is a structural map, not a visual one. It answers "what are the screens and how do they connect," and leaves "what do they look like and how do controls behave" to the wireframes and the PRD.</p>
+<p>Screens are described as one of three structural types:</p>
+<ul>
+<li><strong>Destination:</strong> a place reached from the primary navigation.</li>
+<li><strong>Sub-surface:</strong> a screen that belongs to a destination and is reached from within it.</li>
+<li><strong>Overlay:</strong> a panel, sheet, or dialog that opens over the current view without navigating away. Item create, edit, detail, and all confirmation prompts are overlays per the structural decision below.</li>
+</ul>
+<p>Phase tags (Phase 1, 2, 3) match the PRD and roadmap build phases.</p>
+<hr />
+<h2>Structural decisions</h2>
+<p>These were decided explicitly and drive the layout below:</p>
+<ul>
+<li>The product uses a two-dial view model. The Plan surface presents items through a time range (Day, Week, Month) and an organize-by lens (Schedule, Category, Type). Day plus Schedule is the Phase 1 daily planning view.</li>
+<li>Primary navigation has two destinations: Plan and Progress. Progress is its own destination (Phase 3), not a lens or a settings section.</li>
+<li>Settings is reached from a persistent icon or menu available everywhere, not from the primary navigation. It opens as an overlay over the current surface, so the user keeps their place, and the main nav stays focused on daily-use surfaces.</li>
+<li>Item create, edit, and detail, plus Settings, are overlays on the current view, not separate routed screens, so the user keeps their place in the day.</li>
+<li>The app is usable by guests and works offline. Opening it lands directly on the Plan surface, with no sign-in gate. Authentication is optional and reached from Settings or a dismissible prompt; it turns on sync and backup, it does not gate access.</li>
+</ul>
+<hr />
+<h2>Zones and access states</h2>
+<p>The app has one main zone plus an optional auth area. Opening the app lands on the Plan surface and works fully offline; everything (Plan, Progress, Settings, all item surfaces) is available to a guest with no account, and a signed-in user gets the same surfaces plus sync and backup. The <strong>auth area</strong> (sign in, sign up, verification, password reset) is optional, reached from Settings or a dismissible prompt rather than as a barrier; its only job is to turn on sync.</p>
+<p>Three access states, where offline and signed-out are deliberately different things:</p>
+<ul>
+<li><strong>Guest.</strong> No account; data lives only on the device; no sync.</li>
+<li><strong>Signed in, online.</strong> Full app plus live background sync.</li>
+<li><strong>Signed in, offline.</strong> Still signed in, with full local access; sync is paused and reconciles on reconnect. Losing connectivity never signs a user out or drops them to guest.</li>
+</ul>
+<p>Only an explicit sign-out changes account state: it confirms data is synced, clears this device's local data, and returns the device to guest. So "no internet" and "signed out" are distinct: the former keeps the user and their data, the latter removes both from the device.</p>
+<hr />
+<h2>Sitemap</h2>
+<pre><code>App  (opens here, guest or signed-in, works offline)
+│
+├── Plan                            ← default landing, no sign-in gate
+│   ├── Controls: time range (Day / Week / Month), lens (Schedule / Category / Type), date navigation
+│   ├── Mini-calendar date navigator [Plan sub-surface, Phase 3]
+│   ├── Item detail                 [overlay]
+│   ├── Item create / edit          [overlay]   (notes Phase 2; tag picker Phase 2)
+│   ├── Confirmation prompts        [overlay]   (delete; GCal sync on edit/delete, Phase 2)
+│   └── &quot;Sign up to back up&quot; prompt  [overlay, dismissible]
+│
+├── Progress                        (Phase 3, read-only; completions are logged on Plan)
+│
+├── Settings  (persistent icon/menu)  [overlay]
+│   ├── Account / sign in           (Phase 1; entry to the optional auth area)
+│   ├── Sync &amp; offline status       (Phase 1)
+│   ├── Google Calendar             (Phase 2)
+│   ├── Tags                        (Phase 2)
+│   └── Default landing view        (Phase 3)
+│
+└── Auth area  (optional; reached from Settings or the prompt)
+    ├── Sign in
+    ├── Sign up
+    ├── Email verification          (pending / confirmed states)
+    ├── Forgot password             (request reset)
+    ├── Reset password              (set new password)
+    └── OAuth callback              (transient; no UI)
+</code></pre>
+<hr />
+<h2>Surface inventory</h2>
+<table>
+<thead>
+<tr>
+<th>Surface</th>
+<th>Area</th>
+<th>Type</th>
+<th>Phase</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plan</td>
+<td>App</td>
+<td>Destination</td>
+<td>1</td>
+<td>The flexible view surface; default landing; works for guests, offline.</td>
+</tr>
+<tr>
+<td>Item detail</td>
+<td>App</td>
+<td>Overlay</td>
+<td>1</td>
+<td>View a single item; entry to edit/delete; history in Phase 2.</td>
+</tr>
+<tr>
+<td>Item create / edit</td>
+<td>App</td>
+<td>Overlay</td>
+<td>1</td>
+<td>Create or modify an item (scheduling, optional repeat, optional habit tracking).</td>
+</tr>
+<tr>
+<td>Confirmation prompts</td>
+<td>App</td>
+<td>Overlay</td>
+<td>1</td>
+<td>Confirm destructive actions and GCal sync choices.</td>
+</tr>
+<tr>
+<td>Sign-up prompt</td>
+<td>App</td>
+<td>Overlay</td>
+<td>1</td>
+<td>Dismissible nudge to create an account for backup; never blocks use.</td>
+</tr>
+<tr>
+<td>Mini-calendar</td>
+<td>App</td>
+<td>Sub-surface</td>
+<td>3</td>
+<td>Collapsible month calendar on Plan for jumping to a date.</td>
+</tr>
+<tr>
+<td>Progress</td>
+<td>App</td>
+<td>Destination</td>
+<td>3</td>
+<td>Track count-goal habits (read-only); completions are logged on Plan.</td>
+</tr>
+<tr>
+<td>Settings</td>
+<td>App</td>
+<td>Persistent (overlay)</td>
+<td>1</td>
+<td>Account/sign-in, sync &amp; offline status, then calendar, tags, default view by phase.</td>
+</tr>
+<tr>
+<td>Sign in</td>
+<td>Auth (opt)</td>
+<td>Destination</td>
+<td>1</td>
+<td>Authenticate via email/password or Google to enable sync.</td>
+</tr>
+<tr>
+<td>Sign up</td>
+<td>Auth (opt)</td>
+<td>Destination</td>
+<td>1</td>
+<td>Create an account; migrates the guest's local data.</td>
+</tr>
+<tr>
+<td>Email verification</td>
+<td>Auth (opt)</td>
+<td>Sub-surface</td>
+<td>1</td>
+<td>Confirm email; resend option.</td>
+</tr>
+<tr>
+<td>Forgot password</td>
+<td>Auth (opt)</td>
+<td>Sub-surface</td>
+<td>1</td>
+<td>Request a reset link by email.</td>
+</tr>
+<tr>
+<td>Reset password</td>
+<td>Auth (opt)</td>
+<td>Sub-surface</td>
+<td>1</td>
+<td>Set a new password from a reset link.</td>
+</tr>
+<tr>
+<td>OAuth callback</td>
+<td>Auth (opt)</td>
+<td>Transient</td>
+<td>1</td>
+<td>Handle the Google redirect; exchange the code for a session (linking to an existing same-email account), then return to the app.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Surface detail</h2>
+<p>The inventory above says what each surface is; this adds only the structural essentials, how each is reached and how it exits. Full behavior is in the PRD.</p>
+<p><strong>Auth area (optional).</strong> Sign in and sign up are destinations; email verification, forgot password, and reset password are sub-surfaces reached from them or from an emailed link. Each is reached from Settings or the dismissible sign-up prompt, never as a gate, and each exits back to the app with sync turned on. The OAuth callback is a transient, UI-less handler that exchanges the Google code for a session (linking to an existing account with the same verified email) and returns to the app.</p>
+<p><strong>App shell.</strong> Wraps every app surface identically for guests and signed-in users. It carries the primary navigation (Plan, and Progress from Phase 3), a persistent Settings affordance, and a sync/offline indicator. The time-range, lens, and date controls belong to the Plan surface, not the shell.</p>
+<p><strong>Plan.</strong> The primary surface and default landing view, reached with no sign-in gate and fully offline. It holds the two-dial controls (time range and lens), the day's three zones (an all-day band, a time grid, and a "Tasks" column for untimed items), and the item overlays. Item rows open item detail on tap. Later phases add the Category and Type lenses and the Week and Month ranges (the calendar grid is the Schedule lens only; the other lenses render as grouped lists across the span).</p>
+<p><strong>Mini-calendar (Plan sub-surface, Phase 3).</strong> A collapsible month calendar in a left rail on the Plan surface only, for jumping to a date. Clicking a day moves the Plan view's anchor date without changing the time range, so it is a pure date picker. Its open/closed state is a local device preference, and it defaults open on wide screens and closed on narrow ones.</p>
+<p><strong>Plan-level overlays.</strong> Item detail, item create/edit, the confirmation prompts (delete, and the optional Google Calendar sync prompts), and the dismissible sign-up prompt all open over the current view so the user keeps their place. None is a separate routed screen.</p>
+<p><strong>Progress (Phase 3 destination).</strong> A read-only surface listing tracked count-goal habits with their period progress. Logging happens on Plan, not here; both read the same completion records.</p>
+<p><strong>Settings (persistent overlay).</strong> Reached from anywhere via its icon, opening over the current surface. Its contents grow by phase: account, sync and offline status, and timezone (Phase 1); Google Calendar and tags (Phase 2); default landing view (Phase 3). Sign-out is the only action that clears local data and returns the device to guest.</p>
+<hr />
+<h2>Key navigation flows</h2>
+<p><strong>First open (guest, no account):</strong> open app to Plan (Day plus Schedule), an empty day grid ready to use, online or offline. No setup, no sign-in step.</p>
+<p><strong>Guest decides to back up:</strong> Plan or Settings to the sign-up prompt or Account entry, then sign up, verification, and back to the app with sync on and local data migrated.</p>
+<p><strong>Returning user on a new device:</strong> open app to Settings, sign in, account data syncs down, then the landing view.</p>
+<p><strong>Sign in with local guest data and a populated account:</strong> sign in raises a one-time "Add the items from this device to your account?" prompt; Add (default) merges the sets, or decline discards the local data after a warning. Signing into an empty account, or with no local guest data, skips this prompt.</p>
+<p><strong>Offline use (guest or signed-in):</strong> open app (shell cached), and Plan and all surfaces work against the local store; a signed-in user stays signed in and changes sync once a connection returns.</p>
+<p><strong>Sign out / switch account:</strong> Settings to sign out (confirm synced, warn if unsynced), local data cleared, device returns to guest, then optionally sign into a different account.</p>
+<p><strong>Create, edit, or delete an item:</strong> Plan to the add affordance (create overlay) or an item row (detail, then edit overlay or delete confirmation), and back to Plan.</p>
+<p><strong>Connect Google Calendar (Phase 2):</strong> Settings to Google Calendar, connect, Google consent, back to Settings showing connected status.</p>
+<hr />
+<h2>Phase availability</h2>
+<table>
+<thead>
+<tr>
+<th>Surface</th>
+<th>Phase 1</th>
+<th>Phase 2</th>
+<th>Phase 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Guest use + offline (local store)</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Accounts, sync &amp; backup, guest migration</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Auth screens (optional: sign in/up, verify, reset)</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Sign-up prompt</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Plan: Day range (calendar grid + rail), Schedule lens</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Item create / edit (scheduling + repeat + habit toggle)</td>
+<td>Yes</td>
+<td>+ notes, tags</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Plan: Category lens (by tag)</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Plan: Week and Month ranges; Type lens; mini-calendar</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Completion toggle</td>
+<td>Yes</td>
+<td>+ persistent history</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Progress destination</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Settings: Account / sign-in + sync/offline status</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Settings: Google Calendar</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Settings: Tags</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Settings: Default landing view</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p>There are no scheduling groups; tags (Phase 2) are the single organizing layer. The day grid works with no setup in Phase 1.</p>
+<hr />
+<h2>Wireframe handoffs</h2>
+<p>The Phase 1 wireframes were produced as HTML mockups, which resolved most of the open structural questions. Resolved there: the day grid plus rail plus all-day band and drag-to-schedule; how a timeframe item reads on the rail; the create/edit overlay and its form factor; completion (toggle plus "Log again" for count habits); the sign-up prompt and a prominent sign-in entry; the sync/offline indicator; the sign-out confirmation; and the color and status rules.</p>
+<p>Left for later phases: how tags display in item rows and the Category lens (Phase 2/3); how the Schedule lens renders at the Week and Month ranges and the density of the Month grid (Phase 3); and how the guest-to-account merge prompt and any duplicate cleanup are presented.</p>
+<hr />
+<h2>Relationship to other documents</h2>
+<p>The PRD defines what each surface does and how it behaves; this document defines where each surface sits and how it is reached. The technical architecture maps these surfaces to the local-first data layer. The wireframes give each surface its visual form, and the user stories turn each surface and flow into build-ready tickets.</p>
+<hr />
+<h2>Changelog</h2>
+<p><strong>v0.6, 2026-07-03:</strong> reconciled with the shipped app and folded in the last lens and tag-management decisions.</p>
+<ul>
+<li>Type lens is three sections (Habits, Tasks, Events), including at the Week and Month ranges; the count-habit control on Plan is a progress ring with a plain-text "N of M" indicator and a "Log again" past target, while binary and ordinary items keep a plain checkbox.</li>
+<li>Progress surface is read-only (logging happens on Plan); corrected the tag picker to Phase 2; added the "Automatically sync event changes to Google Calendar" toggle to Settings.</li>
+<li>Tag rename and delete are also available in-the-flow on the Category lens section headers (PRD-80), with the Settings Tags panel staying as the master list.</li>
+<li>Specified the Category lens at the Week and Month ranges (PRD-102): distinct items across the span grouped by tag, read-only, mirroring the Type lens at those ranges.</li>
+</ul>
+<p><strong>v0.5, 2026-07-02:</strong> specified the mini-calendar date navigator (PRD-56).</p>
+<ul>
+<li>A collapsible left-rail month calendar on the Plan surface for jumping to a date, with today, selected-date, and selected-span highlighting, item-density dots, and a click that moves the anchor date only, never the range.</li>
+</ul>
+<p><strong>v0.4, 2026-06-24:</strong> Google sign-in now links to an existing same-email account instead of showing a directed error (PRD-38).</p>
+<ul>
+<li>Updated the OAuth callback and sign-up entries accordingly.</li>
+</ul>
+<p><strong>v0.3, 2026-06-23:</strong> Settings became an overlay, and the Day view gained an unschedule gesture and count-habit rail treatment.</p>
+<ul>
+<li>Settings now opens as an overlay over the current surface, not a separate routed page (PRD-42).</li>
+<li>The flexible Day-view column is labeled "Tasks"; dragging a grid event onto it unschedules the item, the reverse of drag-to-schedule (PRD-54).</li>
+<li>Noted the Day-view rail treatment for count habits (PRD-34).</li>
+</ul>
+<p><strong>v0.2, 2026-06-19:</strong> removed leftover duration references during the user-stories pass.</p>
+<ul>
+<li>The Phase 3 logging overlay is "Log completion," and the item-detail history note drops "logged duration per session" in favor of the count-habit "Log again" case.</li>
+</ul>
+<p><strong>v0.1, 2026-06-18:</strong> initial draft and Phase 1 rework.</p>
+<ul>
+<li>Defined the zones, the two-destination primary navigation (Plan, Progress) with persistent Settings, the sitemap, the surface inventory and detail, the key navigation flows, and phase availability, reflecting the two-dial view model and the structural decisions (Progress as its own destination; Settings and item screens as overlays).</li>
+<li>Reworked for the unified item model and local-first: the Day view became a calendar grid plus a rail (not a group list), scheduling groups were removed in favor of tags as the single organizing layer, and the app became one guest-usable, offline zone with auth as an optional area.</li>
+<li>Specified the guest-to-account merge as a one-time prompt with Add as default, and added the access-states distinction (guest, signed-in-online, signed-in-offline) with explicit sign-out separate from being offline.</li>
+</ul></div>
+</main>
+<footer class="foot"><div class="wrap">
+<a href="../../index.html" class="backbtn">&larr; Back to portfolio</a>
+<span class="footmeta"><a href="../index.html">All work samples</a> &middot; Derek Staley</span>
+</div></footer>
+<div class="lb-overlay" id="lb" role="dialog" aria-modal="true" aria-label="Image preview"><button class="lb-close" type="button" aria-label="Close preview">&times;</button><img alt=""></div>
+<script>
+(function(){var lb=document.getElementById('lb');if(!lb)return;var img=lb.querySelector('img'),btn=lb.querySelector('.lb-close');function open(s,a){img.src=s;img.alt=a||'';lb.classList.add('open');document.body.style.overflow='hidden';}function close(){lb.classList.remove('open');img.removeAttribute('src');document.body.style.overflow='';}document.addEventListener('click',function(e){var t=e.target.closest('a');if(!t)return;var h=t.getAttribute('href')||'';if(/\.(png|jpe?g|webp|gif)$/i.test(h)){e.preventDefault();var im=t.querySelector('img');open(h,im?im.getAttribute('alt'):'');}});btn.addEventListener('click',close);lb.addEventListener('click',function(e){if(e.target===lb)close();});document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});})();
+</script>
+</body></html>

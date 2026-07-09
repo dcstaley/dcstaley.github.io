@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Productivity App: v2 Roadmap Plan &middot; Derek Staley</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234F46E5'/%3E%3C/svg%3E">
+<style>
+:root{
+  --page:#f4f5f8; --surface:#ffffff; --ink:#1b1b1f; --muted:#5c5c67; --faint:#636b7c;
+  --line:#e7e7ee; --line-soft:#eff0f4;
+  --accent:#4f46e5; --accent-ink:#3b34c4; --accent-soft:#eeedfb;
+  --habit:#0d9488; --habit-soft:#e3f1ef;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+  --radius:8px;
+  --shadow:0 1px 2px rgba(20,26,44,.04),0 8px 24px rgba(20,26,44,.05);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+.wrap{max-width:54rem;margin:0 auto;padding:0 clamp(1.15rem,5vw,2rem);}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:10;background:rgba(244,245,248,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem clamp(1.15rem,5vw,2rem);}
+.brand{display:inline-flex;align-items:center;gap:.55rem;font-weight:600;letter-spacing:-.01em;color:var(--ink);font-size:.95rem;}
+.brand:hover{text-decoration:none;}
+.brand .dot{width:.8rem;height:.8rem;border-radius:3px;background:var(--accent);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);}
+.brand .habitbar{width:3px;height:.85rem;border-radius:2px;background:var(--habit);}
+.crumb{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--faint);text-transform:uppercase;}
+@media(max-width:620px){.crumb{display:none;}}
+
+/* document header */
+.dochead{padding:clamp(2.2rem,5vw,3.6rem) 0 1.8rem;border-bottom:1px solid var(--line);}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);}
+.dochead h1{font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.08;letter-spacing:-.025em;font-weight:660;margin:.5rem 0 0;text-wrap:balance;}
+.subtitle{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;color:var(--faint);margin:.9rem 0 0;}
+.callout{margin:1.5rem 0 0;background:var(--accent-soft);border:1px solid #e0defa;border-radius:var(--radius);padding:1.05rem 1.25rem;font-size:.95rem;color:var(--muted);}
+.callout p{margin:.35rem 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+.callout strong{color:var(--accent-ink);font-weight:650;}
+
+/* body */
+.doc{padding:2.2rem 0 1rem;}
+.doc>p:first-of-type{font-size:1.05rem;color:var(--muted);}
+.doc h2{font-size:1.28rem;letter-spacing:-.015em;font-weight:680;margin:2.4rem 0 .5rem;padding-top:1.4rem;border-top:1px solid var(--line);}
+.doc h3{font-size:1.02rem;font-weight:660;margin:1.6rem 0 .4rem;color:var(--ink);}
+.doc h2:first-child,.doc h3:first-child{margin-top:0;border-top:none;padding-top:0;}
+.doc p{margin:.7rem 0;}
+.doc ul,.doc ol{margin:.6rem 0;padding-left:1.3rem;}
+.doc li{margin:.34rem 0;}
+.doc li>ul,.doc li>ol{margin:.3rem 0;}
+.doc strong{color:var(--ink);font-weight:650;}
+.doc hr{border:none;border-top:1px solid var(--line);margin:2.2rem 0;}
+.doc a{border-bottom:1px solid transparent;}
+
+/* figures / screenshots */
+.doc figure{margin:1.5rem 0;}
+.doc figure.shotrow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start;}
+@media(max-width:640px){.doc figure.shotrow{grid-template-columns:1fr;}}
+.doc figure.shotrow a{display:block;border-bottom:0;line-height:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .12s ease;}
+.doc figure.shotrow a:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 24px rgba(20,26,44,.09);}
+.doc figure.shotrow img{width:100%;height:230px;object-fit:cover;object-position:top left;display:block;}
+.doc figure figcaption{grid-column:1/-1;font-size:14px;color:var(--faint);margin-top:.4rem;line-height:1.5;}
+@media (prefers-reduced-motion: reduce){.doc figure.shotrow a{transition:none;}.doc figure.shotrow a:hover{transform:none;}}
+
+/* inline code + code blocks */
+.doc code{font-family:var(--mono);font-size:.85em;background:var(--line-soft);border:1px solid var(--line);border-radius:5px;padding:.08em .38em;color:var(--accent-ink);}
+.doc pre{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.1rem;overflow:auto;box-shadow:var(--shadow);margin:1rem 0;}
+.doc pre code{background:none;border:none;padding:0;color:var(--muted);font-size:.82rem;line-height:1.55;}
+
+/* body blockquotes (e.g. "Resolved later" notes) */
+.doc blockquote{margin:1.1rem 0;padding:.7rem 1.1rem;border-left:3px solid var(--habit);background:var(--habit-soft);border-radius:0 var(--radius) var(--radius) 0;color:var(--muted);font-size:.95rem;}
+.doc blockquote p{margin:.3rem 0;}
+.doc blockquote strong{color:#0a6d64;}
+
+/* tables */
+.doc table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.9rem;display:block;overflow-x:auto;}
+.doc th{text-align:left;font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);padding:.6rem .7rem;border-bottom:2px solid var(--line);white-space:nowrap;}
+.doc td{padding:.6rem .7rem;border-bottom:1px solid var(--line);vertical-align:top;}
+.doc tbody tr:hover{background:var(--line-soft);}
+
+/* footer */
+.foot{border-top:1px solid var(--line);margin-top:2rem;padding:2rem 0 3rem;}
+.foot .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.85rem;color:var(--faint);}
+.foot a{font-weight:600;}
+.backlink{color:var(--ink);}
+.backbtn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border:1px solid var(--accent);border-radius:8px;color:var(--accent-ink);font-weight:600;font-size:14px;text-decoration:none;transition:background .12s ease,color .12s ease;}
+.backbtn:hover{background:var(--accent);color:#fff;text-decoration:none;}
+.foot .footmeta a{color:var(--faint);}
+/* image lightbox */
+.lb-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(15,17,28,.92);padding:2.5vmin;cursor:zoom-out;opacity:0;transition:opacity .16s ease;}
+.lb-overlay.open{display:flex;opacity:1;}
+.lb-overlay img{max-width:95vw;max-height:92vh;width:auto;height:auto;border-radius:8px;box-shadow:0 12px 48px rgba(0,0,0,.5);cursor:default;}
+.lb-close{position:fixed;top:16px;right:20px;width:40px;height:40px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lb-close:hover{background:rgba(255,255,255,.26);}
+@media (prefers-reduced-motion: reduce){.backbtn{transition:none;}.lb-overlay{transition:none;}}
+
+/* index */
+.hero{padding:clamp(2.6rem,6vw,4.4rem) 0 2.2rem;}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3rem);line-height:1.06;letter-spacing:-.03em;font-weight:680;margin:.6rem 0 0;}
+.hero .lede{font-size:clamp(1.05rem,2.4vw,1.2rem);color:var(--muted);max-width:60ch;margin:1.3rem 0 0;}
+.grouplabel{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:2.6rem 0 1rem;display:flex;align-items:center;gap:.8rem;}
+.grouplabel::after{content:"";flex:1;height:1px;background:var(--line);}
+.grouplabel .app{color:var(--accent-ink);}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+@media(max-width:640px){.cards{grid-template-columns:1fr;}}
+.card{display:block;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow);color:var(--ink);transition:transform .12s ease,box-shadow .12s ease;}
+.card:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 3px 6px rgba(20,26,44,.06),0 14px 32px rgba(20,26,44,.08);}
+.card .kind{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.card .name{font-weight:670;font-size:1.02rem;letter-spacing:-.01em;margin:.3rem 0 .4rem;}
+.card .shows{font-size:.9rem;color:var(--muted);line-height:1.55;}
+.intro-note{margin:2.4rem 0 0;font-size:.92rem;color:var(--faint);border-top:1px solid var(--line);padding-top:1.2rem;}
+
+/* Type & contrast pass to match the portfolio: larger content tiers, 13px label floor, underlined body links */
+body{font-size:17px;}
+.doc p,.doc li,.doc td{font-size:17px;}
+.doc h2{font-size:22px;}
+.doc h3{font-size:18px;}
+.callout{font-size:16px;}
+.doc table{font-size:15.5px;}
+.doc th{font-size:13px;}
+.doc code,.doc pre code{font-size:14px;}
+.doc blockquote{font-size:16px;}
+.subtitle{font-size:13px;}
+.crumb{font-size:13px;}
+.eyebrow{font-size:13px;}
+.card .kind{font-size:12.5px;}
+.card .name{font-size:17px;}
+.card .shows{font-size:15px;}
+.foot .wrap{font-size:14px;}
+.doc a{text-decoration:underline;}
+.brand a{color:var(--ink);text-decoration:none;font-weight:600;}
+.brand a:hover{color:var(--accent);}
+.brand .sep{color:var(--faint);font-weight:400;margin:0 .1rem;}
+.foot a{text-decoration:none;}
+@media (prefers-reduced-motion: reduce){ .card{transition:none;} .card:hover{transform:none;} }
+@media print{ .topbar{position:static;} body{background:#fff;} .doc pre,.callout,.card{break-inside:avoid;} }
+
+
+</style>
+</head><body>
+<header class="topbar"><div class="wrap">
+<span class="brand"><span class="dot"></span><span class="habitbar"></span><a href="../../index.html" class="backlink">&larr; Portfolio</a></span>
+<span class="crumb">Unified Tasks &amp; Habits</span>
+</div></header>
+<main class="wrap">
+<header class="dochead">
+<div class="eyebrow">Work Sample</div>
+<h1>Productivity App: v2 Roadmap Plan</h1>
+<div class="subtitle">Work sample · v2 roadmap · in active development (July 2026)</div>
+<div class="callout"><p><strong>What this is:</strong> the working plan and priority decisions for v2, sitting on top of the fuller v2 scope-options menu: what to do, in what order, and how.</p><p><strong>What it shows:</strong> roadmap sequencing and prioritization on top of a candidate menu, plus structuring a backlog for parallel execution.</p><p><strong>Source:</strong> lightly edited from the project's v2 plan for presentation (internal references cleaned). The full working version lives in the app repo.</p></div>
+</header>
+<div class="doc"><p>v1 (all three phases) has shipped, and v2 is now in active development against this plan. The companion scope-options document is the full candidate menu; this doc is the ordering and the decisions the build is following.</p>
+<hr />
+<h2>What v2 is</h2>
+<p>v1 shipped and its audit is closed. v2 deepens the app rather than broadening it: better quantitative tracking (Insights), reminders, and richer habit goals come first, and platform reach (mobile) comes last. The first wave is in active development now: the de-risk spikes are complete and the Insights build is underway.</p>
+<figure class="shotrow">
+<a href="../../images/prod-insights.png" target="_blank" rel="noopener"><img src="../../images/prod-insights.png" alt="Insights: per-habit heatmap, streaks, and trend-over-time views"></a>
+<a href="../../images/prod-weekly-review.png" target="_blank" rel="noopener"><img src="../../images/prod-weekly-review.png" alt="The weekly review flow: a saved end-of-week reflection"></a>
+<figcaption>In development for v2: the Insights analytics surface and the weekly review flow, being built against the locked scope below.</figcaption>
+</figure>
+
+<hr />
+<h2>Priority decisions (locked)</h2>
+<p>These reflect product-owner calls made while planning v2:</p>
+<ul>
+<li><strong>Notifications and reminders is the top priority.</strong> It is the biggest behavior-change lever for a task and habit app, elevated above the tracking work. The caveat: it cannot start cold. It is the only item that breaks the current "no server jobs, local-first, guest-usable" model, so it starts with an architecture spike before any build.</li>
+<li><strong>Pattern analytics is design-first.</strong> High value and cheap to build (it reads existing completion data, with no new data model), but the scope has to be decided from a competitive scan plus a mockup, not invented. It addresses the gap that the current Progress surface is only a current-period snapshot with no history, trends, or streaks.</li>
+<li><strong>Duration habit goals comes after or alongside analytics.</strong> It extends the same Progress area, so it is sequenced against analytics to avoid two streams reshaping one surface at once. It carries a real new interaction (entering a duration when logging, versus today's one-tap), so it is the most design-involved of the tracking items.</li>
+<li><strong>Mobile is last,</strong> after the app is built out with the other v2 features. The narrow-screen responsive Week and Month layout is the first step of mobile and moves down with it.</li>
+<li><strong>Data export is demoted.</strong> Its concrete value is guest backup and data portability, cheap but low-urgency. Optional, not a priority.</li>
+<li><strong>Social and collaborative is parked.</strong> It contradicts the single-user, last-write-wins architecture; it would be a different product.</li>
+<li><strong>Onboarding needs a product decision first.</strong> It is in tension with the "zero setup" principle, so the question of whether to have it at all precedes any design.</li>
+</ul>
+<hr />
+<h2>Ordering</h2>
+<ol>
+<li><strong>Notifications and reminders</strong> (spike first, then a phased build). Top priority.</li>
+<li><strong>Pattern analytics</strong> (design-first: competitive scan, then mockup, then lock scope, then build).</li>
+<li><strong>Duration habit goals</strong> (after or with analytics; shared Progress surface).</li>
+<li><strong>Setup-gated:</strong> Google Drive attachments in notes and additional calendar integrations (Apple, Outlook), each needing external OAuth or API setup before build.</li>
+<li><strong>Big spikes:</strong> AI-assisted scheduling, and gamification (built after analytics so it reuses the streak logic).</li>
+<li><strong>Mobile:</strong> responsive Week and Month grids, then any native work. Last.</li>
+</ol>
+<p>Parked: social and collaborative. Decision-needed before scheduling: onboarding and data export.</p>
+<p>Dependencies: analytics precedes gamification (shared streaks); analytics and duration goals share the Progress surface; notifications is standalone new architecture; responsive grids precede mobile.</p>
+<hr />
+<h2>De-risk tracks (both complete)</h2>
+<p>Neither top item could be built cold, so v2 opened with de-risk work. Both are now done and ticketed.</p>
+<ul>
+<li><strong>Notifications spike (done).</strong> Architecture: Web Push with VAPID, a server-only push-subscriptions table, and a service-worker push handler, scheduled by a database cron job calling the app's own route (the free path, no paid tier) and reading due items server-side. Notifications are account-only, since a guest has nothing server-side to remind against; iOS needs an installed PWA; reminders fire minutes before, so roughly five-minute cron granularity is fine. Phase A is green-lit and ticketed, with Phase B (per-item reminders and settings) and Phase C (habit nudges) as follow-on epics.</li>
+<li><strong>Analytics design (done).</strong> A competitive scan of the analytics surfaces of eight habit and task apps plus a mockup; scope locked and ticketed.</li>
+</ul>
+<p><strong>Analytics over-logging rule (baked into the Insights build).</strong> Count habits can be logged past their goal (for example 4 of 3). Analytics keeps two separate measures and never conflates them: goal adherence (per period, binary: met when the count reaches the target, which drives frequency-relative streaks and a consistency percentage capped at 100% per period) and volume (raw event count, uncapped, shown as heatmap intensity). Streaks count consecutive met periods; over-logging neither extends nor breaks a streak.</p>
+<p><strong>Locked Insights scope (first build).</strong> In: the foundation library and surface, a per-habit card with heatmap, day-of-week and trend-over-time views, a category rollup with a needs-attention list, and a weekly review, with frequency-relative streaks. Deferred: skip/pause (a new stored state) and planned-versus-actual (which depends on duration habit goals). Dropped: the per-completion "why or why not" note.</p>
+<p><strong>What's building now.</strong> Both foundations are independent, so the Insights foundation and the notifications Phase-A wave run in parallel. Analytics is the faster win; notifications is the higher-priority build. Duration habit goals follows, coordinating with the analytics work on the Progress surface.</p>
+<hr />
+<h2>How we work</h2>
+<ul>
+<li>The same per-ticket loop as v1: scoped tickets with acceptance criteria and the Definition of Done, verified in the live preview and tests, committed per ticket. Auto-deploy is on, so each merge to main goes live.</li>
+<li>The notifications infrastructure rides a short-lived branch (the riskiest, being new server and service-worker territory) and merges when green.</li>
+<li>Tickets live in Jira, where the v2 backlog is managed and keeps expanding as the build proceeds.</li>
+<li>Independent items can be built in parallel where they do not touch the same files; the ordering above notes the collisions to avoid.</li>
+</ul>
+<hr />
+<h2>How the backlog is structured</h2>
+<p>The v2 work is organized into two epics that map to the two workstreams above, Insights (analytics) and Notifications, decomposed so they can run in parallel. Each epic follows the same shape: a foundation story lands first (the shared surface and wider history read for Insights; the subscription table and service-worker handler for Notifications), then a set of independent stories runs as a parallel wave (the per-habit card, the trend and slip views, the category rollup), then an integration story closes the epic (the weekly review for Insights; the test-send that closes Notifications Phase A). Every story carries acceptance criteria and the same Definition of Done as v1.</p>
+<p>The live backlog is maintained in Jira and keeps expanding as v2 is built. This document captures that structure and the sequencing decisions, not a snapshot of individual tickets, which move week to week.</p></div>
+</main>
+<footer class="foot"><div class="wrap">
+<a href="../../index.html" class="backbtn">&larr; Back to portfolio</a>
+<span class="footmeta"><a href="../index.html">All work samples</a> &middot; Derek Staley</span>
+</div></footer>
+<div class="lb-overlay" id="lb" role="dialog" aria-modal="true" aria-label="Image preview"><button class="lb-close" type="button" aria-label="Close preview">&times;</button><img alt=""></div>
+<script>
+(function(){var lb=document.getElementById('lb');if(!lb)return;var img=lb.querySelector('img'),btn=lb.querySelector('.lb-close');function open(s,a){img.src=s;img.alt=a||'';lb.classList.add('open');document.body.style.overflow='hidden';}function close(){lb.classList.remove('open');img.removeAttribute('src');document.body.style.overflow='';}document.addEventListener('click',function(e){var t=e.target.closest('a');if(!t)return;var h=t.getAttribute('href')||'';if(/\.(png|jpe?g|webp|gif)$/i.test(h)){e.preventDefault();var im=t.querySelector('img');open(h,im?im.getAttribute('alt'):'');}});btn.addEventListener('click',close);lb.addEventListener('click',function(e){if(e.target===lb)close();});document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});})();
+</script>
+</body></html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>User Stories &amp; Acceptance Criteria: Unified Tasks &amp; Habits App &middot; Derek Staley</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234F46E5'/%3E%3C/svg%3E">
+<style>
+:root{
+  --page:#f4f5f8; --surface:#ffffff; --ink:#1b1b1f; --muted:#5c5c67; --faint:#636b7c;
+  --line:#e7e7ee; --line-soft:#eff0f4;
+  --accent:#4f46e5; --accent-ink:#3b34c4; --accent-soft:#eeedfb;
+  --habit:#0d9488; --habit-soft:#e3f1ef;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+  --radius:8px;
+  --shadow:0 1px 2px rgba(20,26,44,.04),0 8px 24px rgba(20,26,44,.05);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+.wrap{max-width:54rem;margin:0 auto;padding:0 clamp(1.15rem,5vw,2rem);}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:10;background:rgba(244,245,248,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem clamp(1.15rem,5vw,2rem);}
+.brand{display:inline-flex;align-items:center;gap:.55rem;font-weight:600;letter-spacing:-.01em;color:var(--ink);font-size:.95rem;}
+.brand:hover{text-decoration:none;}
+.brand .dot{width:.8rem;height:.8rem;border-radius:3px;background:var(--accent);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);}
+.brand .habitbar{width:3px;height:.85rem;border-radius:2px;background:var(--habit);}
+.crumb{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--faint);text-transform:uppercase;}
+@media(max-width:620px){.crumb{display:none;}}
+
+/* document header */
+.dochead{padding:clamp(2.2rem,5vw,3.6rem) 0 1.8rem;border-bottom:1px solid var(--line);}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);}
+.dochead h1{font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.08;letter-spacing:-.025em;font-weight:660;margin:.5rem 0 0;text-wrap:balance;}
+.subtitle{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;color:var(--faint);margin:.9rem 0 0;}
+.callout{margin:1.5rem 0 0;background:var(--accent-soft);border:1px solid #e0defa;border-radius:var(--radius);padding:1.05rem 1.25rem;font-size:.95rem;color:var(--muted);}
+.callout p{margin:.35rem 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+.callout strong{color:var(--accent-ink);font-weight:650;}
+
+/* body */
+.doc{padding:2.2rem 0 1rem;}
+.doc>p:first-of-type{font-size:1.05rem;color:var(--muted);}
+.doc h2{font-size:1.28rem;letter-spacing:-.015em;font-weight:680;margin:2.4rem 0 .5rem;padding-top:1.4rem;border-top:1px solid var(--line);}
+.doc h3{font-size:1.02rem;font-weight:660;margin:1.6rem 0 .4rem;color:var(--ink);}
+.doc h2:first-child,.doc h3:first-child{margin-top:0;border-top:none;padding-top:0;}
+.doc p{margin:.7rem 0;}
+.doc ul,.doc ol{margin:.6rem 0;padding-left:1.3rem;}
+.doc li{margin:.34rem 0;}
+.doc li>ul,.doc li>ol{margin:.3rem 0;}
+.doc strong{color:var(--ink);font-weight:650;}
+.doc hr{border:none;border-top:1px solid var(--line);margin:2.2rem 0;}
+.doc a{border-bottom:1px solid transparent;}
+
+/* figures / screenshots */
+.doc figure{margin:1.5rem 0;}
+.doc figure.shotrow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start;}
+@media(max-width:640px){.doc figure.shotrow{grid-template-columns:1fr;}}
+.doc figure.shotrow a{display:block;border-bottom:0;line-height:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .12s ease;}
+.doc figure.shotrow a:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 24px rgba(20,26,44,.09);}
+.doc figure.shotrow img{width:100%;height:230px;object-fit:cover;object-position:top left;display:block;}
+.doc figure figcaption{grid-column:1/-1;font-size:14px;color:var(--faint);margin-top:.4rem;line-height:1.5;}
+@media (prefers-reduced-motion: reduce){.doc figure.shotrow a{transition:none;}.doc figure.shotrow a:hover{transform:none;}}
+
+/* inline code + code blocks */
+.doc code{font-family:var(--mono);font-size:.85em;background:var(--line-soft);border:1px solid var(--line);border-radius:5px;padding:.08em .38em;color:var(--accent-ink);}
+.doc pre{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.1rem;overflow:auto;box-shadow:var(--shadow);margin:1rem 0;}
+.doc pre code{background:none;border:none;padding:0;color:var(--muted);font-size:.82rem;line-height:1.55;}
+
+/* body blockquotes (e.g. "Resolved later" notes) */
+.doc blockquote{margin:1.1rem 0;padding:.7rem 1.1rem;border-left:3px solid var(--habit);background:var(--habit-soft);border-radius:0 var(--radius) var(--radius) 0;color:var(--muted);font-size:.95rem;}
+.doc blockquote p{margin:.3rem 0;}
+.doc blockquote strong{color:#0a6d64;}
+
+/* tables */
+.doc table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.9rem;display:block;overflow-x:auto;}
+.doc th{text-align:left;font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);padding:.6rem .7rem;border-bottom:2px solid var(--line);white-space:nowrap;}
+.doc td{padding:.6rem .7rem;border-bottom:1px solid var(--line);vertical-align:top;}
+.doc tbody tr:hover{background:var(--line-soft);}
+
+/* footer */
+.foot{border-top:1px solid var(--line);margin-top:2rem;padding:2rem 0 3rem;}
+.foot .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.85rem;color:var(--faint);}
+.foot a{font-weight:600;}
+.backlink{color:var(--ink);}
+.backbtn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border:1px solid var(--accent);border-radius:8px;color:var(--accent-ink);font-weight:600;font-size:14px;text-decoration:none;transition:background .12s ease,color .12s ease;}
+.backbtn:hover{background:var(--accent);color:#fff;text-decoration:none;}
+.foot .footmeta a{color:var(--faint);}
+/* image lightbox */
+.lb-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(15,17,28,.92);padding:2.5vmin;cursor:zoom-out;opacity:0;transition:opacity .16s ease;}
+.lb-overlay.open{display:flex;opacity:1;}
+.lb-overlay img{max-width:95vw;max-height:92vh;width:auto;height:auto;border-radius:8px;box-shadow:0 12px 48px rgba(0,0,0,.5);cursor:default;}
+.lb-close{position:fixed;top:16px;right:20px;width:40px;height:40px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lb-close:hover{background:rgba(255,255,255,.26);}
+@media (prefers-reduced-motion: reduce){.backbtn{transition:none;}.lb-overlay{transition:none;}}
+
+/* index */
+.hero{padding:clamp(2.6rem,6vw,4.4rem) 0 2.2rem;}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3rem);line-height:1.06;letter-spacing:-.03em;font-weight:680;margin:.6rem 0 0;}
+.hero .lede{font-size:clamp(1.05rem,2.4vw,1.2rem);color:var(--muted);max-width:60ch;margin:1.3rem 0 0;}
+.grouplabel{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:2.6rem 0 1rem;display:flex;align-items:center;gap:.8rem;}
+.grouplabel::after{content:"";flex:1;height:1px;background:var(--line);}
+.grouplabel .app{color:var(--accent-ink);}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+@media(max-width:640px){.cards{grid-template-columns:1fr;}}
+.card{display:block;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow);color:var(--ink);transition:transform .12s ease,box-shadow .12s ease;}
+.card:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 3px 6px rgba(20,26,44,.06),0 14px 32px rgba(20,26,44,.08);}
+.card .kind{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.card .name{font-weight:670;font-size:1.02rem;letter-spacing:-.01em;margin:.3rem 0 .4rem;}
+.card .shows{font-size:.9rem;color:var(--muted);line-height:1.55;}
+.intro-note{margin:2.4rem 0 0;font-size:.92rem;color:var(--faint);border-top:1px solid var(--line);padding-top:1.2rem;}
+
+/* Type & contrast pass to match the portfolio: larger content tiers, 13px label floor, underlined body links */
+body{font-size:17px;}
+.doc p,.doc li,.doc td{font-size:17px;}
+.doc h2{font-size:22px;}
+.doc h3{font-size:18px;}
+.callout{font-size:16px;}
+.doc table{font-size:15.5px;}
+.doc th{font-size:13px;}
+.doc code,.doc pre code{font-size:14px;}
+.doc blockquote{font-size:16px;}
+.subtitle{font-size:13px;}
+.crumb{font-size:13px;}
+.eyebrow{font-size:13px;}
+.card .kind{font-size:12.5px;}
+.card .name{font-size:17px;}
+.card .shows{font-size:15px;}
+.foot .wrap{font-size:14px;}
+.doc a{text-decoration:underline;}
+.brand a{color:var(--ink);text-decoration:none;font-weight:600;}
+.brand a:hover{color:var(--accent);}
+.brand .sep{color:var(--faint);font-weight:400;margin:0 .1rem;}
+.foot a{text-decoration:none;}
+@media (prefers-reduced-motion: reduce){ .card{transition:none;} .card:hover{transform:none;} }
+@media print{ .topbar{position:static;} body{background:#fff;} .doc pre,.callout,.card{break-inside:avoid;} }
+
+
+</style>
+</head><body>
+<header class="topbar"><div class="wrap">
+<span class="brand"><span class="dot"></span><span class="habitbar"></span><a href="../../index.html" class="backlink">&larr; Portfolio</a></span>
+<span class="crumb">Unified Tasks &amp; Habits</span>
+</div></header>
+<main class="wrap">
+<header class="dochead">
+<div class="eyebrow">Work Sample</div>
+<h1>User Stories &amp; Acceptance Criteria: Unified Tasks &amp; Habits App</h1>
+<div class="subtitle">Work sample · user stories and acceptance criteria · as of v1 (July 2026)</div>
+<div class="callout"><p><strong>What this is:</strong> the ticket-by-ticket build backlog for the app, turning the PRD's behavior into small, testable stories with acceptance criteria.</p><p><strong>What it shows:</strong> how I decompose a product into vertical slices, write acceptance criteria (a hybrid of Given/When/Then scenarios and flat checklists), and hold a global Definition of Done, including speccing the hard edge cases rather than deferring them.</p><p><strong>Source:</strong> condensed and edited from the project's user-stories document for presentation. The full backlog is about fifty tickets across the epics below; this exhibit keeps the methodology and Definition of Done in full and shows a representative sample of the tickets. The full working version lives in the app repo.</p></div>
+</header>
+<div class="doc"><p>Derived from the PRD (behavior), the information architecture (screens), and the technical architecture (implementation): the PRD owns behavior, the technical architecture owns implementation, and this document turns both into ordered, testable tickets.</p>
+<hr />
+<h2>How to read this document</h2>
+<p>Each story is a vertical slice: a small, end-to-end piece of working behavior sized to roughly one build session and one pull request. Stories are grouped into epics, and the epics are ordered in the sequence they should be built, so working top to bottom gives a sensible build path. Dependencies are noted on each story where they matter.</p>
+<p><strong>Story shape.</strong> Every story has an ID, a user-story sentence ("As a / I want / so that"), and acceptance criteria. The ID prefix marks the epic (for example <code>ITM-1</code>), so tickets can be referenced in commits.</p>
+<p><strong>Acceptance criteria are hybrid.</strong> Behavior that depends on state or a trigger is written as Given / When / Then scenarios, because those map cleanly to implementation and to tests. Simple, flat rules (a field is required, a default value) are written as a checklist. A story uses whichever fits each criterion, so most stories have both.</p>
+<p><strong>Edge cases are included.</strong> Where a behavior has important edges (offline, guest, recurrence edits, derived "missed," the guest-to-account merge), those are written as their own scenarios rather than deferred, because they are where the logic actually has to be correct.</p>
+<p><strong>"User" means the single end user.</strong> This is a single-user app with no roles, so stories are written against a generic "user."</p>
+<p><strong>Phase scope.</strong> This document specs Phase 1 in full. Phase 2 and Phase 3 are captured as epic-level stubs at the end, to be expanded closer to their build, since their details will still move.</p>
+<hr />
+<h2>Global Definition of Done</h2>
+<p>These apply to every story in addition to its own acceptance criteria. A story is not done unless all of these hold. They are stated once here rather than repeated on each ticket.</p>
+<ul>
+<li>The behavior works against the on-device local store and is instant; nothing blocks on the network (per the local-first architecture).</li>
+<li>The behavior works for a guest with no account, unless the story is specifically about accounts, sync, or Google Calendar.</li>
+<li>All user-facing reads exclude soft-deleted items (<code>deleted_at IS NULL</code>).</li>
+<li>Input is validated client-side with Zod for UX; the schema and the inferred TypeScript types are the single source of types.</li>
+<li>Any pure logic the story introduces (recurrence evaluation, the day query, missed/overdue derivation, progress math, the guest migration) has unit tests covering the happy path and the edge cases in the story.</li>
+<li>The UI matches the Phase 1 mockups and design tokens (Inter; indigo accent <code>#4F46E5</code>; teal <code>#0D9488</code> for the habit indicator; neutral grays; 8px corners), following the design system.</li>
+<li>TypeScript is strict and the code passes ESLint and Prettier.</li>
+<li>No em dashes appear in any UI copy, per the project writing convention.</li>
+</ul>
+<hr />
+<h2>Epic build order (Phase 1)</h2>
+<p>The epics build in this order; later epics depend on earlier ones.</p>
+<ol>
+<li><strong>Foundation &amp; Local Store (FND):</strong> the scaffold, the on-device store, the Supabase sync backend, the app shell, and the PWA. Nothing else can be built until the store and shell exist.</li>
+<li><strong>Item Create &amp; Edit (ITM):</strong> the create/edit overlay and all of item CRUD, so there is data to view and complete.</li>
+<li><strong>Day / Plan View (PLAN):</strong> the daily planning surface that renders items from the store.</li>
+<li><strong>Completion (DONE):</strong> marking items done, the toggle and "Log again," writing completion records.</li>
+<li><strong>Accounts, Sync &amp; Guest Migration (ACCT):</strong> optional accounts that turn on sync, and the guest-to-account data handling.</li>
+<li><strong>Offline &amp; PWA Behavior (OFF):</strong> the explicit offline behaviors and the sync/offline status surface.</li>
+</ol>
+<p>Epics 1 through 4 deliver a fully usable guest app offline. Epics 5 and 6 layer accounts, sync, and the offline status surface on top without changing the core experience.</p>
+<hr />
+<h2>The stories (a representative sample)</h2>
+<p>The full backlog runs to about fifty tickets across the epics above. The six below are chosen to show the range: a foundation story, the core create flow, the habit differentiator, the count-habit completion behavior, the hardest data edge case, and a complex integration. The remaining tickets follow the same shape.</p>
+<h3>FND-2: On-device local store and schema</h3>
+<p><strong>As a</strong> user, <strong>I want</strong> the app to keep its data on my device, <strong>so that</strong> it is instant and works with no account and no network.</p>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The on-device SQLite store is initialized via the local-first SDK.</li>
+<li>The local schema mirrors the data model: <code>profiles</code>, <code>items</code>, <code>completion_events</code> (Phase 1 tables), with <code>tags</code>, <code>item_tags</code>, and <code>calendar_connections</code> provisioned for later phases.</li>
+<li>The data layer exposes typed create / read / update / delete for <code>items</code> (delete is soft for habits, hard for non-habits) and read/write for <code>completion_events</code>, all against the local store.</li>
+<li>Scenarios:<ul>
+<li>Given a fresh install with no account, When the app initializes, Then a local store exists and reads/writes succeed with sync turned off.</li>
+<li>Given an item is written locally, When it is read back, Then the stored fields round-trip unchanged.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checklist</strong></p>
+<ul>
+<li>All tables carry <code>user_id</code>, <code>created_at</code>, and (where defined) <code>updated_at</code>.</li>
+<li>Date fields use ISO <code>YYYY-MM-DD</code>; timestamps use full ISO 8601.</li>
+</ul>
+<h3>ITM-1: Create a Set time item</h3>
+<p><strong>As a</strong> user, <strong>I want</strong> to create an item with a date and a start and end time, <strong>so that</strong> it appears as a block on my day at the right time.</p>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Set time is the default mode when the create overlay opens.</li>
+<li>Scenarios:<ul>
+<li>Given the overlay is in Set time mode, When I enter a title, a date, a start time, and an end time, and save, Then an item is created with <code>scheduling_mode = set_time</code> and it renders as a block on the grid at that time.</li>
+<li>Given Set time mode, When I enter a start time but no end time, Then Save is disabled and an inline hint asks for an end time (the end is required because it is the duration).</li>
+<li>Given Set time mode, When I enter an end time earlier than the start time, Then validation blocks save with a clear message.</li>
+<li>Given no title, When I try to save, Then Save is disabled.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checklist</strong></p>
+<ul>
+<li><code>date_start</code> defaults to the day currently in view; <code>is_all_day</code> and <code>is_end_of_day</code> default to false.</li>
+<li>Title is required, max 200 characters.</li>
+</ul>
+<h3>ITM-8: Track an item as a habit</h3>
+<p><strong>As a</strong> user, <strong>I want</strong> a toggle to track an item as a habit, <strong>so that</strong> I can measure my consistency without creating a separate kind of item.</p>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Scenarios:<ul>
+<li>Given any item, When I turn on "Track as a habit" and save, Then <code>is_tracked_habit</code> is true and the item shows the habit indicator (teal bar) on the calendar.</li>
+<li>Given a tracked item with a frequency repeat, When it is saved, Then it is a count habit whose target is its frequency.</li>
+<li>Given a tracked item with a scheduled repeat, When it is saved, Then it is a binary habit (done / not done per active date).</li>
+<li>Given the toggle, When I save, Then no separate numeric target is requested (hour-based goals are out of v1).</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checklist</strong></p>
+<ul>
+<li>The toggle is independent of repeat: an item can repeat without being tracked, and (rarely) be tracked while one-off.</li>
+<li>The teal habit indicator appears on the calendar card, not on the item detail title.</li>
+</ul>
+<h3>DONE-3: Log again for a count habit</h3>
+<p><strong>As a</strong> user, <strong>I want</strong> to log a count habit more than once a day, <strong>so that</strong> doing it twice counts twice toward my frequency goal.</p>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Scenarios:<ul>
+<li>Given a count habit (a tracked item with a frequency repeat) active that day, When it renders, Then its completion control is a progress ring: tapping it logs a completion and fills the ring toward the target, and a teal check shows once the target is met.</li>
+<li>Given the target is met, When I tap the done ring again, Then that day's completions are cleared (an undo).</li>
+<li>Given the target is met, When the day renders, Then a separate "Log again" control appears, and using it writes an additional completion for the same date, taking the period count past the target (it never clears).</li>
+<li>Given the period target is met, When the day renders, Then the habit stays on the rail so the user can keep logging past the goal (for example 4 of 3 this week).</li>
+<li>Given a binary or non-tracked item, When it renders, Then its control is a plain checkbox, with no ring, no "Log again," and no count indicator.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checklist</strong></p>
+<ul>
+<li>"Log again" is a small secondary control at the trailing edge of the card, not a stepper, and never shifts the title.</li>
+<li>Count progress in a period is the number of completion rows in that period; logging may exceed the target.</li>
+</ul>
+<h3>ACCT-10: Guest-to-account merge (both populated)</h3>
+<p><strong>As a</strong> user signing into an account that already has data from a device that also has guest data, <strong>I want</strong> to choose whether to add my local items, <strong>so that</strong> I control the merge and avoid duplicates.</p>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Scenarios:<ul>
+<li>Given local guest data and an account that already has data, When I sign in, Then a one-time prompt asks "Add the items you created on this device to your account?" with Add as the default.</li>
+<li>Given the prompt, When I choose Add, Then the two sets are unioned by identity: items and their completions upload as distinct rows, and same-named tags (case-insensitive) are reconciled so guest items repoint to the account's matching tag rather than duplicating it.</li>
+<li>Given the prompt, When I choose discard, Then the local guest data is dropped after a clear warning, and only the account data remains.</li>
+<li>Given an empty account or no local guest data, When I sign in, Then this prompt does not appear.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checklist</strong></p>
+<ul>
+<li>The merge is a union of records with separate IDs, not a last-write-wins conflict.</li>
+<li>Any genuine duplicates that remain can be deleted by the user.</li>
+</ul>
+<h3>GCAL-7: Optional bidirectional sync (read-only inbound events)</h3>
+<p><strong>As a</strong> user, <strong>I want</strong> to optionally see my Google Calendar events inside the app, <strong>so that</strong> my day view reflects my whole schedule.</p>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Scenarios:<ul>
+<li>Given a connected user, When I enable bidirectional sync in Settings (off by default), Then my Google Calendar events appear on their date and time in the Day, Week, and Month ranges, distinguished as external.</li>
+<li>Given I have several visible Google calendars, When inbound events render, Then events from every calendar I have visible in Google, plus the primary, are shown, excluding the app's own calendar (so pushed items never double up) and free/busy-only calendars; each event carries its source calendar's color as a small dot.</li>
+<li>Given an external event in the app, When I try to edit it or mark it complete, Then I cannot (read-only; not a full app item, no repeat or tags).</li>
+<li>Given bidirectional sync is off, Then no external events appear.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checklist</strong></p>
+<ul>
+<li>Which calendars appear is controlled in Google (hide a calendar there and it stops appearing here); there is no in-app calendar chooser.</li>
+<li>The toggle appears only once Calendar is connected, and defaults to off.</li>
+</ul>
+<hr />
+<h2>Phase 2 and Phase 3</h2>
+<p>Phase 2 layers integration and configuration on top of the core experience without changing Phase 1 behavior, across three epics: <strong>Tags &amp; Category View</strong> (the single organizing layer), <strong>Notes &amp; Completion History</strong> (a notes field plus the surfaces that read completion records over time), and <strong>Google Calendar Sync</strong> (the only feature with server-side code). Each is specced to full stories in the same shape as Phase 1.</p>
+<p>Phase 3 is captured as epic stubs (Time Ranges, Type Lens, Progress, Configurable Landing View, and date/time display format), to be expanded to full stories when groomed, so the backlog shows the whole arc.</p>
+<hr />
+<h2>Changelog</h2>
+<p><strong>v0.7, 2026-07-03:</strong> reconciled the stories with the shipped app.</p>
+<ul>
+<li>Type Lens stub became three sections (Habits, Tasks, Events).</li>
+<li>Count-habit control became a progress ring with plain-text "N of M" progress and a "Log again" past the target.</li>
+<li>Tag rename and delete added to the Category lens section headers.</li>
+<li>All-day items sync as Google all-day events; inbound read-only events widened to every visible Google calendar, each with a source-color dot.</li>
+</ul>
+<p><strong>v0.6, 2026-06-29:</strong> Notes upgraded to rich text.</p>
+<ul>
+<li>Matched Google Calendar's toolbar, stored as HTML; split the Google Drive attachment into its own deferred story.</li>
+</ul>
+<p><strong>v0.5, 2026-06-24:</strong> account linking, Phase 2 stories, and the timezone picker.</p>
+<ul>
+<li>Changed the Google sign-in conflict from a directed error to account linking (one account per email, usable either way).</li>
+<li>Expanded the Phase 2 epic stubs into full stories (Tags &amp; Category, Notes &amp; History, Google Calendar Sync).</li>
+<li>Refined the timezone picker to a searchable, region-grouped list with city, abbreviation, and offset aliases over a canonical IANA value.</li>
+</ul>
+<p><strong>v0.4, 2026-06-23:</strong> count habit stays on the rail.</p>
+<ul>
+<li>A count habit stays on the rail for its whole active period regardless of the completion count, so the user can keep logging past the target; reverses the earlier "drops off once met" wording.</li>
+</ul>
+<p><strong>v0.3, 2026-06-22:</strong> delete behavior and past-date completion.</p>
+<ul>
+<li>Revised delete to a split by type from Phase 1 (habits soft-delete to preserve history; tasks and events hard-delete).</li>
+<li>Trimmed date navigation to navigation-only and moved completion-control rules to the Completion epic; recorded that a past day's item can be marked done (past is not read-only).</li>
+</ul>
+<p><strong>v0.2, 2026-06-20:</strong> timezone story and repeat behavior.</p>
+<ul>
+<li>Added the "change timezone in Settings" story, logged from a gap found while building the timezone default.</li>
+<li>Restricted frequency repeats to the flexible timing modes and documented the hybrid period model.</li>
+</ul>
+<p><strong>v0.1, 2026-06-19:</strong> initial draft.</p>
+<ul>
+<li>Methodology, global Definition of Done, and the Phase 1 epic build order; full stories with hybrid acceptance criteria for the Foundation and Item epics; Phase 2 and Phase 3 captured as epic stubs, with expansion deferred until Phase 1 is built.</li>
+</ul></div>
+</main>
+<footer class="foot"><div class="wrap">
+<a href="../../index.html" class="backbtn">&larr; Back to portfolio</a>
+<span class="footmeta"><a href="../index.html">All work samples</a> &middot; Derek Staley</span>
+</div></footer>
+<div class="lb-overlay" id="lb" role="dialog" aria-modal="true" aria-label="Image preview"><button class="lb-close" type="button" aria-label="Close preview">&times;</button><img alt=""></div>
+<script>
+(function(){var lb=document.getElementById('lb');if(!lb)return;var img=lb.querySelector('img'),btn=lb.querySelector('.lb-close');function open(s,a){img.src=s;img.alt=a||'';lb.classList.add('open');document.body.style.overflow='hidden';}function close(){lb.classList.remove('open');img.removeAttribute('src');document.body.style.overflow='';}document.addEventListener('click',function(e){var t=e.target.closest('a');if(!t)return;var h=t.getAttribute('href')||'';if(/\.(png|jpe?g|webp|gif)$/i.test(h)){e.preventDefault();var im=t.querySelector('img');open(h,im?im.getAttribute('alt'):'');}});btn.addEventListener('click',close);lb.addEventListener('click',function(e){if(e.target===lb)close();});document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});})();
+</script>
+</body></html>

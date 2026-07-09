@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Notifications and Reminders: Feature Spike and Decision Doc &middot; Derek Staley</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234F46E5'/%3E%3C/svg%3E">
+<style>
+:root{
+  --page:#f4f5f8; --surface:#ffffff; --ink:#1b1b1f; --muted:#5c5c67; --faint:#636b7c;
+  --line:#e7e7ee; --line-soft:#eff0f4;
+  --accent:#4f46e5; --accent-ink:#3b34c4; --accent-soft:#eeedfb;
+  --habit:#0d9488; --habit-soft:#e3f1ef;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+  --radius:8px;
+  --shadow:0 1px 2px rgba(20,26,44,.04),0 8px 24px rgba(20,26,44,.05);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+.wrap{max-width:54rem;margin:0 auto;padding:0 clamp(1.15rem,5vw,2rem);}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:10;background:rgba(244,245,248,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem clamp(1.15rem,5vw,2rem);}
+.brand{display:inline-flex;align-items:center;gap:.55rem;font-weight:600;letter-spacing:-.01em;color:var(--ink);font-size:.95rem;}
+.brand:hover{text-decoration:none;}
+.brand .dot{width:.8rem;height:.8rem;border-radius:3px;background:var(--accent);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);}
+.brand .habitbar{width:3px;height:.85rem;border-radius:2px;background:var(--habit);}
+.crumb{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--faint);text-transform:uppercase;}
+@media(max-width:620px){.crumb{display:none;}}
+
+/* document header */
+.dochead{padding:clamp(2.2rem,5vw,3.6rem) 0 1.8rem;border-bottom:1px solid var(--line);}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);}
+.dochead h1{font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.08;letter-spacing:-.025em;font-weight:660;margin:.5rem 0 0;text-wrap:balance;}
+.subtitle{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;color:var(--faint);margin:.9rem 0 0;}
+.callout{margin:1.5rem 0 0;background:var(--accent-soft);border:1px solid #e0defa;border-radius:var(--radius);padding:1.05rem 1.25rem;font-size:.95rem;color:var(--muted);}
+.callout p{margin:.35rem 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+.callout strong{color:var(--accent-ink);font-weight:650;}
+
+/* body */
+.doc{padding:2.2rem 0 1rem;}
+.doc>p:first-of-type{font-size:1.05rem;color:var(--muted);}
+.doc h2{font-size:1.28rem;letter-spacing:-.015em;font-weight:680;margin:2.4rem 0 .5rem;padding-top:1.4rem;border-top:1px solid var(--line);}
+.doc h3{font-size:1.02rem;font-weight:660;margin:1.6rem 0 .4rem;color:var(--ink);}
+.doc h2:first-child,.doc h3:first-child{margin-top:0;border-top:none;padding-top:0;}
+.doc p{margin:.7rem 0;}
+.doc ul,.doc ol{margin:.6rem 0;padding-left:1.3rem;}
+.doc li{margin:.34rem 0;}
+.doc li>ul,.doc li>ol{margin:.3rem 0;}
+.doc strong{color:var(--ink);font-weight:650;}
+.doc hr{border:none;border-top:1px solid var(--line);margin:2.2rem 0;}
+.doc a{border-bottom:1px solid transparent;}
+
+/* figures / screenshots */
+.doc figure{margin:1.5rem 0;}
+.doc figure.shotrow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start;}
+@media(max-width:640px){.doc figure.shotrow{grid-template-columns:1fr;}}
+.doc figure.shotrow a{display:block;border-bottom:0;line-height:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .12s ease;}
+.doc figure.shotrow a:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 24px rgba(20,26,44,.09);}
+.doc figure.shotrow img{width:100%;height:230px;object-fit:cover;object-position:top left;display:block;}
+.doc figure figcaption{grid-column:1/-1;font-size:14px;color:var(--faint);margin-top:.4rem;line-height:1.5;}
+@media (prefers-reduced-motion: reduce){.doc figure.shotrow a{transition:none;}.doc figure.shotrow a:hover{transform:none;}}
+
+/* inline code + code blocks */
+.doc code{font-family:var(--mono);font-size:.85em;background:var(--line-soft);border:1px solid var(--line);border-radius:5px;padding:.08em .38em;color:var(--accent-ink);}
+.doc pre{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.1rem;overflow:auto;box-shadow:var(--shadow);margin:1rem 0;}
+.doc pre code{background:none;border:none;padding:0;color:var(--muted);font-size:.82rem;line-height:1.55;}
+
+/* body blockquotes (e.g. "Resolved later" notes) */
+.doc blockquote{margin:1.1rem 0;padding:.7rem 1.1rem;border-left:3px solid var(--habit);background:var(--habit-soft);border-radius:0 var(--radius) var(--radius) 0;color:var(--muted);font-size:.95rem;}
+.doc blockquote p{margin:.3rem 0;}
+.doc blockquote strong{color:#0a6d64;}
+
+/* tables */
+.doc table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.9rem;display:block;overflow-x:auto;}
+.doc th{text-align:left;font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);padding:.6rem .7rem;border-bottom:2px solid var(--line);white-space:nowrap;}
+.doc td{padding:.6rem .7rem;border-bottom:1px solid var(--line);vertical-align:top;}
+.doc tbody tr:hover{background:var(--line-soft);}
+
+/* footer */
+.foot{border-top:1px solid var(--line);margin-top:2rem;padding:2rem 0 3rem;}
+.foot .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.85rem;color:var(--faint);}
+.foot a{font-weight:600;}
+.backlink{color:var(--ink);}
+.backbtn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border:1px solid var(--accent);border-radius:8px;color:var(--accent-ink);font-weight:600;font-size:14px;text-decoration:none;transition:background .12s ease,color .12s ease;}
+.backbtn:hover{background:var(--accent);color:#fff;text-decoration:none;}
+.foot .footmeta a{color:var(--faint);}
+/* image lightbox */
+.lb-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(15,17,28,.92);padding:2.5vmin;cursor:zoom-out;opacity:0;transition:opacity .16s ease;}
+.lb-overlay.open{display:flex;opacity:1;}
+.lb-overlay img{max-width:95vw;max-height:92vh;width:auto;height:auto;border-radius:8px;box-shadow:0 12px 48px rgba(0,0,0,.5);cursor:default;}
+.lb-close{position:fixed;top:16px;right:20px;width:40px;height:40px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lb-close:hover{background:rgba(255,255,255,.26);}
+@media (prefers-reduced-motion: reduce){.backbtn{transition:none;}.lb-overlay{transition:none;}}
+
+/* index */
+.hero{padding:clamp(2.6rem,6vw,4.4rem) 0 2.2rem;}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3rem);line-height:1.06;letter-spacing:-.03em;font-weight:680;margin:.6rem 0 0;}
+.hero .lede{font-size:clamp(1.05rem,2.4vw,1.2rem);color:var(--muted);max-width:60ch;margin:1.3rem 0 0;}
+.grouplabel{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:2.6rem 0 1rem;display:flex;align-items:center;gap:.8rem;}
+.grouplabel::after{content:"";flex:1;height:1px;background:var(--line);}
+.grouplabel .app{color:var(--accent-ink);}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+@media(max-width:640px){.cards{grid-template-columns:1fr;}}
+.card{display:block;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow);color:var(--ink);transition:transform .12s ease,box-shadow .12s ease;}
+.card:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 3px 6px rgba(20,26,44,.06),0 14px 32px rgba(20,26,44,.08);}
+.card .kind{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.card .name{font-weight:670;font-size:1.02rem;letter-spacing:-.01em;margin:.3rem 0 .4rem;}
+.card .shows{font-size:.9rem;color:var(--muted);line-height:1.55;}
+.intro-note{margin:2.4rem 0 0;font-size:.92rem;color:var(--faint);border-top:1px solid var(--line);padding-top:1.2rem;}
+
+/* Type & contrast pass to match the portfolio: larger content tiers, 13px label floor, underlined body links */
+body{font-size:17px;}
+.doc p,.doc li,.doc td{font-size:17px;}
+.doc h2{font-size:22px;}
+.doc h3{font-size:18px;}
+.callout{font-size:16px;}
+.doc table{font-size:15.5px;}
+.doc th{font-size:13px;}
+.doc code,.doc pre code{font-size:14px;}
+.doc blockquote{font-size:16px;}
+.subtitle{font-size:13px;}
+.crumb{font-size:13px;}
+.eyebrow{font-size:13px;}
+.card .kind{font-size:12.5px;}
+.card .name{font-size:17px;}
+.card .shows{font-size:15px;}
+.foot .wrap{font-size:14px;}
+.doc a{text-decoration:underline;}
+.brand a{color:var(--ink);text-decoration:none;font-weight:600;}
+.brand a:hover{color:var(--accent);}
+.brand .sep{color:var(--faint);font-weight:400;margin:0 .1rem;}
+.foot a{text-decoration:none;}
+@media (prefers-reduced-motion: reduce){ .card{transition:none;} .card:hover{transform:none;} }
+@media print{ .topbar{position:static;} body{background:#fff;} .doc pre,.callout,.card{break-inside:avoid;} }
+
+
+</style>
+</head><body>
+<header class="topbar"><div class="wrap">
+<span class="brand"><span class="dot"></span><span class="habitbar"></span><a href="../../index.html" class="backlink">&larr; Portfolio</a></span>
+<span class="crumb">Unified Tasks &amp; Habits</span>
+</div></header>
+<main class="wrap">
+<header class="dochead">
+<div class="eyebrow">Work Sample</div>
+<h1>Notifications and Reminders: Feature Spike and Decision Doc</h1>
+<div class="subtitle">Work sample · feature spike and decision doc · as of v1 (July 2026)</div>
+<div class="callout"><p><strong>What this is:</strong> a spike and decision document for a proposed v2 feature (notifications and reminders), grounding the design in the real codebase and asking for a go/no-go on the first phase.</p><p><strong>What it shows:</strong> feature discovery and de-risking, plus a real decision-forcing "green-light Phase A" ask, the mechanics of product decision-making.</p><p><strong>Source:</strong> condensed and edited from the project's notifications spike for presentation (trimmed for length, internal references removed). The full working version lives in the app repo.</p></div>
+</header>
+<div class="doc"><p>The app is a local-first, guest-usable tasks-and-habits web app: it runs entirely on-device, and an account is optional. This spike asks a hard question up front: can we deliver reminders that fire when the app is closed, and what does that cost us in architecture and money? It answers by grounding the design in how the app already works, then asks to green-light an infrastructure-only first phase.</p>
+<hr />
+<h2>1. Goal and user-facing behavior</h2>
+<p>Reminders tell the user about a thing to do at (or before) the moment it matters, even when the app isn't open. Three concrete jobs, mapped to the item shapes the app already has:</p>
+<ul>
+<li><strong>Timed-item reminders.</strong> For an item with a start and end time, fire a notification a chosen amount before the start ("Standup in 10 minutes"). The offset is per-item or a global default.</li>
+<li><strong>All-day and by-end-of-day reminders.</strong> For items with a date but no clock time, there is no start to count back from, so these fire at a fixed daily clock time the user picks ("Today: Pay rent"). The same applies to open-window items, anchored to the window start.</li>
+<li><strong>Habit nudges.</strong> For a tracked habit due today with no completion recorded yet, nudge later in the day ("You haven't done Meditate today"). This reuses the app's existing due-but-not-done derivation rather than inventing new logic.</li>
+</ul>
+<p>Tapping a notification deep-links into the app on the right day. Delivered notifications are transient: nothing about them is stored as app data. Reminders are a read-only layer on top of the item model; they must never change completion or scheduling data.</p>
+<hr />
+<h2>2. The core constraint</h2>
+<p>This app has no server-scheduled jobs today, and real reminders require them. The architecture is explicit that nothing runs on a schedule, and the one named future exception is exactly this feature. The whole app is local-first; the only server code is the request-driven Google Calendar routes.</p>
+<p>A reminder's defining requirement is that it fires when the app is closed. Every option that stays inside the current architecture fails that test:</p>
+<ul>
+<li><strong>A page timer</strong> only runs while a tab is open.</li>
+<li><strong>Service-worker timers</strong> don't survive. The service worker is started for an event and terminated seconds later. The timestamp-based scheduling API that would work around this is experimental, Chromium-only, and absent on iOS.</li>
+<li><strong>Periodic background sync</strong> is Chromium-only, throttled to roughly daily, install-gated, and absent on iOS.</li>
+</ul>
+<p>The service worker is essential only as the receiver: it handles an incoming push and shows the notification. Something off-device has to decide "it's time" and wake the device. That forces two pieces the app lacks: Web Push (a per-device subscription plus a service-worker push handler) and a server-side scheduler (a job on a clock that finds due items and sends the pushes).</p>
+<hr />
+<h2>3. Recommended architecture on this stack</h2>
+<p>Add Web Push delivery plus a scheduled server function, slotting into the existing structure without disturbing the local-first core. The moving parts:</p>
+<ul>
+<li><strong>VAPID keys</strong>, the keypair that authorizes Web Push. The public key ships to the client; the private key stays server-only, in environment variables.</li>
+<li><strong>A push handler</strong> in the service worker that shows the notification and deep-links on tap.</li>
+<li><strong>Subscription capture</strong>: ask permission, subscribe the device, and POST the subscription to a server route. This lives in a small client-side controller in the app shell, beside the existing calendar-sync controller.</li>
+<li><strong>A <code>push_subscriptions</code> table</strong> holding each device's endpoint and keys, keyed by user. It is server-only, the same way calendar connections are deliberately kept out of the synced local store.</li>
+<li><strong>A subscription API</strong> to save and remove subscriptions, authenticated the same way the calendar routes are.</li>
+<li><strong>The scheduler</strong>, a cron entry that hits a route every few minutes. This is the first scheduled job in the app.</li>
+<li><strong>The send function</strong>, which reads due items server-side, computes who is due now in their own timezone, and sends a push per subscription.</li>
+<li><strong>Reminder settings</strong>, new columns describing whether and when to remind. These are ordinary app data and do sync.</li>
+</ul>
+<p><strong>Flow:</strong> enabling asks permission, subscribes the device, and saves the subscription. Delivery runs on the clock: the scheduled job reads due items and each user's timezone server-side, sends a push per subscription, and drops dead endpoints. Receiving wakes the service worker, which shows the notification; a tap deep-links to the right day.</p>
+<p>The key point: the send function reads the same server tables the local store already syncs to, so the scheduled job has everything it needs server-side with no new sync path.</p>
+<p><strong>Precedent to mirror:</strong> the existing calendar outbox already does the hard version of this. It is a device-local controller in the app shell that sends to the server without blocking the UI, records a structured outcome per item, and retries. Reminders reuse that pattern. The one difference is that subscription capture goes client to server, because the device owns the subscription.</p>
+<hr />
+<h2>4. Data model additions</h2>
+<p>Two kinds of new data sit on opposite sides of the sync boundary, mirroring how calendar connections are deliberately excluded from the synced store.</p>
+<p><strong>A. Reminder settings on items (and defaults on the profile). These do sync.</strong> Add a reminder-enabled flag, an offset in minutes (for timed items), and a clock time (for all-day, end-of-day, open-window, and nudge cases). These go into the local schema, a server migration, and the validation schema together, keeping the schema-sync discipline the project already follows. A global default (default offset, default time, quiet hours) sits beside the existing timezone setting. Because these are ordinary item columns, they sync to the server, which is what puts them in the scheduled job's reach.</p>
+<p><strong>B. <code>push_subscriptions</code>. Server-only, not synced.</strong> The direct analogue of calendar connections: an id, the user id (the access-control key), the endpoint, the two subscription keys, and a created-at timestamp. Row-level security scopes the client's own subscribe and unsubscribe to its user; the scheduled send uses a service-role client with no user session, the same reasoning as the OAuth callback. The VAPID private key and the service-role key never leave the server.</p>
+<hr />
+<h2>5. Implications and limits</h2>
+<ul>
+<li><strong>Account-only, and this is inherent, not a temporary gap.</strong> Web Push needs a subscription tied to a user and a server that can read that user's items. A guest keeps data only on-device, so there is nothing server-side to read and no user to key a subscription to. Closed-app reminders are therefore a signed-in feature, gated the same way Google Calendar sync is.</li>
+<li><strong>Offline.</strong> Subscribing needs the network; after that, delivery is server-driven, so an offline device just receives the push when its push service is next reachable. The subscribe call should tolerate being offline and retry when back online.</li>
+<li><strong>iOS needs an installed PWA (16.4+), with quirks.</strong> Web Push on iPhone and iPad works only for the home-screen-installed app on 16.4 and later, and the permission prompt must follow a user gesture. The app is already installable, but the settings UI has to detect "not installed or unsupported" and explain the Add-to-Home-Screen step instead of failing silently. Desktop and Android Chrome are more forgiving.</li>
+<li><strong>Permission UX.</strong> Never prompt on load. Request permission only when the user turns reminders on, from a Settings toggle beside the calendar panel. A denied permission gets an honest recovery note.</li>
+<li><strong>Timezone correctness is non-negotiable and already solvable.</strong> The app stores each user's timezone and anchors today, overdue, and missed to it. The scheduled run executes in UTC, so it has to compute "due now?" in the user's timezone. That logic should be a pure, unit-tested module, consistent with the existing recurrence and day-query code.</li>
+</ul>
+<hr />
+<h2>6. Phased build plan</h2>
+<p><strong>Phase A: infrastructure plus one manual test round-trip.</strong> Prove the whole pipe with a single button before any per-item logic. Generate the VAPID keys (the owner pastes them into the environment; no secret is handled in the build session), add the push and tap handlers to the service worker, create the subscriptions table with row-level security, add the subscribe and unsubscribe routes, add the client controller and a minimal Settings toggle that requests permission and subscribes, and add a manual "send me a test" route. Verify by installing the PWA, toggling on, clicking Send test, and seeing a notification, first with the app open and then with it closed. No scheduler yet.</p>
+<p><strong>Phase B: per-item timed reminders, settings, and permission flow.</strong> Add the reminder columns to items and the profile (schema, migration, and validation) and controls to the item form; write the pure, timezone-aware "due for a reminder in this window?" module with tests; add the cron entry and the run route (service-role read plus the push send, dropping dead endpoints); handle the not-installed, unsupported, and denied states. Verify by setting a reminder a few minutes out, closing the app, receiving it, and tapping through to the right day.</p>
+<p><strong>Phase C: habit nudges.</strong> Extend the reminders module to derive "due today but not completed" (reusing the existing recurrence logic and the completion check), unit-tested; add a per-habit nudge time and copy. Verify that a due, undone habit nudges at the set time, and that completing it beforehand suppresses the nudge.</p>
+<hr />
+<h2>7. Risks, cost, and open questions</h2>
+<p><strong>The scheduler cost question (and the recommended answer).</strong> Reminders that fire near a chosen minute need a run every 5 to 15 minutes. The hosting platform's free cron tier is limited to roughly daily granularity, which would push the platform's cron toward a paid plan. The recommended path avoids that: run the trigger on the database we already pay nothing for (Supabase pg_cron via pg_net) on a roughly 5-minute schedule, and keep the push send in a Node route on the existing host. Because reminders fire minutes-before, 5-minute granularity is fine, and this keeps the feature at no recurring cost. The alternative (the host's paid cron) stays on the table if the database trigger proves awkward.</p>
+<p><strong>Other risks:</strong></p>
+<ul>
+<li><strong>Web Push is best-effort.</strong> Delivery can be delayed or dropped on battery-saver or backgrounded mobile. Treat reminders as nudges, not guarantees, and never assume exactly-once. Prune dead endpoints.</li>
+<li><strong>VAPID key management.</strong> The private key is a long-lived server secret; rotating it forces every device to re-subscribe.</li>
+<li><strong>iOS fragility</strong> (installed PWA, 16.4+, gesture-gated) is the highest-support surface.</li>
+<li><strong>Notification fatigue.</strong> Conservative defaults, quiet hours, and easy per-item opt-out matter more than adding features.</li>
+</ul>
+<p><strong>Open product questions:</strong></p>
+<ol>
+<li>Default reminder offset for timed items (10 minutes? 15?) and default daily clock time for all-day and end-of-day items (9:00am?).</li>
+<li>Quiet hours: a global "don't notify between X and Y." Added scope, but it avoids a 6am nudge.</li>
+<li>Per-item versus global control: a global default with a per-item override (as sketched), or global-only first?</li>
+<li>Which items remind by default: off by default for every item, or on for some?</li>
+</ol>
+<hr />
+<p><em>Outcome: Phase A was green-lit and is now epic PRD-106 in the v2 backlog, with Phases B and C as follow-on epics.</em></p></div>
+</main>
+<footer class="foot"><div class="wrap">
+<a href="../../index.html" class="backbtn">&larr; Back to portfolio</a>
+<span class="footmeta"><a href="../index.html">All work samples</a> &middot; Derek Staley</span>
+</div></footer>
+<div class="lb-overlay" id="lb" role="dialog" aria-modal="true" aria-label="Image preview"><button class="lb-close" type="button" aria-label="Close preview">&times;</button><img alt=""></div>
+<script>
+(function(){var lb=document.getElementById('lb');if(!lb)return;var img=lb.querySelector('img'),btn=lb.querySelector('.lb-close');function open(s,a){img.src=s;img.alt=a||'';lb.classList.add('open');document.body.style.overflow='hidden';}function close(){lb.classList.remove('open');img.removeAttribute('src');document.body.style.overflow='';}document.addEventListener('click',function(e){var t=e.target.closest('a');if(!t)return;var h=t.getAttribute('href')||'';if(/\.(png|jpe?g|webp|gif)$/i.test(h)){e.preventDefault();var im=t.querySelector('img');open(h,im?im.getAttribute('alt'):'');}});btn.addEventListener('click',close);lb.addEventListener('click',function(e){if(e.target===lb)close();});document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});})();
+</script>
+</body></html>

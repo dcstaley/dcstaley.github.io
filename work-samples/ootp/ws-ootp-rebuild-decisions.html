@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Rebuild Requirements and Decisions: OOTP Roster Optimizer &middot; Derek Staley</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234F46E5'/%3E%3C/svg%3E">
+<style>
+:root{
+  --page:#f4f5f8; --surface:#ffffff; --ink:#1b1b1f; --muted:#5c5c67; --faint:#636b7c;
+  --line:#e7e7ee; --line-soft:#eff0f4;
+  --accent:#4f46e5; --accent-ink:#3b34c4; --accent-soft:#eeedfb;
+  --habit:#0d9488; --habit-soft:#e3f1ef;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+  --radius:8px;
+  --shadow:0 1px 2px rgba(20,26,44,.04),0 8px 24px rgba(20,26,44,.05);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+.wrap{max-width:54rem;margin:0 auto;padding:0 clamp(1.15rem,5vw,2rem);}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:10;background:rgba(244,245,248,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem clamp(1.15rem,5vw,2rem);}
+.brand{display:inline-flex;align-items:center;gap:.55rem;font-weight:600;letter-spacing:-.01em;color:var(--ink);font-size:.95rem;}
+.brand:hover{text-decoration:none;}
+.brand .dot{width:.8rem;height:.8rem;border-radius:3px;background:var(--accent);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);}
+.brand .habitbar{width:3px;height:.85rem;border-radius:2px;background:var(--habit);}
+.crumb{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--faint);text-transform:uppercase;}
+@media(max-width:620px){.crumb{display:none;}}
+
+/* document header */
+.dochead{padding:clamp(2.2rem,5vw,3.6rem) 0 1.8rem;border-bottom:1px solid var(--line);}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);}
+.dochead h1{font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.08;letter-spacing:-.025em;font-weight:660;margin:.5rem 0 0;text-wrap:balance;}
+.subtitle{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;color:var(--faint);margin:.9rem 0 0;}
+.callout{margin:1.5rem 0 0;background:var(--accent-soft);border:1px solid #e0defa;border-radius:var(--radius);padding:1.05rem 1.25rem;font-size:.95rem;color:var(--muted);}
+.callout p{margin:.35rem 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+.callout strong{color:var(--accent-ink);font-weight:650;}
+
+/* body */
+.doc{padding:2.2rem 0 1rem;}
+.doc>p:first-of-type{font-size:1.05rem;color:var(--muted);}
+.doc h2{font-size:1.28rem;letter-spacing:-.015em;font-weight:680;margin:2.4rem 0 .5rem;padding-top:1.4rem;border-top:1px solid var(--line);}
+.doc h3{font-size:1.02rem;font-weight:660;margin:1.6rem 0 .4rem;color:var(--ink);}
+.doc h2:first-child,.doc h3:first-child{margin-top:0;border-top:none;padding-top:0;}
+.doc p{margin:.7rem 0;}
+.doc ul,.doc ol{margin:.6rem 0;padding-left:1.3rem;}
+.doc li{margin:.34rem 0;}
+.doc li>ul,.doc li>ol{margin:.3rem 0;}
+.doc strong{color:var(--ink);font-weight:650;}
+.doc hr{border:none;border-top:1px solid var(--line);margin:2.2rem 0;}
+.doc a{border-bottom:1px solid transparent;}
+
+/* figures / screenshots */
+.doc figure{margin:1.5rem 0;}
+.doc figure.shotrow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start;}
+@media(max-width:640px){.doc figure.shotrow{grid-template-columns:1fr;}}
+.doc figure.shotrow a{display:block;border-bottom:0;line-height:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .12s ease;}
+.doc figure.shotrow a:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 24px rgba(20,26,44,.09);}
+.doc figure.shotrow img{width:100%;height:230px;object-fit:cover;object-position:top left;display:block;}
+.doc figure figcaption{grid-column:1/-1;font-size:14px;color:var(--faint);margin-top:.4rem;line-height:1.5;}
+@media (prefers-reduced-motion: reduce){.doc figure.shotrow a{transition:none;}.doc figure.shotrow a:hover{transform:none;}}
+
+/* inline code + code blocks */
+.doc code{font-family:var(--mono);font-size:.85em;background:var(--line-soft);border:1px solid var(--line);border-radius:5px;padding:.08em .38em;color:var(--accent-ink);}
+.doc pre{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.1rem;overflow:auto;box-shadow:var(--shadow);margin:1rem 0;}
+.doc pre code{background:none;border:none;padding:0;color:var(--muted);font-size:.82rem;line-height:1.55;}
+
+/* body blockquotes (e.g. "Resolved later" notes) */
+.doc blockquote{margin:1.1rem 0;padding:.7rem 1.1rem;border-left:3px solid var(--habit);background:var(--habit-soft);border-radius:0 var(--radius) var(--radius) 0;color:var(--muted);font-size:.95rem;}
+.doc blockquote p{margin:.3rem 0;}
+.doc blockquote strong{color:#0a6d64;}
+
+/* tables */
+.doc table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.9rem;display:block;overflow-x:auto;}
+.doc th{text-align:left;font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);padding:.6rem .7rem;border-bottom:2px solid var(--line);white-space:nowrap;}
+.doc td{padding:.6rem .7rem;border-bottom:1px solid var(--line);vertical-align:top;}
+.doc tbody tr:hover{background:var(--line-soft);}
+
+/* footer */
+.foot{border-top:1px solid var(--line);margin-top:2rem;padding:2rem 0 3rem;}
+.foot .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.85rem;color:var(--faint);}
+.foot a{font-weight:600;}
+.backlink{color:var(--ink);}
+.backbtn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border:1px solid var(--accent);border-radius:8px;color:var(--accent-ink);font-weight:600;font-size:14px;text-decoration:none;transition:background .12s ease,color .12s ease;}
+.backbtn:hover{background:var(--accent);color:#fff;text-decoration:none;}
+.foot .footmeta a{color:var(--faint);}
+/* image lightbox */
+.lb-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(15,17,28,.92);padding:2.5vmin;cursor:zoom-out;opacity:0;transition:opacity .16s ease;}
+.lb-overlay.open{display:flex;opacity:1;}
+.lb-overlay img{max-width:95vw;max-height:92vh;width:auto;height:auto;border-radius:8px;box-shadow:0 12px 48px rgba(0,0,0,.5);cursor:default;}
+.lb-close{position:fixed;top:16px;right:20px;width:40px;height:40px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lb-close:hover{background:rgba(255,255,255,.26);}
+@media (prefers-reduced-motion: reduce){.backbtn{transition:none;}.lb-overlay{transition:none;}}
+
+/* index */
+.hero{padding:clamp(2.6rem,6vw,4.4rem) 0 2.2rem;}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3rem);line-height:1.06;letter-spacing:-.03em;font-weight:680;margin:.6rem 0 0;}
+.hero .lede{font-size:clamp(1.05rem,2.4vw,1.2rem);color:var(--muted);max-width:60ch;margin:1.3rem 0 0;}
+.grouplabel{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:2.6rem 0 1rem;display:flex;align-items:center;gap:.8rem;}
+.grouplabel::after{content:"";flex:1;height:1px;background:var(--line);}
+.grouplabel .app{color:var(--accent-ink);}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+@media(max-width:640px){.cards{grid-template-columns:1fr;}}
+.card{display:block;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow);color:var(--ink);transition:transform .12s ease,box-shadow .12s ease;}
+.card:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 3px 6px rgba(20,26,44,.06),0 14px 32px rgba(20,26,44,.08);}
+.card .kind{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.card .name{font-weight:670;font-size:1.02rem;letter-spacing:-.01em;margin:.3rem 0 .4rem;}
+.card .shows{font-size:.9rem;color:var(--muted);line-height:1.55;}
+.intro-note{margin:2.4rem 0 0;font-size:.92rem;color:var(--faint);border-top:1px solid var(--line);padding-top:1.2rem;}
+
+/* Type & contrast pass to match the portfolio: larger content tiers, 13px label floor, underlined body links */
+body{font-size:17px;}
+.doc p,.doc li,.doc td{font-size:17px;}
+.doc h2{font-size:22px;}
+.doc h3{font-size:18px;}
+.callout{font-size:16px;}
+.doc table{font-size:15.5px;}
+.doc th{font-size:13px;}
+.doc code,.doc pre code{font-size:14px;}
+.doc blockquote{font-size:16px;}
+.subtitle{font-size:13px;}
+.crumb{font-size:13px;}
+.eyebrow{font-size:13px;}
+.card .kind{font-size:12.5px;}
+.card .name{font-size:17px;}
+.card .shows{font-size:15px;}
+.foot .wrap{font-size:14px;}
+.doc a{text-decoration:underline;}
+.brand a{color:var(--ink);text-decoration:none;font-weight:600;}
+.brand a:hover{color:var(--accent);}
+.brand .sep{color:var(--faint);font-weight:400;margin:0 .1rem;}
+.foot a{text-decoration:none;}
+@media (prefers-reduced-motion: reduce){ .card{transition:none;} .card:hover{transform:none;} }
+@media print{ .topbar{position:static;} body{background:#fff;} .doc pre,.callout,.card{break-inside:avoid;} }
+
+
+</style>
+</head><body>
+<header class="topbar"><div class="wrap">
+<span class="brand"><span class="dot"></span><span class="habitbar"></span><a href="../../index.html" class="backlink">&larr; Portfolio</a></span>
+<span class="crumb">OOTP Roster Optimizer</span>
+</div></header>
+<main class="wrap">
+<header class="dochead">
+<div class="eyebrow">Work Sample</div>
+<h1>Rebuild Requirements and Decisions: OOTP Roster Optimizer</h1>
+<div class="subtitle">Work sample · product decision log · as of v1 (July 2026)</div>
+<div class="callout"><p><strong>What this is:</strong> the decision log from planning a ground-up rebuild of my OOTP roster optimizer, an analytics app that scores baseball-sim players and solves for an optimal tournament roster.</p><p><strong>What it shows:</strong> how I make and record product decisions. Each one is framed as a question, the options, and the call, with the rationale and trade-offs. One decision (D3) is deliberately deferred until there is data to decide it well.</p><p><strong>Source:</strong> lightly edited from the project's requirements-and-decisions document for presentation (internal references removed, wording cleaned). The full working version lives in the app repo.</p></div>
+</header>
+<div class="doc"><p>The rebuild strategy was parity first, then upgrade: rebuild to a provably faithful copy of the old app, confirm it, then improve on that trusted base. That is why the model form (D3) was intentionally left open for a later data bake-off rather than decided up front.</p>
+<p>Companion to the discovery findings (the evidence base). This document is decision-oriented: Part A confirms <em>what the app must do</em> (function, not current code); Part B lists the <em>open decisions</em> to resolve before architecture. Nothing here locks in implementation; current behavior is cited only as evidence of intent.</p>
+<hr />
+<h2>Part A · Requirements confirmation by feature area</h2>
+<p>Each line states the durable function plus any must-preserve domain fact. Detail and evidence are in the findings document.</p>
+<ol>
+<li><strong>Scoring core.</strong> From a card's raw ratings, produce per-event predictions (BB, K, HR, non-HR hits, XBH) and from them wOBA and a "basic" score, per side (vL/vR) and per role (hitter/pitcher). Must-preserve domain facts: park factors are compressed (<code>cp</code>, 0.26) <strong>before</strong> application; era factors are <strong>not</strong> compressed; BIP is derived from the other events and dependent hits recompute from it; switch-hitter handedness rules; same-side platoon penalty. <strong>One implementation, consumed identically by grid, roster/LP, SP, and training-validation.</strong></li>
+<li><strong>Data Grid.</strong> Browse the card pool with every card scored; sort, filter, search, and manage columns; per-grid view persistence; inline edit of raw fields (especially <code>owned</code>); highlight roster membership; reusable for SP via an override/predicate/preset mechanism. New wants: named column presets; a guard against corrupt rating values.</li>
+<li><strong>Roster &amp; Lineup.</strong> From a scored, eligible pool plus tournament rules, produce an optimal 26-card roster and optimized vL/vR lineups plus rotation and bullpen. Must-preserve constraints (intent level): roster size, hitter/pitcher split (two-way players free a slot), position coverage for both platoon lineups including backups, starter qualification (stamina plus pitch-type minimums), rotation slot weighting, one-card-one-use (variant and base mutually exclusive), required and excluded cards, and cap-mode budget or slots-mode tier caps. Manual drag-drop override of roster and lineups with per-position locks. Both-sides bonus is cap/slots-only. No pitcher batting.</li>
+<li><strong>Coefficients / scoring parameters.</strong> A parameter set drives scoring. Today it is one global flat bag mixing trained model params, era and park, platoon penalties, fixed wOBA weights, softcaps, and derived values, to be separated by provenance and lifecycle in the rebuild.</li>
+<li><strong>Eras.</strong> A reusable library of era run-environment factors (BB, K, AVG, HR, BIP, GAP), selected per tournament. Factors apply linearly (no compression).</li>
+<li><strong>Park.</strong> Per-side HR/AVG factors plus gap, the venue environment, compressed via <code>cp</code>. Needs exactly one home (today duplicated). Possibly a reusable Park library mirroring Eras.</li>
+<li><strong>Tournaments.</strong> The central rules object: cap/value rules, roster shape, variants policy, era, park, eligibility (ALL/ANY rule groups), softcaps, slot counts, and position weights, plus the generation-time settings currently split into a separate page-level object.</li>
+<li><strong>Model Training.</strong> Fit the four models (woba/basic by hitting/pitching) from outcome CSVs; treat vL and vR as separate observations into one unified fit; weight by PA^0.75 / BF^0.75; aggregate duplicate cards; produce residual and softcap diagnostics measured by weighted volume (not row count).</li>
+<li><strong>Single Player (SP).</strong> The same scoring and roster engine on a different input format (column adapter), plus scale-agnostic anchoring and Potential-rating scoring and UI. Not a separate engine. PT-only features (accounts) excluded.</li>
+<li><strong>PT Account (new).</strong> Per-account ownership scoping on the owned/not-owned generation filter; one CSV import per account; <code>owned</code> is a quantity already in the CSV; PT-only. Shared catalog plus per-account ownership/variant overlay. (Full detail: findings §7B.)</li>
+</ol>
+<hr />
+<h2>Part B · Open decisions (to resolve before architecture)</h2>
+<p>Each states the question, the options, and a recommendation.</p>
+<h3>D1 · Calibration, scaling, and anchoring (RESOLVED)</h3>
+<p><strong>Decision:</strong> Two score types, one implementation each, computed once and consumed identically:</p>
+<ul>
+<li><strong>Basic score</strong> is a direct function of ratings (each rating's contribution with era and park folded into the contribution). No event modeling, no BIP recompute, no per-event calibration.</li>
+<li><strong>wOBA score</strong> is an event-based pipeline, in this order: <code>raw → softcap → per-event calibration (to neutral baselines) → era/park → recompute BIP &amp; dependent hits → assemble wOBA → uniform per-pool/side anchor (AFTER era/park)</code>.</li>
+<li><strong>Anchor is after era and park.</strong> Rationale: the anchor is a single uniform multiplier per pool and side, so it cannot change within-pool ranking; era and park's <em>relative</em> effects are already baked into the events before it; its only real jobs are cross-pool reference (D2) and display. We optimize for roster quality, not realistic absolute numbers, so the absolute level the anchor sets is irrelevant.</li>
+<li>Per-event calibration is computed against neutral baselines, and the reference pool is the eligible/top-X pool (both already correct in current code).</li>
+<li>All cards normalized to 600 PA so cards compare fairly regardless of training-data volume.</li>
+</ul>
+<h3>D2 · Cross-pool hitter/pitcher comparability (RESOLVED)</h3>
+<p><strong>Decision:</strong> Compare players by <strong>signed distance from a common baseline</strong>, with the sign flipped for pitchers, all at 600-PA normalization:</p>
+<ul>
+<li>Hitter value is <code>wOBA − baseline</code>; pitcher value is <code>baseline − allowedWOBA</code>. Same unit (wOBA points), same direction (more is better). This serves both within-pool ranking (monotonic with wOBA) and cross-pool comparison.</li>
+<li><strong>Drop the <code>^1.2</code> power transform</strong> and the LP-only multipliers. With both pools honestly on the same wOBA scale (guaranteed by D1) and measured from a shared baseline, the exponent only distorted the balance. (Consistent with the project rule: fix the scale, do not scale-hack.)</li>
+<li><strong>Natural hitter/pitcher balance, no tilt knob.</strong> The H/P exchange falls out of each pool's real wOBA spread. If a split ever looks wrong, treat it as a calibration signal to fix at the source.</li>
+<li>Because playing time is constant (600 PA), the runs/playing-time apparatus collapses to constants and is unnecessary; the baseline (from D1) is the only input.</li>
+<li><strong>Role/slot weights and the both-sides bonus apply in CAP and SLOTS modes only.</strong> Non-cap objective is unweighted Σ(signed-distance value) subject to structural constraints; cap/slots objective is Σ(signed-distance value × role/slot weight) subject to budget and tier caps. The value unit and natural balance are identical across all modes.</li>
+</ul>
+<h3>D3 · Model functional form (DEFERRED, decide with data in hand)</h3>
+<p><strong>Decision:</strong> Defer the functional-form choice to a dedicated data-exploration phase. It needs a real bake-off across many structures (sequential and non-sequential; log, linear, quadratic, cubic; logistic vs rate). The earlier poor sequential result is weak evidence (old tooling).</p>
+<p><strong>Firm requirements this imposes on the rebuild (decided now):</strong></p>
+<ul>
+<li>The <strong>model is a swappable component behind a clean interface.</strong> The scoring core, calibration (D1), and value/LP layers (D2) consume predicted events and scores abstractly, never assumptions about how they were produced, so the form can change later without touching anything downstream.</li>
+<li>A <strong>model-comparison harness</strong> is part of the plan: fit candidate forms, score them against the residual/diagnostic suite on real data, and select. Diagnostics (residual bins by weighted volume, over-valuation signal, and so on) are a permanent capability.</li>
+</ul>
+<blockquote>
+<p><strong>Resolved later (2026-07):</strong> the data bake-off selected the raw-poly functional form. The swappable-interface requirement above is what made swapping the model in painless, which is the point of deferring the choice rather than guessing early.</p>
+</blockquote>
+<h3>D4 · Unified configuration model (RESOLVED)</h3>
+<p><strong>Decision:</strong> One home per concern; selecting a tournament <em>is</em> the configuration (no manual "load" step).</p>
+<ul>
+<li><strong>Tournament is the single source</strong> for roster shape, cap/slots rules, eligibility, position constraints, metrics, pool sizes, and ownedOnly. The page-level RosterSettings folds into the tournament.</li>
+<li><strong>Era becomes a reusable Eras library</strong>, referenced by the tournament by id (not embedded).</li>
+<li><strong>Park becomes its own reusable Park library</strong>, referenced by id, mirroring Eras (new).</li>
+<li><strong>Position weights are tournament-scoped</strong> (cap/slots roster rules).</li>
+<li><strong>Softcaps are tournament/pool-scoped</strong>, because the right softcap depends on the card pool (elite vs mid-tier pools need different high-end compression), currently hand-tuned per tournament. <strong>Model training emits recommended softcaps to seed</strong> a tournament's values. Note: the need for per-pool manual softcaps is largely a symptom of model-shape error at the extremes; D3's better model should reduce it over time.</li>
+<li><strong>The global mutable coeff bag dissolves:</strong> model coefficients are model-scoped; era and park come from libraries via the tournament; position weights and softcaps are tournament-scoped; fixed wOBA weights are constants; derived values are computed. No button-synced global state.</li>
+</ul>
+<h3>D5 · Optimizer shape and post-processing (RESOLVED, keep decomposition, fix quality)</h3>
+<p>Root cause understood (findings §7C): the LP optimizes the starting core and reserves cap for support roles filled post-LP. <strong>Decision: the starters-first decomposition stays.</strong> It is correct for two reasons, not only tractability:</p>
+<ul>
+<li><strong>Value structure:</strong> in cap/slots mode starters are valued <em>massively</em> above bench, and the per-role support budgets (<code>maxCap</code> bench, backup-C, swingman, reliever) are an <strong>explicit user feature</strong>. Pouring scarce budget and tier-slots into high-value starters and cheaply filling low-value support is the right economics; jointly optimizing all 26 spends huge solver and modeling cost on near-zero-stakes bench picks.</li>
+<li><strong>Tractability:</strong> full 26-card selection plus feasible defensive <em>assignment</em> across vL/vR and backups is a covering-versus-matching problem (counts are not feasible simultaneous alignment); a single MILP with card-by-position-by-side assignment plus sub-budgets plus slots tiers is big and brittle. This is consistent with prior experience that it does not solve reliably in cap/slots, and that base mode chokes on positional constraints.</li>
+</ul>
+<p><strong>The rebuild's win is quality, not restructuring:</strong></p>
+<ol>
+<li>Keep starters-first (cap/slots). Non-cap mode picks the best roster meeting structural and positional constraints, no role weighting or sub-budgets.</li>
+<li>Replace the <strong>greedy</strong> support/bench fill with a small <strong>principled</strong> optimization (maximize coverage plus value within the reserved sub-budgets). This kills the Arozarena-class bug without touching starter logic.</li>
+<li>Make defensive feasibility a <strong>principled matching/assignment check</strong> so a chosen starter set is guaranteed alignable across vL/vR and backups. This removes greedy gap-patching and the catcher misfires (backup catcher becomes a coverage-depth requirement, not a 3-pass).</li>
+<li>Keep cap-reclaim (unspent support budget to starters) but make it deterministic.</li>
+<li>Lineup assignment stays a legitimate sub-solve; all steps consume the one D1/D2 scoring value.</li>
+</ol>
+<p>Formulation specifics were settled during the build with the solver in hand.</p>
+<h3>D6 · PT Account data model (RESOLVED)</h3>
+<p>Core (from findings §7B): per-account ownership scoping, one CSV import per account, quantity in CSV, PT-only. Specifics:</p>
+<ul>
+<li><strong>Account count: two</strong>, but do not hard-code it. Model accounts as keyed overlays so N is possible later (two is the immediate need; N kept as a cheap backup option).</li>
+<li><strong>Quantity: carried as information, filter on <code>owned &gt; 0</code>.</strong> Roster building uses owned-versus-not; quantity is stored and displayed (variant material, "you own 3") but constrains nothing for now.</li>
+<li><strong>Active-account selector scopes the whole PT view:</strong> owned quantity shown in the Data Grid, which account's variants you see and edit, and the owned filter in generation. (Variants are account-scoped, so the selector must drive grid and variants, not just generation.)</li>
+</ul>
+<h3>D7 · Persistence and platform (RESOLVED, principle now, tech at architecture)</h3>
+<p><strong>Decision:</strong> Lock the principle, defer the technology to the architecture phase.</p>
+<ul>
+<li><strong>Principle:</strong> consolidated, coherent persistence: one home for libraries (tournaments, eras, parks, models) and one for the active working session; the D6 per-account overlays are first-class. No replicating today's four-mechanism sprawl (IndexedDB plus localStorage plus sessionStorage plus backend JSON).</li>
+<li><strong>Deferred to architecture:</strong> the actual storage technology (local vs server, which DB) and whether the solver stays Python/HiGHS (works today, no forcing function) or moves in-process.</li>
+</ul>
+<hr />
+<h2>Decision status</h2>
+<ul>
+<li><strong>D1 (resolved):</strong> two score types (basic direct, wOBA event-based); wOBA pipeline order locked; anchor after era and park; 600-PA normalization.</li>
+<li><strong>D2 (resolved):</strong> signed distance from a common baseline (sign-flipped for pitchers); drop the power transform; natural H/P balance; role/slot weights cap/slots-only.</li>
+<li><strong>D3 (deferred, later resolved):</strong> functional form deferred to a data bake-off; model is a swappable component behind a clean interface; comparison harness required. The bake-off later selected the raw-poly form.</li>
+<li><strong>D4 (resolved):</strong> tournament is the single config source; Era and Park reusable libraries by reference; weights and softcaps tournament-scoped (softcaps model-seeded); global coeff bag dissolves.</li>
+<li><strong>D5 (resolved):</strong> keep starters-first decomposition (value structure plus tractability); fix quality with principled support fill and matching-based defensive feasibility; catcher backup becomes a depth constraint; deterministic cap-reclaim.</li>
+<li><strong>D6 (resolved):</strong> two accounts (not hard-coded); quantity carried, filter <code>owned &gt; 0</code>; active-account selector scopes grid, variants, and generation.</li>
+<li><strong>D7 (resolved):</strong> principle locked (consolidated persistence, per-account overlays first-class); storage tech and solver placement deferred to architecture.</li>
+</ul>
+<p>Discovery and requirements are closed. The one item carried forward was <strong>D3, the model form</strong>, decided later with data in hand. The project was then ready for the architecture phase, anchored by the single most important principle: <strong>one scoring core, computed once, consumed identically everywhere.</strong></p></div>
+</main>
+<footer class="foot"><div class="wrap">
+<a href="../../index.html" class="backbtn">&larr; Back to portfolio</a>
+<span class="footmeta"><a href="../index.html">All work samples</a> &middot; Derek Staley</span>
+</div></footer>
+<div class="lb-overlay" id="lb" role="dialog" aria-modal="true" aria-label="Image preview"><button class="lb-close" type="button" aria-label="Close preview">&times;</button><img alt=""></div>
+<script>
+(function(){var lb=document.getElementById('lb');if(!lb)return;var img=lb.querySelector('img'),btn=lb.querySelector('.lb-close');function open(s,a){img.src=s;img.alt=a||'';lb.classList.add('open');document.body.style.overflow='hidden';}function close(){lb.classList.remove('open');img.removeAttribute('src');document.body.style.overflow='';}document.addEventListener('click',function(e){var t=e.target.closest('a');if(!t)return;var h=t.getAttribute('href')||'';if(/\.(png|jpe?g|webp|gif)$/i.test(h)){e.preventDefault();var im=t.querySelector('img');open(h,im?im.getAttribute('alt'):'');}});btn.addEventListener('click',close);lb.addEventListener('click',function(e){if(e.target===lb)close();});document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});})();
+</script>
+</body></html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Productivity App: v2 Scope and Prioritization &middot; Derek Staley</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234F46E5'/%3E%3C/svg%3E">
+<style>
+:root{
+  --page:#f4f5f8; --surface:#ffffff; --ink:#1b1b1f; --muted:#5c5c67; --faint:#636b7c;
+  --line:#e7e7ee; --line-soft:#eff0f4;
+  --accent:#4f46e5; --accent-ink:#3b34c4; --accent-soft:#eeedfb;
+  --habit:#0d9488; --habit-soft:#e3f1ef;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+  --radius:8px;
+  --shadow:0 1px 2px rgba(20,26,44,.04),0 8px 24px rgba(20,26,44,.05);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+.wrap{max-width:54rem;margin:0 auto;padding:0 clamp(1.15rem,5vw,2rem);}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:10;background:rgba(244,245,248,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem clamp(1.15rem,5vw,2rem);}
+.brand{display:inline-flex;align-items:center;gap:.55rem;font-weight:600;letter-spacing:-.01em;color:var(--ink);font-size:.95rem;}
+.brand:hover{text-decoration:none;}
+.brand .dot{width:.8rem;height:.8rem;border-radius:3px;background:var(--accent);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);}
+.brand .habitbar{width:3px;height:.85rem;border-radius:2px;background:var(--habit);}
+.crumb{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--faint);text-transform:uppercase;}
+@media(max-width:620px){.crumb{display:none;}}
+
+/* document header */
+.dochead{padding:clamp(2.2rem,5vw,3.6rem) 0 1.8rem;border-bottom:1px solid var(--line);}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);}
+.dochead h1{font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.08;letter-spacing:-.025em;font-weight:660;margin:.5rem 0 0;text-wrap:balance;}
+.subtitle{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;color:var(--faint);margin:.9rem 0 0;}
+.callout{margin:1.5rem 0 0;background:var(--accent-soft);border:1px solid #e0defa;border-radius:var(--radius);padding:1.05rem 1.25rem;font-size:.95rem;color:var(--muted);}
+.callout p{margin:.35rem 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+.callout strong{color:var(--accent-ink);font-weight:650;}
+
+/* body */
+.doc{padding:2.2rem 0 1rem;}
+.doc>p:first-of-type{font-size:1.05rem;color:var(--muted);}
+.doc h2{font-size:1.28rem;letter-spacing:-.015em;font-weight:680;margin:2.4rem 0 .5rem;padding-top:1.4rem;border-top:1px solid var(--line);}
+.doc h3{font-size:1.02rem;font-weight:660;margin:1.6rem 0 .4rem;color:var(--ink);}
+.doc h2:first-child,.doc h3:first-child{margin-top:0;border-top:none;padding-top:0;}
+.doc p{margin:.7rem 0;}
+.doc ul,.doc ol{margin:.6rem 0;padding-left:1.3rem;}
+.doc li{margin:.34rem 0;}
+.doc li>ul,.doc li>ol{margin:.3rem 0;}
+.doc strong{color:var(--ink);font-weight:650;}
+.doc hr{border:none;border-top:1px solid var(--line);margin:2.2rem 0;}
+.doc a{border-bottom:1px solid transparent;}
+
+/* figures / screenshots */
+.doc figure{margin:1.5rem 0;}
+.doc figure.shotrow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start;}
+@media(max-width:640px){.doc figure.shotrow{grid-template-columns:1fr;}}
+.doc figure.shotrow a{display:block;border-bottom:0;line-height:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .12s ease;}
+.doc figure.shotrow a:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 24px rgba(20,26,44,.09);}
+.doc figure.shotrow img{width:100%;height:230px;object-fit:cover;object-position:top left;display:block;}
+.doc figure figcaption{grid-column:1/-1;font-size:14px;color:var(--faint);margin-top:.4rem;line-height:1.5;}
+@media (prefers-reduced-motion: reduce){.doc figure.shotrow a{transition:none;}.doc figure.shotrow a:hover{transform:none;}}
+
+/* inline code + code blocks */
+.doc code{font-family:var(--mono);font-size:.85em;background:var(--line-soft);border:1px solid var(--line);border-radius:5px;padding:.08em .38em;color:var(--accent-ink);}
+.doc pre{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.1rem;overflow:auto;box-shadow:var(--shadow);margin:1rem 0;}
+.doc pre code{background:none;border:none;padding:0;color:var(--muted);font-size:.82rem;line-height:1.55;}
+
+/* body blockquotes (e.g. "Resolved later" notes) */
+.doc blockquote{margin:1.1rem 0;padding:.7rem 1.1rem;border-left:3px solid var(--habit);background:var(--habit-soft);border-radius:0 var(--radius) var(--radius) 0;color:var(--muted);font-size:.95rem;}
+.doc blockquote p{margin:.3rem 0;}
+.doc blockquote strong{color:#0a6d64;}
+
+/* tables */
+.doc table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.9rem;display:block;overflow-x:auto;}
+.doc th{text-align:left;font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);padding:.6rem .7rem;border-bottom:2px solid var(--line);white-space:nowrap;}
+.doc td{padding:.6rem .7rem;border-bottom:1px solid var(--line);vertical-align:top;}
+.doc tbody tr:hover{background:var(--line-soft);}
+
+/* footer */
+.foot{border-top:1px solid var(--line);margin-top:2rem;padding:2rem 0 3rem;}
+.foot .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.85rem;color:var(--faint);}
+.foot a{font-weight:600;}
+.backlink{color:var(--ink);}
+.backbtn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border:1px solid var(--accent);border-radius:8px;color:var(--accent-ink);font-weight:600;font-size:14px;text-decoration:none;transition:background .12s ease,color .12s ease;}
+.backbtn:hover{background:var(--accent);color:#fff;text-decoration:none;}
+.foot .footmeta a{color:var(--faint);}
+/* image lightbox */
+.lb-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(15,17,28,.92);padding:2.5vmin;cursor:zoom-out;opacity:0;transition:opacity .16s ease;}
+.lb-overlay.open{display:flex;opacity:1;}
+.lb-overlay img{max-width:95vw;max-height:92vh;width:auto;height:auto;border-radius:8px;box-shadow:0 12px 48px rgba(0,0,0,.5);cursor:default;}
+.lb-close{position:fixed;top:16px;right:20px;width:40px;height:40px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lb-close:hover{background:rgba(255,255,255,.26);}
+@media (prefers-reduced-motion: reduce){.backbtn{transition:none;}.lb-overlay{transition:none;}}
+
+/* index */
+.hero{padding:clamp(2.6rem,6vw,4.4rem) 0 2.2rem;}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3rem);line-height:1.06;letter-spacing:-.03em;font-weight:680;margin:.6rem 0 0;}
+.hero .lede{font-size:clamp(1.05rem,2.4vw,1.2rem);color:var(--muted);max-width:60ch;margin:1.3rem 0 0;}
+.grouplabel{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:2.6rem 0 1rem;display:flex;align-items:center;gap:.8rem;}
+.grouplabel::after{content:"";flex:1;height:1px;background:var(--line);}
+.grouplabel .app{color:var(--accent-ink);}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+@media(max-width:640px){.cards{grid-template-columns:1fr;}}
+.card{display:block;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow);color:var(--ink);transition:transform .12s ease,box-shadow .12s ease;}
+.card:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 3px 6px rgba(20,26,44,.06),0 14px 32px rgba(20,26,44,.08);}
+.card .kind{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.card .name{font-weight:670;font-size:1.02rem;letter-spacing:-.01em;margin:.3rem 0 .4rem;}
+.card .shows{font-size:.9rem;color:var(--muted);line-height:1.55;}
+.intro-note{margin:2.4rem 0 0;font-size:.92rem;color:var(--faint);border-top:1px solid var(--line);padding-top:1.2rem;}
+
+/* Type & contrast pass to match the portfolio: larger content tiers, 13px label floor, underlined body links */
+body{font-size:17px;}
+.doc p,.doc li,.doc td{font-size:17px;}
+.doc h2{font-size:22px;}
+.doc h3{font-size:18px;}
+.callout{font-size:16px;}
+.doc table{font-size:15.5px;}
+.doc th{font-size:13px;}
+.doc code,.doc pre code{font-size:14px;}
+.doc blockquote{font-size:16px;}
+.subtitle{font-size:13px;}
+.crumb{font-size:13px;}
+.eyebrow{font-size:13px;}
+.card .kind{font-size:12.5px;}
+.card .name{font-size:17px;}
+.card .shows{font-size:15px;}
+.foot .wrap{font-size:14px;}
+.doc a{text-decoration:underline;}
+.brand a{color:var(--ink);text-decoration:none;font-weight:600;}
+.brand a:hover{color:var(--accent);}
+.brand .sep{color:var(--faint);font-weight:400;margin:0 .1rem;}
+.foot a{text-decoration:none;}
+@media (prefers-reduced-motion: reduce){ .card{transition:none;} .card:hover{transform:none;} }
+@media print{ .topbar{position:static;} body{background:#fff;} .doc pre,.callout,.card{break-inside:avoid;} }
+
+
+</style>
+</head><body>
+<header class="topbar"><div class="wrap">
+<span class="brand"><span class="dot"></span><span class="habitbar"></span><a href="../../index.html" class="backlink">&larr; Portfolio</a></span>
+<span class="crumb">Unified Tasks &amp; Habits</span>
+</div></header>
+<main class="wrap">
+<header class="dochead">
+<div class="eyebrow">Work Sample</div>
+<h1>Productivity App: v2 Scope and Prioritization</h1>
+<div class="subtitle">Work sample · v2 scope and prioritization · as of v1 (July 2026)</div>
+<div class="callout"><p><strong>What this is:</strong> a menu of candidate v2 scope, each option recording how v1 classified it, its current state in the shipped app, and what building it would involve, so it can be prioritized.</p><p><strong>What it shows:</strong> prioritization, deliberate scoping, and forward roadmapping past a shipped v1.</p><p><strong>Source:</strong> lightly edited from the project's v2 scope-options document for presentation (internal references cleaned). The full working version lives in the app repo.</p></div>
+</header>
+<div class="doc"><p>This is a planning menu, not a commitment or a plan. It compiles everything the v1 docs deferred so a next round of work can be prioritized. v1 (Phases 1 to 3) is complete.</p>
+<hr />
+<h2>How this document is organized</h2>
+<p>Every option carries an <strong>Origin</strong> tag showing how the v1 docs classified it, because the distinction matters for prioritization: "Out of scope" items were set aside deliberately, while "Future" items were always intended to come back.</p>
+<p><strong>Origin tags:</strong></p>
+<ul>
+<li><strong>Out of scope (v1)</strong>: listed under "Out of Scope for v1" in the PRD. Deliberately excluded from v1, with no commitment to a version.</li>
+<li><strong>Future Direction</strong>: labeled "Future Direction" in the PRD or technical architecture spec. Intended for a later version, not v1.</li>
+<li><strong>v1.1</strong>: explicitly slated for v1.1 in the docs.</li>
+</ul>
+<p>A few options carry more than one tag (for example, duration goals are both "Out of scope (v1)" and "Future Direction"). Where that is the case, all applicable tags are shown.</p>
+<p><strong>Current-state tags:</strong></p>
+<ul>
+<li><strong>Not started</strong>: no code exists for it.</li>
+<li><strong>Partial (foundation)</strong>: a dependency or data layer it needs already ships in v1, but the feature itself is not built.</li>
+</ul>
+<hr />
+<h2>Deferred features</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Option</th>
+<th>Origin</th>
+<th>Current state</th>
+<th>What v2 would involve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Pattern analytics</strong> (trends, streaks, consistency over time)</td>
+<td>Out of scope (v1); analytics <strong>views</strong> flagged <strong>v1.1</strong></td>
+<td>Partial (foundation): every completion is stored, and per-item history shows in item detail, but there are no trend, streak, or aggregate views</td>
+<td>New read-only surfaces over existing completion data (charts, streaks, per-tag or per-period rollups). No new data model.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Notifications and reminders</strong></td>
+<td>Out of scope (v1); server-scheduling need flagged <strong>v1.1</strong></td>
+<td>Not started</td>
+<td>The first scheduled/server work in the app (the current architecture has no scheduled jobs). Needs push infrastructure and per-item reminder settings.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Hour-based (duration) habit goals</strong> (e.g. "2 hours per week")</td>
+<td>Out of scope (v1) <strong>and</strong> Future Direction</td>
+<td>Not started (deliberately: goals are count/frequency only; no duration-target field in the schema)</td>
+<td>A second habit-goal kind alongside count: a duration target, logging minutes per completion, and duration progress on the Progress surface. Schema and progress-math changes.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Natural language input</strong> (type "run 7am tomorrow")</td>
+<td>Out of scope (v1)</td>
+<td>Not started</td>
+<td>A parser that turns free text into the item fields (date, time, repeat). Sits on top of the existing item model.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>AI-assisted scheduling</strong> (suggest when to do things)</td>
+<td>Out of scope (v1)</td>
+<td>Not started</td>
+<td>Suggestions layered over the day/week; needs a suggestion engine and UI. Largest and least-defined option.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Data export</strong> (take your data out)</td>
+<td>Out of scope (v1)</td>
+<td>Not started</td>
+<td>Export items, completions, and tags to a portable format (JSON/CSV/ICS). Reads the local store; no new data.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Additional calendar integrations</strong> (Apple Calendar, Outlook)</td>
+<td>Out of scope (v1)</td>
+<td>Not started</td>
+<td>Reuse the Google Calendar sync pattern for other providers. Each is its own OAuth + API integration.</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Optional gamification</strong> (streaks as rewards, badges)</td>
+<td>Out of scope (v1)</td>
+<td>Not started</td>
+<td>A motivational layer over completion data. Overlaps with pattern analytics (streaks).</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>First-run onboarding flow</strong></td>
+<td>Out of scope (v1)</td>
+<td>Not started (by design: v1 is "no setup required" and opens straight to Plan)</td>
+<td>An optional guided intro. Tension with the "zero configuration" principle, so worth a design decision on whether it is wanted at all.</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>Mobile application</strong></td>
+<td>Out of scope (v1)</td>
+<td>Partial (foundation): the app is an installable PWA, but the UI is desktop-first and there is no mobile-optimized layout</td>
+<td>Either a responsive mobile layout pass on the existing PWA, or a native app. The narrow-screen Week/Month fallback (see refinements below) is the concrete first step.</td>
+</tr>
+<tr>
+<td>11</td>
+<td><strong>Social / collaborative features</strong> (sharing, multi-user)</td>
+<td>Out of scope (v1)</td>
+<td>Not started (single-user by design; conflict resolution is last-write-wins, not collaborative)</td>
+<td>The largest architectural change: multi-user data, sharing, and real conflict handling. Contradicts the current single-user design premise.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Tracked deferred story (already in the backlog)</h2>
+<p>Unlike the items above (which live only as prose in the v1 docs), this one is a groomed Jira story:</p>
+<ul>
+<li><strong>Google Drive file attachments in item notes (PRD-81).</strong> Origin: split off from the rich-text notes work (was Phase 2, relabeled Phase 3), not part of the original "Out of scope" list. Current state: <strong>Not started, held.</strong> Groomed as the Google Drive Picker approach (Option B), blocked on Google Cloud setup. The Google OAuth foundation it builds on already exists. The full setup checklist and two-phase build plan live in the PRD-81 ticket.</li>
+</ul>
+<hr />
+<h2>Deferred design and polish (behavior shipped, refinement left open)</h2>
+<p>These are not new features; they are refinements the v1 docs flagged as "still open for later phases." The underlying behavior works today.</p>
+<ul>
+<li><strong>Narrow-screen, mobile-responsive layout for the Week and Month grids.</strong> PRD-91 shipped these desktop-first and explicitly deferred the narrow-screen fallback. This is the concrete first step toward option 10 (mobile).</li>
+<li><strong>Guest-to-account merge prompt presentation and duplicate cleanup.</strong> The merge behavior is built and correct (tag reconciliation was fixed under PRD-103). How the prompt and any duplicate cleanup are presented was left for refinement in the information architecture spec.</li>
+</ul>
+<hr />
+<h2>Resolved since these notes were written (no longer future)</h2>
+<p>Recorded so this list is not mistaken for still-open work. The v1 docs once listed these as "later phase," and they are now shipped:</p>
+<ul>
+<li>Category lens at the Week and Month ranges (PRD-102).</li>
+<li>The mini-calendar date navigator (PRD-56).</li>
+<li>How tags display in item rows and the Category lens (Phase 2).</li>
+</ul>
+<hr />
+<h2>Notes for prioritizing</h2>
+<ul>
+<li><strong>Cheapest, highest-leverage on existing data:</strong> pattern analytics (1) and data export (6) both read the completion/item data that already ships, with no new data model.</li>
+<li><strong>Completes an existing feature:</strong> duration habit goals (3) extend the Progress surface that already exists for count goals.</li>
+<li><strong>Biggest lift / most design-dependent:</strong> AI-assisted scheduling (5), social/collaborative (11), and a native mobile app (10, if native rather than responsive).</li>
+<li><strong>Needs external setup before any build:</strong> additional calendar integrations (7) and the tracked Drive-attachments story (PRD-81) each require provider/OAuth setup.</li>
+</ul></div>
+</main>
+<footer class="foot"><div class="wrap">
+<a href="../../index.html" class="backbtn">&larr; Back to portfolio</a>
+<span class="footmeta"><a href="../index.html">All work samples</a> &middot; Derek Staley</span>
+</div></footer>
+<div class="lb-overlay" id="lb" role="dialog" aria-modal="true" aria-label="Image preview"><button class="lb-close" type="button" aria-label="Close preview">&times;</button><img alt=""></div>
+<script>
+(function(){var lb=document.getElementById('lb');if(!lb)return;var img=lb.querySelector('img'),btn=lb.querySelector('.lb-close');function open(s,a){img.src=s;img.alt=a||'';lb.classList.add('open');document.body.style.overflow='hidden';}function close(){lb.classList.remove('open');img.removeAttribute('src');document.body.style.overflow='';}document.addEventListener('click',function(e){var t=e.target.closest('a');if(!t)return;var h=t.getAttribute('href')||'';if(/\.(png|jpe?g|webp|gif)$/i.test(h)){e.preventDefault();var im=t.querySelector('img');open(h,im?im.getAttribute('alt'):'');}});btn.addEventListener('click',close);lb.addEventListener('click',function(e){if(e.target===lb)close();});document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});})();
+</script>
+</body></html>

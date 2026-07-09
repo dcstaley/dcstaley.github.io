@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Product Requirements Document: Unified Tasks &amp; Habits App &middot; Derek Staley</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234F46E5'/%3E%3C/svg%3E">
+<style>
+:root{
+  --page:#f4f5f8; --surface:#ffffff; --ink:#1b1b1f; --muted:#5c5c67; --faint:#636b7c;
+  --line:#e7e7ee; --line-soft:#eff0f4;
+  --accent:#4f46e5; --accent-ink:#3b34c4; --accent-soft:#eeedfb;
+  --habit:#0d9488; --habit-soft:#e3f1ef;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+  --radius:8px;
+  --shadow:0 1px 2px rgba(20,26,44,.04),0 8px 24px rgba(20,26,44,.05);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+.wrap{max-width:54rem;margin:0 auto;padding:0 clamp(1.15rem,5vw,2rem);}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:10;background:rgba(244,245,248,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem clamp(1.15rem,5vw,2rem);}
+.brand{display:inline-flex;align-items:center;gap:.55rem;font-weight:600;letter-spacing:-.01em;color:var(--ink);font-size:.95rem;}
+.brand:hover{text-decoration:none;}
+.brand .dot{width:.8rem;height:.8rem;border-radius:3px;background:var(--accent);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);}
+.brand .habitbar{width:3px;height:.85rem;border-radius:2px;background:var(--habit);}
+.crumb{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--faint);text-transform:uppercase;}
+@media(max-width:620px){.crumb{display:none;}}
+
+/* document header */
+.dochead{padding:clamp(2.2rem,5vw,3.6rem) 0 1.8rem;border-bottom:1px solid var(--line);}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);}
+.dochead h1{font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.08;letter-spacing:-.025em;font-weight:660;margin:.5rem 0 0;text-wrap:balance;}
+.subtitle{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;color:var(--faint);margin:.9rem 0 0;}
+.callout{margin:1.5rem 0 0;background:var(--accent-soft);border:1px solid #e0defa;border-radius:var(--radius);padding:1.05rem 1.25rem;font-size:.95rem;color:var(--muted);}
+.callout p{margin:.35rem 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+.callout strong{color:var(--accent-ink);font-weight:650;}
+
+/* body */
+.doc{padding:2.2rem 0 1rem;}
+.doc>p:first-of-type{font-size:1.05rem;color:var(--muted);}
+.doc h2{font-size:1.28rem;letter-spacing:-.015em;font-weight:680;margin:2.4rem 0 .5rem;padding-top:1.4rem;border-top:1px solid var(--line);}
+.doc h3{font-size:1.02rem;font-weight:660;margin:1.6rem 0 .4rem;color:var(--ink);}
+.doc h2:first-child,.doc h3:first-child{margin-top:0;border-top:none;padding-top:0;}
+.doc p{margin:.7rem 0;}
+.doc ul,.doc ol{margin:.6rem 0;padding-left:1.3rem;}
+.doc li{margin:.34rem 0;}
+.doc li>ul,.doc li>ol{margin:.3rem 0;}
+.doc strong{color:var(--ink);font-weight:650;}
+.doc hr{border:none;border-top:1px solid var(--line);margin:2.2rem 0;}
+.doc a{border-bottom:1px solid transparent;}
+
+/* figures / screenshots */
+.doc figure{margin:1.5rem 0;}
+.doc figure.shotrow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start;}
+@media(max-width:640px){.doc figure.shotrow{grid-template-columns:1fr;}}
+.doc figure.shotrow a{display:block;border-bottom:0;line-height:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .12s ease;}
+.doc figure.shotrow a:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 24px rgba(20,26,44,.09);}
+.doc figure.shotrow img{width:100%;height:230px;object-fit:cover;object-position:top left;display:block;}
+.doc figure figcaption{grid-column:1/-1;font-size:14px;color:var(--faint);margin-top:.4rem;line-height:1.5;}
+@media (prefers-reduced-motion: reduce){.doc figure.shotrow a{transition:none;}.doc figure.shotrow a:hover{transform:none;}}
+
+/* inline code + code blocks */
+.doc code{font-family:var(--mono);font-size:.85em;background:var(--line-soft);border:1px solid var(--line);border-radius:5px;padding:.08em .38em;color:var(--accent-ink);}
+.doc pre{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.1rem;overflow:auto;box-shadow:var(--shadow);margin:1rem 0;}
+.doc pre code{background:none;border:none;padding:0;color:var(--muted);font-size:.82rem;line-height:1.55;}
+
+/* body blockquotes (e.g. "Resolved later" notes) */
+.doc blockquote{margin:1.1rem 0;padding:.7rem 1.1rem;border-left:3px solid var(--habit);background:var(--habit-soft);border-radius:0 var(--radius) var(--radius) 0;color:var(--muted);font-size:.95rem;}
+.doc blockquote p{margin:.3rem 0;}
+.doc blockquote strong{color:#0a6d64;}
+
+/* tables */
+.doc table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.9rem;display:block;overflow-x:auto;}
+.doc th{text-align:left;font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);padding:.6rem .7rem;border-bottom:2px solid var(--line);white-space:nowrap;}
+.doc td{padding:.6rem .7rem;border-bottom:1px solid var(--line);vertical-align:top;}
+.doc tbody tr:hover{background:var(--line-soft);}
+
+/* footer */
+.foot{border-top:1px solid var(--line);margin-top:2rem;padding:2rem 0 3rem;}
+.foot .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.85rem;color:var(--faint);}
+.foot a{font-weight:600;}
+.backlink{color:var(--ink);}
+.backbtn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border:1px solid var(--accent);border-radius:8px;color:var(--accent-ink);font-weight:600;font-size:14px;text-decoration:none;transition:background .12s ease,color .12s ease;}
+.backbtn:hover{background:var(--accent);color:#fff;text-decoration:none;}
+.foot .footmeta a{color:var(--faint);}
+/* image lightbox */
+.lb-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(15,17,28,.92);padding:2.5vmin;cursor:zoom-out;opacity:0;transition:opacity .16s ease;}
+.lb-overlay.open{display:flex;opacity:1;}
+.lb-overlay img{max-width:95vw;max-height:92vh;width:auto;height:auto;border-radius:8px;box-shadow:0 12px 48px rgba(0,0,0,.5);cursor:default;}
+.lb-close{position:fixed;top:16px;right:20px;width:40px;height:40px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lb-close:hover{background:rgba(255,255,255,.26);}
+@media (prefers-reduced-motion: reduce){.backbtn{transition:none;}.lb-overlay{transition:none;}}
+
+/* index */
+.hero{padding:clamp(2.6rem,6vw,4.4rem) 0 2.2rem;}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3rem);line-height:1.06;letter-spacing:-.03em;font-weight:680;margin:.6rem 0 0;}
+.hero .lede{font-size:clamp(1.05rem,2.4vw,1.2rem);color:var(--muted);max-width:60ch;margin:1.3rem 0 0;}
+.grouplabel{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:2.6rem 0 1rem;display:flex;align-items:center;gap:.8rem;}
+.grouplabel::after{content:"";flex:1;height:1px;background:var(--line);}
+.grouplabel .app{color:var(--accent-ink);}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+@media(max-width:640px){.cards{grid-template-columns:1fr;}}
+.card{display:block;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow);color:var(--ink);transition:transform .12s ease,box-shadow .12s ease;}
+.card:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 3px 6px rgba(20,26,44,.06),0 14px 32px rgba(20,26,44,.08);}
+.card .kind{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.card .name{font-weight:670;font-size:1.02rem;letter-spacing:-.01em;margin:.3rem 0 .4rem;}
+.card .shows{font-size:.9rem;color:var(--muted);line-height:1.55;}
+.intro-note{margin:2.4rem 0 0;font-size:.92rem;color:var(--faint);border-top:1px solid var(--line);padding-top:1.2rem;}
+
+/* Type & contrast pass to match the portfolio: larger content tiers, 13px label floor, underlined body links */
+body{font-size:17px;}
+.doc p,.doc li,.doc td{font-size:17px;}
+.doc h2{font-size:22px;}
+.doc h3{font-size:18px;}
+.callout{font-size:16px;}
+.doc table{font-size:15.5px;}
+.doc th{font-size:13px;}
+.doc code,.doc pre code{font-size:14px;}
+.doc blockquote{font-size:16px;}
+.subtitle{font-size:13px;}
+.crumb{font-size:13px;}
+.eyebrow{font-size:13px;}
+.card .kind{font-size:12.5px;}
+.card .name{font-size:17px;}
+.card .shows{font-size:15px;}
+.foot .wrap{font-size:14px;}
+.doc a{text-decoration:underline;}
+.brand a{color:var(--ink);text-decoration:none;font-weight:600;}
+.brand a:hover{color:var(--accent);}
+.brand .sep{color:var(--faint);font-weight:400;margin:0 .1rem;}
+.foot a{text-decoration:none;}
+@media (prefers-reduced-motion: reduce){ .card{transition:none;} .card:hover{transform:none;} }
+@media print{ .topbar{position:static;} body{background:#fff;} .doc pre,.callout,.card{break-inside:avoid;} }
+
+
+</style>
+</head><body>
+<header class="topbar"><div class="wrap">
+<span class="brand"><span class="dot"></span><span class="habitbar"></span><a href="../../index.html" class="backlink">&larr; Portfolio</a></span>
+<span class="crumb">Unified Tasks &amp; Habits</span>
+</div></header>
+<main class="wrap">
+<header class="dochead">
+<div class="eyebrow">Work Sample</div>
+<h1>Product Requirements Document: Unified Tasks &amp; Habits App</h1>
+<div class="subtitle">Work sample · product requirements document · as of v1 (July 2026)</div>
+<div class="callout"><p><strong>What this is:</strong> the PRD for my unified tasks-and-habits web app, defining what to build and how it should behave across three phases.</p><p><strong>What it shows:</strong> requirements definition and scope discipline (including an explicit out-of-scope list), the product decisions behind the app, and a version changelog that records how the spec evolved, with several deliberate reversals.</p><p><strong>Source:</strong> lightly edited from the project's PRD for presentation (internal references cleaned, some implementation-level detail trimmed). The full working version lives in the app repo.</p></div>
+</header>
+<div class="doc"><p>This doc tracked the product from initial draft through shipped v1. It is written in planning tense because that is what it is: the spec the build worked from. The changelog at the end is where the decision history lives.</p>
+<hr />
+<h2>Overview</h2>
+<p>A unified productivity web application for managing tasks and habits in a single system. Single user, no collaboration features. The primary user opens it daily to plan their day, track recurring habits, and manage personal commitments alongside an existing work calendar.</p>
+<p>The central concept is flexible scheduling granularity: items are not forced into a specific time slot or a flat daily list. They can exist at different levels of scheduling specificity and coexist in the same view.</p>
+<hr />
+<h2>Scope</h2>
+<h3>In scope for v1</h3>
+<ul>
+<li><strong>Phase 1 (Core Experience):</strong> local-first foundation (works offline), guest (no-account) use, optional accounts with sync and backup, item CRUD (with optional repeat and optional habit tracking), the calendar day grid plus rail, flexible scheduling, completion marking. No setup required.</li>
+<li><strong>Phase 2 (Integration and Configuration):</strong> completion history tracking, notes field, Google Calendar sync, tags and the by-tag Category view.</li>
+<li><strong>Phase 3 (Views and Quantitative Tracking):</strong> additional time ranges (Week and Month) and lenses (Type: Habits, Tasks, and Events), configurable landing view, quantitative progress tracking.</li>
+</ul>
+<h3>Out of scope for v1</h3>
+<p>Explicitly deferred, and not to influence v1 implementation decisions: a mobile application; notifications and reminders; pattern analytics (the data layer ships in v1, analytics views are v1.1); natural language input; AI-assisted scheduling; data export; optional gamification; hour-based (duration) habit goals (count and frequency goals are in v1, duration is deferred); additional calendar integrations (Apple, Outlook); social or collaborative features; and a first-run onboarding flow.</p>
+<hr />
+<h2>Key decisions</h2>
+<p><strong>Local-first, offline, and guest use.</strong> The app works fully offline and can be used without an account; data lives on the device first. An account is optional and exists to enable sync, backup, and multi-device, not to gate access. Offline and signed-out are distinct: a signed-in user offline keeps their session and full local access, and only an explicit sign-out clears local data and returns the device to guest. On first sign-up, a guest's local data migrates into the account; signing into an account that already has data prompts once to add the local data (default) or discard it, reconciling same-named tags rather than duplicating them. Cross-device conflict resolution is last-write-wins. Google Calendar sync requires an account and a connection and works only online.</p>
+<p><strong>Authentication.</strong> Optional; it turns on sync and backup rather than gating access. Two methods, Google OAuth and email/password, are independent paths that cannot merge or switch after creation. Each account maps to one set of app data, and sessions persist across browser closes.</p>
+<p><strong>Google Calendar sync.</strong> Push-only by default: time-specific and all-day items sync to a dedicated app calendar. External events are not pulled into the app unless bidirectional sync is enabled (an optional toggle). Google OAuth users need no second login; email/password users grant calendar access through a separate flow in settings that does not change their sign-in method.</p>
+<p><strong>Items, repeat, and habit tracking.</strong> One underlying item type; there is no task-versus-habit choice at creation. Repeat is one control with two flavors: a fixed schedule (every day, specific weekdays, every N days/weeks/months), available on any timing mode; or a frequency (N times per period, for example four times a week), available only on the flexible modes, since a set-time block is pinned to a clock time. Both can end (never, on a date, or after N). Repetition alone does not make something a habit; a weekly meeting just repeats. "Track as a habit" is an optional toggle that turns on consistency tracking against the item's recurrence, with no separate target to fill in (a count habit's target is its frequency, and a binary habit is a scheduled item with tracking on). "Task" and "habit" are shorthand: a habit is simply an item with tracking on.</p>
+<p><strong>Scheduling (the "when").</strong> Set at creation as one of three timing modes: <strong>Set time</strong> (a date, or date range, with a start and end time, where the end is the duration); <strong>Timeframe</strong> (a date plus "between X and Y," optionally "for a duration," done any time in the range); or <strong>No set time</strong> (no date or time, a rail item, optionally recurring). Within Set time, two checkboxes: <strong>All day</strong> (occupies the whole day, shown in the all-day band, can span a date range) and <strong>By end of day</strong> (due that day, shown on the rail). This replaced an earlier flat list of scheduling types; an item is never created "as Morning."</p>
+<p><strong>Tags, one organizing layer.</strong> Tags are user-defined labels (Work, Fitness, Personal) used to group and filter items. They replace the former scheduling-group concept entirely; there are no Morning/Afternoon/Evening groups. An item can carry any number of tags; tags arrive in Phase 2.</p>
+<p><strong>No setup required.</strong> The app is usable immediately with zero configuration. The day grid works out of the box; tags are optional. This replaced the former "smart default groups."</p>
+<p><strong>View model.</strong> Two independent controls present the same items: a time range (Day, Week, Month) and an organize-by lens (Schedule, Category, Type). The Schedule lens shows the calendar surface (day grid plus rail at Day, a grid at Week and Month). The Category lens groups and filters by tag. The Type lens splits into Habits, Tasks, and Events. Day plus Schedule is the Phase 1 daily planning view; the Category view arrives in Phase 2; the other ranges and the Type lens arrive in Phase 3. The landing view is user-configurable, defaulting to Day plus Schedule.</p>
+<p><strong>Overdue and incomplete states.</strong> Set-time items become overdue once their end time passes without completion (all-day and by-end-of-day once the day passes). Timeframe items become overdue once the window passes; the item is not deleted. No-set-time items are never "overdue"; a floating item just stays on the rail, and a frequency habit whose period closes with the count unmet is counted as missed, not overdue. These are derived display states, not stored fields: missed instances are computed on demand from the recurrence and the completion records, and repeat rules are effective-dated so a past date is always judged against the rule that applied then, never recomputed from a later version.</p>
+<hr />
+<h2>Phase 1: Core Experience</h2>
+<p><strong>Goal:</strong> the app is usable for the first time. A person can open it (as guest or signed in), see their day on the calendar grid, create items, optionally repeat or track them as habits, and mark them complete.</p>
+<p><strong>Authentication.</strong> Optional, and never blocks use. A new user starts immediately as a guest, with all data stored locally and the app fully functional offline; a gentle, dismissible prompt suggests signing up so data is backed up. Both methods live on the same sign-in screen. Creating an account turns on sync and backup and migrates the guest's existing local data into the account so nothing is lost.</p>
+<p>The guest-to-account handling is deliberately careful about the one genuinely ambiguous case. Signing up to a new (or empty) account claims and uploads the local data with no prompt; signing in on a fresh device syncs the account down with no prompt; only signing in where both the device and the account already hold data prompts once ("Add the items you created on this device to your account?", Add as the default). A merge there is a union of independently created records, not a last-write-wins conflict, since the records have separate IDs; to avoid obvious duplicates, same-named tags are reconciled case-insensitively and guest items repoint to the account's matching tag. One account maps to one email: signing in with Google for an email that already has a password account links the two rather than erroring.</p>
+<p><strong>Sign out</strong> is the only action that clears local data. It first confirms changes have synced (warning if unsynced offline changes would be lost), then clears the device and returns it to guest. Being offline is not sign-out. Google Calendar access is not revoked on sign-out; the user disconnects it explicitly.</p>
+<p><strong>Creating items.</strong> There is one kind of item. To create one, the user gives it a title and a timing; repeat and habit-tracking are optional layers on top. The form stays simple: a small three-option mode selector plus a couple of checkboxes.</p>
+<ul>
+<li><strong>Set time (default):</strong> a date or date range with a start and end time, shown as a block on the day grid. Eligible for Google Calendar sync. Two checkboxes grey out the time: <strong>All day</strong> (spans whole days, shown in the all-day band) and <strong>By end of day</strong> (due that day, shown on the rail).</li>
+<li><strong>Timeframe:</strong> a date plus "do it between X and Y," optionally "for a duration." Flexible within the range; lives on the rail, with its window shown as a focus-band when selected.</li>
+<li><strong>No set time:</strong> no date or time. Combined with a frequency it expresses "Practice Spanish four times a week"; with no recurrence it is a floating to-do.</li>
+</ul>
+<p>Repeat is one control with two flavors (a schedule, or a frequency of N per period) plus an end. "Track as a habit" turns on consistency tracking with no separate target. Repeating and habit-tracking are independent:</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Timing</th>
+<th>Repeat</th>
+<th>Tracked?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Meeting with contractor</td>
+<td>Set time, 1–2 PM</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Vacation in Mexico</td>
+<td>Set time, All day, Jun 18–25</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Call Mom</td>
+<td>Set time, By end of day</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Play guitar</td>
+<td>Timeframe, 12–4 PM, for 1 hr</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Team standup, 9:00 AM</td>
+<td>Set time</td>
+<td>Every weekday</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Meditate</td>
+<td>Set time or no set time</td>
+<td>Every day</td>
+<td>Yes (binary)</td>
+</tr>
+<tr>
+<td>Practice Spanish</td>
+<td>No set time</td>
+<td>4 times per week</td>
+<td>Yes (count = the frequency)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Editing and deleting.</strong> All fields are editable; editing a repeat rule affects future instances only, since rules are effective-dated. Deleting shows a confirmation. Deleting a habit soft-deletes it (the item and its completion history are retained but hidden, so history is preserved); deleting a task or event removes it and its completion records permanently. This split applies from Phase 1, since completions exist from Phase 1.</p>
+<p><strong>Daily planning view.</strong> The primary surface, and the Day range of the Schedule lens: a calendar day grid showing the current day, in three zones. An all-day band on top; a time grid down the day where set-time items appear as blocks; and a side rail holding everything without a set time (timeframe, by-end-of-day, and no-set-time items active today, including tracked habits due today). The user can drag a rail item onto the grid to give it a time. Only what is relevant to the day appears; future-only items, inactive repeats, and completed items from previous days do not. Day navigation moves forward and backward: past days are viewable and their completion state is editable (a forgotten item can be marked done), and future days show what is scheduled without a completion control.</p>
+<p>Because everything is one item type, there are no separate "tasks" and "habits" tabs. Tracked habits and ordinary items appear together, visually distinguished rather than split into modules. This unified model is a core differentiator.</p>
+<p><strong>Completion marking.</strong> In Phase 1, completion is a simple per-item, per-day toggle, reversible within the day. A count habit uses a progress ring instead of a checkbox: tapping it logs a completion and fills the ring toward the target, a teal check shows at the target, and once met a separate "Log again" control allows logging past the goal (for example 4 of 3 this week). The count habit stays on the rail for its whole active period and shows plain-text period progress ("2 of 4"). Recurring items reset each day; non-recurring tasks stay complete once toggled. Completion in Phase 1 does not yet surface history, streaks, or rates (those read the same records in Phase 2). The completion data store is provisioned from Phase 1 so completion state is durable from the start, which keeps the behavior phasing intact while avoiding a later data migration.</p>
+<hr />
+<h2>Phase 2: Integration and Configuration</h2>
+<p><strong>Goal:</strong> the app works alongside a user's existing calendar, tags organize items, and items carry notes and a persistent completion record.</p>
+<p><strong>Completion history.</strong> Phase 1 already stores each completion; Phase 2 adds the surfaces that read those records over time. When an item is marked done, a completion event is stored (item ID, date, timestamp); for a count habit, each completion is its own event. Missed instances are not stored: a tracked habit counts as missed for a date when it was active then (per the effective repeat rule) and has no completion record, computed on demand so no end-of-day process runs. Past daily views show what was scheduled and whether each item was completed or missed, and completion is editable for past dates.</p>
+<p><strong>Notes.</strong> A freeform, optional rich-text field on all items, matching Google Calendar's description toolbar (bold, italic, underline, lists, links) and stored as HTML so notes sync cleanly, rendered sanitized. Notes are visible in the item detail view; no preview in the daily list in v1.</p>
+<p><strong>Google Calendar sync.</strong> Connects the app to the user's Google Calendar so time-specific items appear alongside existing events. Requires an account, works only online, and queues offline changes until reconnected. Push-only by default: time-specific and all-day items sync to a dedicated app calendar (by-end-of-day, timeframe, and someday items do not map to a slot and are not synced). Editing or deleting a synced item propagates automatically by default, governed by an "Automatically sync event changes" toggle; turning it off makes the app ask per change. An optional bidirectional toggle (off by default) surfaces external events read-only on their date, inert and not editable. Sync never blocks item creation or editing; failures show a non-blocking status.</p>
+<p><strong>Tags and the Category view.</strong> User-defined labels that group and filter items, the product's single organizing layer. Users create, rename, and delete tags from settings, with rename and delete also available in-flow on the Category lens section headers. Deleting a tag removes it from items without deleting the items. The Category view gives each tag a section with its items beneath, items with multiple tags appear under each, and an "Untagged" section collects the rest.</p>
+<hr />
+<h2>Phase 3: Views and Quantitative Tracking</h2>
+<p><strong>Goal:</strong> users can view items across additional time ranges and lenses, and log progress against quantitative targets.</p>
+<p><strong>Views.</strong> The same items seen through two independent controls. The <strong>time range</strong> is Day, Week, or Month. The <strong>lens</strong> is Schedule (the calendar surface: day grid plus rail at Day, a calendar grid at Week and Month), Category (grouped by tag), or Type (three sections, Habits, Tasks, and Events, where Events are set-time items, Tasks are timeframe and no-set-time, and Habits are the tracked habits). The two controls are independent, so any combination is valid ("this month, by category" or "today, by type"). The landing view is a user setting, defaulting to Day plus Schedule.</p>
+<p>The Week and Month Schedule grids keep one shell at every zoom: a calendar area on the left that changes with the range, and a persistent Tasks panel on the right (the Phase 1 rail, now present at all three ranges). Week and Month reuse the Day view's per-item placement rule mapped across the span, so no new placement logic is introduced. Week is a seven-day header plus an all-day band plus a scrollable time grid; Month is a five-to-six-week grid of compact date cells with up to three item chips and a "+N more" affordance. The Tasks panel groups items into Recurring (repeating rail items shown once for the span), Anytime (undated one-offs, also shown once), and per-day groups. First day of week is configurable. External Google events render read-only and visually distinct, never in the Tasks panel. Desktop-first, with a narrow-screen fallback deferred as a later refinement.</p>
+<p><strong>Quantitative progress.</strong> A dedicated surface for viewing progress against frequency (count) goals, reading the same completion records used everywhere. It lists tracked habits with a frequency goal and shows, per habit, the goal, progress in the current period, days remaining, and a quiet progress indicator. Frequency periods use a hybrid model: a named calendar period (day, week, month) snaps to calendar boundaries, while a custom "N times per X days" window runs in consecutive windows anchored to the rule's start date. Nothing evaluates a trailing window from today. Logging is just marking the item done (plus "Log again" for multiple completions in a day); there is no separate duration entry in v1.</p>
+<hr />
+<h2>Settings</h2>
+<p>A persistent surface accessible from anywhere, whose contents grow across phases. Phase 1: account (a sign-up entry point for guests, or account display and logout for signed-in users), sync and offline status, and timezone (the timezone used to evaluate the day boundary, defaulting to the browser's). Phase 2: Google Calendar connection, the bidirectional-sync toggle, the automatic-change-sync toggle, and tag management. Phase 3: the default landing view.</p>
+<hr />
+<h2>Changelog</h2>
+<p>The spec ran from an initial draft to a shipped, complete v1. Entries are grouped by working date, each recording the decisions and reversals made that day (pure formatting and errata passes omitted).</p>
+<p><strong>v1.9, 2026-07-03:</strong> reconciled the doc with the shipped app.</p>
+<ul>
+<li>Type lens became three sections (Habits, Tasks, Events), not "tracked habits versus the rest."</li>
+<li>Count-habit control became a progress ring with a "Log again" past the goal.</li>
+<li>Week/Month Tasks panel gained a "Recurring" group; tag rename and delete added to the Category lens headers.</li>
+<li>Inbound read-only events widened to every visible Google calendar, not just the primary.</li>
+</ul>
+<p><strong>v1.8, 2026-07-02:</strong> Week/Month grid and Type lens.</p>
+<ul>
+<li>Resolved the Week/Month Schedule grid, keeping the Tasks panel present at Day, Week, and Month (correcting an initial proposal that dropped it).</li>
+<li>Added the Type lens at Day; fixed the completion model so a count habit is "done" only when its period target is met.</li>
+</ul>
+<p><strong>v1.7, 2026-07-01:</strong> Google Calendar sync shipped.</p>
+<ul>
+<li>All-day items sync alongside time-specific ones; edits and deletes propagate automatically by default, governed by a new toggle.</li>
+<li>Push is queued in a device-local outbox, so creation is never blocked on sync.</li>
+<li>Added optional bidirectional sync, completing the Google Calendar epic and Phase 2.</li>
+</ul>
+<p><strong>v1.6, 2026-06-29:</strong> Notes upgraded to rich text.</p>
+<ul>
+<li>Matched Google Calendar's toolbar, stored as HTML; split the Google Drive attachment into its own deferred story.</li>
+</ul>
+<p><strong>v1.5, 2026-06-24:</strong> account-conflict behavior changed to linking.</p>
+<ul>
+<li>Signing in with Google for an email that already has a password account now links the two rather than erroring (one account per email, usable either way).</li>
+</ul>
+<p><strong>v1.4, 2026-06-23:</strong> count habit stays on the rail.</p>
+<ul>
+<li>It stays for its whole active period rather than dropping off once the goal is met, so the user can keep logging past the target.</li>
+</ul>
+<p><strong>v1.3, 2026-06-22:</strong> past-date completion and delete behavior.</p>
+<ul>
+<li>Made completion editable for past dates, reversing the earlier "past is read-only" stance, which was user-hostile to anyone who simply forgot.</li>
+<li>Resolved delete behavior as a split by type from Phase 1 (habits soft-delete to preserve history; tasks and events delete permanently), replacing earlier wording that conflicted across sections.</li>
+</ul>
+<p><strong>v1.2, 2026-06-20:</strong> repeat model clarified.</p>
+<ul>
+<li>A frequency repeat is available only on flexible timing modes; its period is hybrid (named calendar periods, or a custom anchored window).</li>
+<li>Added a timezone setting for the day boundary.</li>
+</ul>
+<p><strong>v1.1, 2026-06-18:</strong> design-review pass, major model rework.</p>
+<ul>
+<li>Unified to one item type with optional repeat and a "track as a habit" toggle, so recurrence no longer means habit; removed scheduling groups in favor of tags as the single organizing layer.</li>
+<li>Reworked scheduling into three timing modes plus All-day and By-end-of-day checkboxes; dropped hour-based goals from v1 (Phase 3 trimmed to count-only).</li>
+<li>Reworked the views model from four fixed views into two independent controls (a time range and an organize-by lens), with a configurable landing view.</li>
+<li>Added offline and guest use as v1 requirements, making authentication optional.</li>
+<li>Distinguished offline from signed-out, with sign-out the only action that clears local data.</li>
+<li>Specified guest-to-account data handling across the four sign-up/sign-in cases (the both-populated case prompts once; a merge is a union of distinct records, not a conflict).</li>
+<li>Made missed instances derived on demand rather than written by an end-of-day process, with effective-dated repeat rules.</li>
+</ul>
+<p><strong>v1.0, 2026-05-01:</strong> first complete spec.</p>
+<ul>
+<li>Phase 3 specs written; authentication expanded to Google OAuth plus email/password; settings section added.</li>
+</ul>
+<p><strong>v0.1, 2026-04-30:</strong> initial draft.</p>
+<ul>
+<li>Authentication, data model, scheduling, recurrence, and Phase 1 feature specs.</li>
+</ul></div>
+</main>
+<footer class="foot"><div class="wrap">
+<a href="../../index.html" class="backbtn">&larr; Back to portfolio</a>
+<span class="footmeta"><a href="../index.html">All work samples</a> &middot; Derek Staley</span>
+</div></footer>
+<div class="lb-overlay" id="lb" role="dialog" aria-modal="true" aria-label="Image preview"><button class="lb-close" type="button" aria-label="Close preview">&times;</button><img alt=""></div>
+<script>
+(function(){var lb=document.getElementById('lb');if(!lb)return;var img=lb.querySelector('img'),btn=lb.querySelector('.lb-close');function open(s,a){img.src=s;img.alt=a||'';lb.classList.add('open');document.body.style.overflow='hidden';}function close(){lb.classList.remove('open');img.removeAttribute('src');document.body.style.overflow='';}document.addEventListener('click',function(e){var t=e.target.closest('a');if(!t)return;var h=t.getAttribute('href')||'';if(/\.(png|jpe?g|webp|gif)$/i.test(h)){e.preventDefault();var im=t.querySelector('img');open(h,im?im.getAttribute('alt'):'');}});btn.addEventListener('click',close);lb.addEventListener('click',function(e){if(e.target===lb)close();});document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});})();
+</script>
+</body></html>
