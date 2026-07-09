@@ -245,10 +245,10 @@
     </figure>
 
     <h3>The problem</h3>
-    <p>Planning a real day means looking in three places: a task app, a habit tracker, and a calendar. Each has its own model, and each demands more precision than real plans have. A to-do app wants a date, a calendar wants a time, and neither has a home for "practice Spanish four times this week." The product's bet is that these are the same thing: one item model on one daily view, with your real calendar alongside it.</p>
+    <p>Planning a real day means looking in three places: a task app, a habit tracker, and a calendar. Each has its own model, and each demands more precision than real plans have. A to-do app wants a date, a calendar wants a time, and neither has a home for "practice Spanish four times this week." The product's bet is that these are the same thing, one item model on one daily view, with your real calendar alongside it.</p>
 
     <h3>Discovery: the incumbent</h3>
-    <p>Before I wrote the spec, I looked closely at TickTick, the best-known app that already combines tasks, habits, and a calendar. It has a day timeline, a rail of unscheduled tasks you drag onto it, durations, and recurring tasks. Its scheduling works in two modes: an item has a specific time, or it has none. There's no flexible option in between, no way to tell it "I'll do this sometime between 12 and 4" and have it sit on the day without committing to a slot. Habits are separate as well, tracked in their own module and shown on the calendar rather than planned like a task. That's the space I built for: flexible scheduling, and habits that work like any other item.</p>
+    <p>Before I wrote the spec, I looked closely at TickTick, the best-known app that already combines tasks, habits, and a calendar. It has a day timeline, a rail of unscheduled tasks you drag onto it, durations, and recurring tasks. Its scheduling works in two modes: an item has a specific time, or it has none. There's no flexible option in between, no way to tell it "I'll do this sometime between 12 and 4" and have it sit on the day without committing to a slot. Habits are separate as well, tracked in their own module and shown on the calendar rather than planned like a task. That's the space I built for, flexible scheduling and habits that work like any other item.</p>
     <div class="excerpt">
       <div class="src">Competitive analysis · TickTick, structural insight</div>
       <p>"TickTick unified the <em>apps</em> but not the <em>model</em>. Its architecture keeps task, habit, and calendar event as different kinds of things, then works to display them together... The real opening is not another feature-complete competitor. It is a product built on one item model: task, event, and habit as the same underlying item with options turned on, rendered on one daily view next to the user's real calendar."</p>
@@ -353,7 +353,7 @@
     </div>
 
     <h3>From the actual documents</h3>
-    <p>One decision captures the approach: choosing not to decide yet. I left the prediction model swappable and let a bake-off on season data pick it, so the choice was cheap to defer and cheap to change. The document records that reasoning.</p>
+    <p>One decision captures the approach, choosing not to decide yet. I left the prediction model swappable and let a bake-off on season data pick it, so the choice was cheap to defer and cheap to change. The document records that reasoning.</p>
     <div class="excerpt">
       <div class="src">Requirements &amp; decisions doc · D3, model functional form</div>
       <p>"Defer the functional-form choice to a dedicated data-exploration phase. <em>The model is a swappable component behind a clean interface</em>, so the form can change later without touching anything downstream. A model-comparison harness fits candidate forms, scores them against the diagnostic suite on real data, and selects."</p>
