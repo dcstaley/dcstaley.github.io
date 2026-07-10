@@ -194,7 +194,6 @@
   <div class="links">
     <a href="#work">Case Studies</a>
     <a href="work-samples/index.html">Work Samples</a>
-    <a href="#about">How I Work</a>
     <a href="#industry">Professional Work</a>
     <a href="#skills">Skills</a>
     <a href="#experience">Experience</a>
@@ -330,7 +329,7 @@
     </figure>
 
     <h3>The problem</h3>
-    <p>Building a tournament roster is a constrained optimization problem with thousands of players weighted against budget caps, position eligibility, platoon matchups, and tier limits. Most people build rosters by feel and intuition. I wanted rosters built on evidence, with player value predicted by models trained on actual game outcomes. A first version worked, then ran into a problem that reframed the whole project.</p>
+    <p>Building a tournament roster is a constrained optimization problem with thousands of players weighted against budget caps, position eligibility, platoon matchups, and tier limits. Most people build rosters by feel and intuition. I wanted rosters built on evidence, with player value predicted by models trained on actual game outcomes. The first version worked, until it started contradicting itself. That's what forced the rebuild.</p>
 
     <h3>Key decisions</h3>
     <div class="decisions">
@@ -340,7 +339,7 @@
       </div>
       <div class="dcard">
         <div class="q">How do you stop scoring drift for good?</div>
-        <p class="a"><b>Structurally.</b> One scoring core, computed once, used identically by the data grid, the optimizer, and model validation. One language, one shared module. A scoring bug can now exist in only one place.</p>
+        <p class="a"><b>Structurally.</b> I moved all the scoring into one module. The grid, the optimizer, and the validation code all call it, so they always produce the same number for the same card. That wasn't true before. The grid and the optimizer each did their own math and could disagree about the same player. Now a scoring bug can only live in one place, so that's the only place I check.</p>
       </div>
       <div class="dcard">
         <div class="q">Which prediction model?</div>
@@ -353,7 +352,7 @@
     </div>
 
     <h3>From the actual documents</h3>
-    <p>The clearest example was a decision not to decide until the time was right. I kept the prediction model swappable and let a bake-off on exported data pick it, so it was cheap to defer and cheap to change. The document records that reasoning.</p>
+    <p>The prediction model is a good example. Instead of guessing the right one up front, I made models swappable, ran a bake-off on real season data, and let the results choose. I never had to commit before I had evidence.</p>
     <div class="excerpt">
       <div class="src">Requirements &amp; decisions doc · D3, model functional form</div>
       <p>"Defer the functional-form choice to a dedicated data-exploration phase. <em>The model is a swappable component behind a clean interface</em>, so the form can change later without touching anything downstream. A model-comparison harness fits candidate forms, scores them against the diagnostic suite on real data, and selects."</p>
@@ -382,17 +381,6 @@
     </div>
     <p class="artifacts"><b>Read the documents behind it:</b> the <a href="work-samples/ootp/ws-ootp-discovery-findings.html">discovery findings</a>, the <a href="work-samples/ootp/ws-ootp-rebuild-decisions.html">requirements and decisions (D1 through D7)</a>, the <a href="work-samples/ootp/ws-ootp-handover.html">handover</a>, the <a href="work-samples/ootp/ws-ootp-rebuild-roadmap.html">milestone roadmap</a>, and the <a href="ootp-feature-set.html">feature set</a>.</p>
   </article>
-</div></section>
-
-<section id="about"><div class="wrap">
-  <h2>How I work</h2>
-  <p class="sub">The two case studies above are products I built end to end; these are the principles behind that work.</p>
-  <div class="principles">
-    <div class="principle"><b>Evidence over assumption</b><span>I audit what a system actually does, and study the products already out there, before deciding what to build.</span></div>
-    <div class="principle"><b>Decisions in writing</b><span>I record settled decisions and the reasoning behind them, so they can be referenced later instead of reopened.</span></div>
-    <div class="principle"><b>Scope is the product</b><span>I keep an explicit out-of-scope list and a phased roadmap, and I would rather cut a feature early than late.</span></div>
-    <div class="principle"><b>Change the call when the evidence does</b><span>When new data or real use contradicts a decision I've made, I change it and record why, rather than defend it.</span></div>
-  </div>
 </div></section>
 
 <section id="industry"><div class="wrap">
