@@ -55,11 +55,6 @@
   p{margin-bottom:12px;}
   p:last-child{margin-bottom:0;}
 
-  /* Principles */
-  .principles{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;}
-  .principle{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow);}
-  .principle b{display:block;margin-bottom:4px;font-size:15px;}
-  .principle span{font-size:14px;color:var(--ink-soft);}
 
   /* Focus areas (at-a-glance) */
   .focus{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px;}
@@ -143,8 +138,6 @@
   .lede{font-size:20px;}
   .sub{font-size:16.5px;}
   h3{font-size:18px;}
-  .principle b{font-size:16px;}
-  .principle span{font-size:15px;}
   .focus .col h4{font-size:13px;}
   .focus .col li{font-size:14.5px;}
   .case-lead{font-size:17.5px;}
@@ -171,11 +164,11 @@
   .shot{width:100%;height:auto;border:1px solid var(--rule);border-radius:12px;box-shadow:var(--shadow);display:block;}
   .shot-cap{font-size:13px;color:var(--faint);margin-top:9px;line-height:1.5;}
 
-  @media(max-width:640px){.principles,.decisions{grid-template-columns:1fr;}.case{padding:22px;}}
+  @media(max-width:640px){.decisions{grid-template-columns:1fr;}.case{padding:22px;}}
   @media print{
     nav,.cta{display:none;}
     body{background:#fff;}
-    .case,.mini,.principle,.dcard{border-color:#ccc;break-inside:avoid;box-shadow:none;}
+    .case,.mini,.dcard{border-color:#ccc;break-inside:avoid;box-shadow:none;}
     .band{background:#fff;color:var(--ink);box-shadow:none;border:1px solid #ccc;}
     .band p{color:var(--ink-soft);}
   }
@@ -240,7 +233,7 @@
 
     <figure style="margin:22px 0 0;">
       <a href="images/prod-day-view.png" style="display:block;line-height:0;cursor:zoom-in;"><img class="shot" src="images/prod-day-view.png" alt="The app's Day view: a flexible-window task shown as a highlighted band on the time grid, alongside timed calendar events and inline habits, with tags and a side rail of untimed tasks." loading="lazy"></a>
-      <figcaption class="shot-cap">The Day view. The highlighted band is a flexible-window task ("do it between 9 and 12"), on the same grid as timed events and habits. One item model, each thing scheduled as loosely or as precisely as it needs.</figcaption>
+      <figcaption class="shot-cap">The Day view. The highlighted band is a flexible-window task ("do it between 9 and 12"), sitting on the same grid as timed events and habits, since they're all one kind of item.</figcaption>
     </figure>
 
     <h3>The problem</h3>
@@ -250,12 +243,12 @@
     <p>Before I wrote the spec, I looked closely at TickTick, the best-known app that already combines tasks, habits, and a calendar. It has a day timeline, a rail of unscheduled tasks you drag onto it, durations, and recurring tasks. Its scheduling has only two modes. An item either has a specific time or it has none. There's no flexible option in between, no way to tell it "I'll do this sometime between 12 and 4" and have it sit on the day without committing to a slot. Habits are separate as well, tracked in their own module and shown on the calendar rather than planned like a task. That's the space I built for, handling flexible scheduling and treating habits like any other item.</p>
     <div class="excerpt">
       <div class="src">Competitive analysis · TickTick, structural insight</div>
-      <p>"TickTick unified the <em>apps</em> but not the <em>model</em>. Its architecture keeps task, habit, and calendar event as different kinds of things, then works to display them together... The real opening is not another feature-complete competitor. It is a product built on one item model: task, event, and habit as the same underlying item with options turned on, rendered on one daily view next to the user's real calendar."</p>
+      <p>"TickTick unified the <em>apps</em> but not the <em>model</em>. Its architecture keeps task, habit, and calendar event as different kinds of things, then works to display them together... That is where a new product can win. It builds on one item model, where task, event, and habit are the same underlying item with options turned on, shown on one daily view beside the user's real calendar."</p>
       <p style="margin:8px 0 0;font-size:13.5px;font-weight:600;"><a href="work-samples/productivity/ws-productivity-competitive-analysis.html">Read the full analysis &rarr;</a></p>
     </div>
 
     <h3>How I run it</h3>
-    <p>Like a product organization of one. I maintain a living PRD, a Jira backlog of stories with acceptance criteria, and narrative specs for the information and technical architecture. AI builds each piece from the written spec, and I review it, request changes, and accept it only once it meets the acceptance criteria I set.</p>
+    <p>I run the project on the artifacts a product team would use. I keep a PRD current, maintain a backlog of stories with acceptance criteria, and write out the information and technical architecture. AI does the actual implementation. The decisions and the quality bar are mine. I review each piece of built work against its acceptance criteria, and nothing is accepted until it meets them.</p>
 
     <h3>Key decisions</h3>
     <div class="decisions">

@@ -200,11 +200,7 @@
     <div class="lead-card">
       <h2>One scoring core, computed once, consumed identically everywhere</h2>
       <p>
-        Most of the original app's bugs traced to scoring logic living in more than one place and
-        drifting apart, so the rebuild enforces the fix structurally. A card's value is computed once,
-        and the data grid, the optimizer, and model validation all read that same number. A scoring
-        bug can now exist in only one place, and the prediction model behind it is a swappable
-        component chosen by a bake-off on season outcomes.
+        In the original app, scoring logic lived in several places and drifted apart, which caused most of its bugs. The rebuild fixes that structurally. The grid, the optimizer, and model validation now read a card's value from one shared module, so a scoring bug can only occur in that one place. The prediction model behind that score is a swappable component, chosen by a bake-off on real season outcomes.
       </p>
       <div class="pills">
         <span class="pill">Grid</span>
