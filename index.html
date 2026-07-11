@@ -200,8 +200,8 @@
 
 <header class="hero"><div class="wrap">
   <h1>Derek Staley</h1>
-  <p style="font-size:clamp(19px,3vw,26px);font-weight:700;letter-spacing:-.01em;color:var(--accent);margin:6px 0 0;">Product-minded delivery leader</p>
-  <p class="lede">For 13 years I managed software delivery, keeping cross-functional teams moving through complex roadmaps and launches. But the part I kept being drawn to was the product side: deciding what problem to solve, what to build, and what to cut. So I started building products to make those calls myself.</p>
+  <p style="font-size:clamp(19px,3vw,26px);font-weight:700;letter-spacing:-.01em;color:var(--accent);margin:6px 0 0;">Product-focused delivery leader</p>
+  <p class="lede">For 13 years I've worked in software delivery, keeping teams moving through complex roadmaps and time-sensitive launches. I was always interested in the product side of that work, so I started building products of my own.</p>
   <div class="cta">
     <a class="btn btn-primary" href="#work">See the case studies</a>
     <a class="btn btn-ghost" href="mailto:dstaley@gmail.com">Get in touch</a>
@@ -215,12 +215,12 @@
 
 <section id="work"><div class="wrap">
   <h2>Case studies</h2>
-  <p class="sub">Two products I own end to end. I write the specs and decision logs, AI builds from them, and I sign off against acceptance criteria. Each is organized around the decisions behind it, with excerpts from the real documents you can <a href="work-samples/index.html">read in full</a>.</p>
+  <p class="sub">Two products I own end to end. I write the specs and decision logs, AI handles the code, and I review against acceptance criteria. Each case study is organized around the decisions behind it, with excerpts from the real documents you can <a href="work-samples/index.html">read in full</a>.</p>
 
   <!-- CASE 1: Productivity App -->
   <article class="case">
     <h3 style="margin-top:0;font-size:23px;">Unified Tasks &amp; Habits App</h3>
-    <p class="case-lead">A local-first web app that puts tasks, habits, and calendar events on one daily view. A timed meeting from Google Calendar can share a day with a habit you're doing four times a week, each one scheduled as loosely or as precisely as it needs.</p>
+    <p class="case-lead">A local-first web app that puts tasks, habits, and calendar events in one place. A timed meeting from Google Calendar can share a day with a habit you're doing four times a week, each one scheduled as loosely or as precisely as it needs.</p>
     <div class="case-meta">
       <span class="chip live">v1 shipped · three phases</span>
       <span class="chip">Sole product owner</span>
@@ -241,7 +241,7 @@
     </figure>
 
     <h3>The problem</h3>
-    <p>Planning a real day can mean switching between a task app, a habit tracker, and a calendar, three tools that don't always work well together. A to-do app wants a date, a calendar wants a time, and neither has a home for "practice Spanish four times this week." The product's bet is that these can all be captured by one item model on one daily view, with your real calendar alongside it.</p>
+    <p>Planning a real day can mean switching between a task app, a habit tracker, and a calendar, three tools that don't always work well together. A to-do app wants a date and a calendar wants a time, but neither has a home for "practice Spanish four times this week." The idea is that these can all be captured by one item model in one place, with your real calendar alongside it.</p>
 
     <h3>Discovery: the incumbent</h3>
     <p>Before I wrote the spec, I looked closely at TickTick, the best-known app that already combines tasks, habits, and a calendar. It has a day timeline, a rail of unscheduled tasks you drag onto it, durations, and recurring tasks. Its scheduling has only two modes. An item either has a specific time or it has none. There's no flexible option in between, no way to tell it "I'll do this sometime between 12 and 4" and have it sit on the day without committing to a slot. Habits are separate as well, tracked in their own module and shown on the calendar rather than planned like a task. That's the space I built for, handling flexible scheduling and treating habits like any other item.</p>
@@ -252,17 +252,17 @@
     </div>
 
     <h3>How I run it</h3>
-    <p>I run the project on the artifacts a product team would use. I keep a PRD current, maintain a backlog of stories with acceptance criteria, and write out the information and technical architecture. AI does the actual implementation. The decisions and the quality bar are mine. I review each piece of built work against its acceptance criteria, and nothing is accepted until it meets them.</p>
+    <p>I run the project on the artifacts a product team would use. I maintain a PRD and a backlog of stories with acceptance criteria, along with the information and technical architecture. AI does the actual implementation. The decisions and the quality bar are mine, and nothing is accepted until it meets the acceptance criteria.</p>
 
     <h3>Key decisions</h3>
     <div class="decisions">
       <div class="dcard">
         <div class="q">One item type, or tasks vs. habits?</div>
-        <p class="a"><b>One type.</b> Repeat and habit tracking are optional toggles on the same item, so a weekly meeting, an errand, and a four-times-a-week habit all live in one create flow and one daily view. This is the product's core bet, and it fills the gap the incumbents leave open.</p>
+        <p class="a"><b>One type.</b> Repeat and habit tracking are optional toggles on the same item, so a weekly meeting, an errand, and a four-times-a-week habit all live in one create flow and one daily view. This is the central idea, and it's the gap the incumbents leave open.</p>
       </div>
       <div class="dcard">
         <div class="q">Require an account?</div>
-        <p class="a"><b>No.</b> The app is local-first and fully usable as a guest; an account adds sync and backup rather than gating access. It also inverts the incumbent's paywall on the features that define the category.</p>
+        <p class="a"><b>No.</b> The app is local-first and fully usable as a guest; an account adds sync and backup rather than gating access. The incumbents put these features behind a paywall, but here they work out of the box.</p>
       </div>
       <div class="dcard">
         <div class="q">Past days: read-only?</div>
@@ -296,10 +296,10 @@
     <div class="demo">
       <h4>What this demonstrates</h4>
       <ul>
-        <li><b>A written competitive analysis.</b> Broke down the leading incumbent, named the gap it leaves, and tied every product bet back to a specific finding.</li>
+        <li><b>A written competitive analysis.</b> Broke down the leading incumbent and tied product decisions back to specific findings.</li>
         <li><b>A living PRD and backlog.</b> User stories with acceptance criteria, plus information and technical architecture specs, versioned and kept current as the build proceeds.</li>
         <li><b>A phased roadmap with an out-of-scope list.</b> Explicit boundaries per phase, so no early decision quietly builds in a feature meant for later.</li>
-        <li><b>A prioritized v2 plan.</b> Past shipping v1, a scope menu that classifies every deferred feature by origin, current state, and effort, so the next round is sequenced on evidence rather than guessed.</li>
+        <li><b>A prioritized v2 plan.</b> After shipping v1, a prioritized backlog of deferred features classified by current state and effort, so the next round is sequenced on evidence rather than guessed.</li>
       </ul>
     </div>
     <p class="artifacts"><b>Read the documents behind it:</b> the <a href="work-samples/productivity/ws-productivity-prd.html">PRD with its decision changelog</a>, the <a href="work-samples/productivity/ws-productivity-user-stories.html">user stories and acceptance criteria</a>, the <a href="work-samples/productivity/ws-productivity-competitive-analysis.html">competitive analysis</a>, the <a href="work-samples/productivity/ws-productivity-information-architecture.html">information architecture</a>, the <a href="work-samples/productivity/ws-productivity-v2-plan.html">v2 plan</a>, the <a href="v1-feature-set.html">v1 feature set</a>, and the <a href="design-system.html">design system</a>.</p>
@@ -387,19 +387,19 @@
   <div class="mini">
     <div class="role">Project Manager · Ellation (Crunchyroll)</div>
     <h3>Launching VRV on four platforms at once</h3>
-    <p>Led the launch of VRV, a new streaming platform that hit its target launch date as a simultaneous release on iOS, Android, Xbox One, and PS4. The launch held together through tight scope and resourcing decisions, backed by dashboards that kept the critical path visible to engineering and executives, so tradeoffs were made early rather than at the deadline.</p>
+    <p>Led the launch of VRV, a new streaming platform that hit its target launch date as a simultaneous release on iOS, Android, Xbox One, and PS4. Kept the critical path and blockers visible to engineering and execs, so the team could make scope calls early instead of at the deadline.</p>
   </div>
 
   <div class="mini">
     <div class="role">Senior Project Manager · The Zebra</div>
     <h3>Bringing a new insurance vertical to market</h3>
-    <p>Drove delivery for the launch of home insurance, the company's first major extension beyond its core auto business, working with product and business leads from initial scoping through go-to-market. Built the delivery practices and executive reporting the organization scaled on as it grew.</p>
+    <p>Led the launch of the company's home insurance product, its first move beyond auto insurance. Built the delivery practices and reporting the team relied on as it scaled.</p>
   </div>
 
   <div class="mini">
     <div class="role">Producer · Demiurge Studios (for Riot Games)</div>
     <h3>Turning product vision into buildable plans</h3>
-    <p>On Teamfight Tactics and 2XKO, partnered with Riot's product and design leadership to turn product intent into well-scoped plans with clear acceptance criteria, balancing design goals against technical feasibility, and used delivery data to shape prioritization with studio and client leadership.</p>
+    <p>On Teamfight Tactics and 2XKO, worked with Riot's product and design leads to turn their direction into plans the dev team could build against, with clear scope and acceptance criteria. Used delivery data to surface risks early and give studio and client leadership what they needed to make prioritization calls.</p>
   </div>
 </div></section>
 
@@ -427,17 +427,17 @@
 
 <section id="experience"><div class="wrap">
   <h2>Experience</h2>
-  <p class="sub">13 years across tech, games, and entertainment. Full detail in the <a href="Derek Staley Resume 2026.pdf"><b>resume (PDF)</b></a>.</p>
+  <p class="sub">13 years across tech, games, and enterprise. Full detail in the <a href="Derek Staley Resume 2026.pdf"><b>resume (PDF)</b></a>.</p>
   <div class="tl">
     <div class="tl-item">
       <div class="yr">2025 – Present</div>
       <div class="rl">Independent Product Development</div>
-      <p class="ds">Building the two products in the case studies above, end to end, with AI as the engineering team.</p>
+      <p class="ds">Building the two products in the case studies above, with AI as the engineering team.</p>
     </div>
     <div class="tl-item">
       <div class="yr">2023 – 2025</div>
       <div class="rl">Producer · Demiurge Studios (for Riot Games)</div>
-      <p class="ds">Feature prioritization and roadmap planning on Teamfight Tactics and 2XKO; aligned Riot's product and design leadership with studio engineering and art.</p>
+      <p class="ds">Worked with Riot's product and design leads on Teamfight Tactics and 2XKO, turning their direction into plans the dev team could build against.</p>
     </div>
     <div class="tl-item">
       <div class="yr">2021 – 2023</div>
@@ -447,7 +447,7 @@
     <div class="tl-item">
       <div class="yr">2019 – 2021</div>
       <div class="rl">Senior Project Manager · The Zebra</div>
-      <p class="ds">Early PM hire; drove delivery of the home insurance vertical from scoping through go-to-market; stood up executive reporting as the company scaled.</p>
+      <p class="ds">Early PM hire; led the launch of the company's home insurance product, its first move beyond auto insurance.</p>
     </div>
     <div class="tl-item">
       <div class="yr">2016 – 2019</div>
